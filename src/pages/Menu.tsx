@@ -11,34 +11,83 @@ import NestedOptions from "../components/NestedOptions";
 import { IoBook } from "react-icons/io5";
 import { MdAdd } from "react-icons/md";
 import { RiDeleteBin4Fill } from "react-icons/ri";
-
+import axios from "axios";
+import { useState } from "react";
+import { Line } from "rc-progress";
+import DragDrop from "../components/DragDrop";
 
 
 const Menu = () => {
 
-const {register, handleSubmit, control, formState: {errors}} = useForm();
+const {register, handleSubmit, setValue, control, watch, formState: {errors}} = useForm();
 const {fields, append, remove} = useFieldArray({control, name: "optionGroups"});
 const {fields: addonFields, append: appendAddon, remove: removeAddon} = useFieldArray({control, name: "addons"});
 const {fields: dietaryFields, append: appendDietary, remove: removeDietary} = useFieldArray({control, name: "dietaryAlternatives"});
 
-  const onSubmit = (data: any) => {
-      console.log(data)
+const [progress, setProgress] = useState(0);
+  
+const onSubmit = async (data: any) => {
+      setValue("imageURL", "https://via.placeholder.com/150");
+      const response =  await axios.post("http://localhost:3000/menu-item", data);
+      console.log(response.data);
   }
 
+const getPresignedUrl = async () => {
+    const file =  watch("image")?.[0];
+
+    const response = await axios.post("http://localhost:3000/image-uploader/presigned-url", {
+            fileName: file.name,
+            fileType: file.type
+    });
+    return response;
+};
+
+
+  const handleImageUpload = async () => {
+       
+        const file =  watch("image")?.[0];
+        if (!file) {
+            alert("Please select a file to upload.");
+            return;
+        }
+        
+        const response = await getPresignedUrl();
+        console.log(response.data);
+        const{presignedUrl, imageUrl} = response.data;
+        
+        console.log(presignedUrl, imageUrl);
+
+        await axios.put(presignedUrl, file, {
+            headers: {
+                "Content-Type": file.type,
+            },
+            onUploadProgress: (progressEvent) => {                
+                const progress = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
+                setProgress(progress);
+                // console.log(`Upload Progress: ${progress}%`);
+            }
+        });
+
+        setValue("imageURL", imageUrl);
+        alert("Image uploaded successfully!");
+    }
   return (
-    <div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="flex flex-col md:flex-row gap-6">
+        
+        {/* Form Component */}
+        <div className="w-full md:w-3/5">
+            <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
-                <Input id="name" type="text" label="Name" placeholder="Enter name" register={register} rules={{required: "Name is required"}} error={errors.name}/>
+                <Input id="name" type="text" label="Item name *" placeholder="Enter name" register={register} rules={{required: "Name is required"}} error={errors.name}/>
             </div>
             
             <div className="mb-3">
-                <Textarea id="description" label="Description" placeholder="Enter description" register={register} rules={{required: "Description is required"}} error={errors.description}/>
+                <Textarea id="description" label="Description *" placeholder="Enter description" register={register} rules={{required: "Description is required"}} error={errors.description}/>
             </div>
 
             <div className="mb-3 flex gap-4">
                 <div className="flex-1">
-                    <Input id="price" type="number" label="Price" placeholder="Enter price" register={register} rules={{ required: "Price is required", min: 0 }} error={errors.price}/>
+                    <Input id="price" type="number" label="Price *" placeholder="Enter price" register={register} rules={{ required: "Price is required", min: 0 }} error={errors.price}/>
                 </div>
 
                 <div className="flex-1">
@@ -121,11 +170,33 @@ const {fields: dietaryFields, append: appendDietary, remove: removeDietary} = us
             </div>
 
             <div className="mb-3">
-                <Checkbox  label="Available For Ordering" name="availability" value="available" register={register} />
+                <Label label="Available For Ordering"/>
+                <Checkbox  label="Available" name="availability" value="available" register={register} />
+                <Checkbox  label="Unavailable" name="availability" value="unavailable" register={register} />
             </div>
 
-            <Button type="submit" text="Submit"  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200" />
-        </form>
+            <div>
+                <input type="hidden" {...register("imageURL")} />
+            </div>
+
+            <div>
+                <Label label="Upload Image"/>
+                <input type="file" {...register("image")} />
+                {progress > 0 && progress < 100 && <Line percent={progress} strokeWidth={2} strokeColor="#b6b311"/> }
+                {progress === 100 && <p className="text-green-600">Upload complete!</p>}
+            </div>
+
+                <Button type="button" text="Upload" onClick={handleImageUpload}/>
+
+                <Button type="submit" text="Submit"  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200" />
+            </form>
+        </div>
+
+        {/* Image Upload Section */}
+        <div className="w-full md:w-2/5">
+            <DragDrop />
+        </div>
+        
     </div>
   )
 }
