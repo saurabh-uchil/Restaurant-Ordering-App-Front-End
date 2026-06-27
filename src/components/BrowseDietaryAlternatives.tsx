@@ -51,7 +51,6 @@ const BrowseDietaryAlternatives = ({data, dietaryAlternatives, setDietaryAlterna
     <div>
        <h2 className={browseDrawerStyles.drawerHeader}>Dietary Alternatives</h2>
         {dietaries}
-       <Button text="Save" variant="primary" onClick={()=>{alert("Selected DA's");}}/> 
     </div>
   )
 }

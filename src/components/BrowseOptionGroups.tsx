@@ -1,3 +1,4 @@
+import { browseDrawerStyles } from "../styles/browseDrawer";
 import { optionStyles } from "../styles/optionsBrowser";
 
 function AddOptions({data, optionGroups, setOptionGroups}) {
@@ -65,7 +66,7 @@ function AddOptions({data, optionGroups, setOptionGroups}) {
 
   return (
     <div>
-      <p>Add Options Component</p>
+      <p className={browseDrawerStyles.drawerHeader}>Add Options Component</p>
       {options}
     </div>
   )

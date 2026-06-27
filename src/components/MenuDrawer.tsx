@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import AddOptions from "./BrowseOptionGroups";
 import BrowseDietaryAlternatives from "./BrowseDietaryAlternatives";
 import BrowseAddons from "./BrowseAddons";
+import { CircularProgress } from "@mui/material";
+import { browseDrawerStyles } from "../styles/browseDrawer";
 
 function MenuDrawer({component, dietaryAlternatives, setDietaryAlternatives, addons, setAddons, optionGroups, setOptionGroups}) {
 
@@ -30,17 +32,14 @@ function fetchView() {
     switch(component) {
         case "Options":
             return <div>
-                <h2 className="text-lg font-semibold mb-4">Option Groups</h2>
                 <AddOptions data={data} optionGroups={optionGroups} setOptionGroups={setOptionGroups}/>
             </div>;
         case "Dietary":
             return <div>
-                <h2 className="text-lg font-semibold mb-4">Dietary Options</h2>
                 <BrowseDietaryAlternatives data={data} dietaryAlternatives={dietaryAlternatives} setDietaryAlternatives={setDietaryAlternatives}/>
             </div>;    
         case "Addons":    
             return <div>
-                <h2 className="text-lg font-semibold mb-4">Add-ons</h2>
                 <BrowseAddons data={data} addons={addons} setAddons={setAddons} />
             </div>;
     }
@@ -56,11 +55,15 @@ useEffect(() => {
 
   return (
     <div>
-        <div className="p-4 w-90">
+        <div className={browseDrawerStyles.drawerContent}>
             {isLoading ? (
-                <p>Loading...</p>
+                <div className={browseDrawerStyles.drawerContentLoading}>
+                    <CircularProgress size={40} aria-label="Loading…" />
+                </div>
             ) : error ? (
-                <p>Error: {error}</p>
+                <div className={browseDrawerStyles.drawerContentLoading}>
+                    <p className={browseDrawerStyles.errorLoadingMessage}>Error: {error}</p>
+                </div>
             ) : (
                 view
             )}
