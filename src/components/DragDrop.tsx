@@ -3,10 +3,18 @@ import { useState, useEffect } from "react";
 import { IoCloudUpload } from "react-icons/io5";
 import Button from "./Button";
 import Label from "./Label";
+import { RiDeleteBin4Fill } from "react-icons/ri";
+import type { FieldValues, UseFormSetValue } from "react-hook-form";
 
-export default function DragDrop() {
+type DragDropProTypes = {
+    upload: (file: File) => Promise<void>,
+    name: string,
+    setValue: UseFormSetValue<FieldValues>
+}
+export default function DragDrop({upload, name, setValue}: DragDropProTypes) {
   const [file, setFile] = useState<File & { preview: string } | null>(null);
 
+  
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple: false,
     accept: {
@@ -32,6 +40,28 @@ export default function DragDrop() {
     };
   }, [file]);
 
+  const handleUpload = async() => {
+    // Implement your upload logic here, e.g., using fetch or axios to send the file to a server
+
+    if (!file) return;
+
+    upload(file)
+      .then(() => {
+        alert("Image uploaded successfully!");
+        //setFile(null); // Clear the selected file after upload
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image. Please try again.");
+      });
+  }
+
+  const handleClearImage = () => {
+    setFile(null);
+    setValue(name, null);
+  }
+
+
   return (
     <div className="bg-gray-100 p-4 rounded-md">
       <div>
@@ -54,8 +84,8 @@ export default function DragDrop() {
           <p >Drag & drop an image</p>
         )}
 
-        <p className="text-emerald-600 font-medium">Click to browse files</p>
-        <p className="text-gray-600">PNG or JPG upto 5MB</p>
+        <p className="text-emerald-600 font-medium">or click to browse files</p>
+        <p className="text-gray-600 text-sm">PNG or JPG upto 5MB</p>
       </div> 
 
       {file && (
@@ -65,9 +95,10 @@ export default function DragDrop() {
           alt="preview"
           className="object-cover mt-2 rounded-md border border-slate-600"
           />
+           
         <div className="flex gap-4 mt-4">
-          <Button text="Upload Image" variant="primary"/>
-          <Button text="Clear Image" variant="danger"/>  
+          <Button icon={<IoCloudUpload />} text="Upload Image" variant="transparentGreen" onClick={handleUpload}/>
+          <Button icon={<RiDeleteBin4Fill />} text="Clear Image" variant="transparentRed" onClick={handleClearImage}/>  
         </div>  
         
         </div>

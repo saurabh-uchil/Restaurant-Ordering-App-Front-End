@@ -1,0 +1,2 @@
+export const MENU_TYPES = [{label:"Breakfast", value:"breakfast"}, {label:"Lunch", value:"lunch"}, {label:"Dinner", value:"dinner"}];
+export const AVAILABILITY_OPTIONS = [{label:"Available", value:"available"}, {label:"Unavailable", value:"unavailable"}];
