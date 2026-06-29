@@ -50,7 +50,11 @@ const BrowseDietaryAlternatives = ({data, dietaryAlternatives, setDietaryAlterna
   return (
     <div>
        <h2 className={browseDrawerStyles.drawerHeader}>Dietary Alternatives</h2>
-        {dietaries}
+        {data.length > 0 ? dietaries : 
+          <div className={browseDrawerStyles.loadingContainer}>
+            <p className={browseDrawerStyles.noOptions}>No dietary alternatives available.</p>
+          </div>
+        }
     </div>
   )
 }

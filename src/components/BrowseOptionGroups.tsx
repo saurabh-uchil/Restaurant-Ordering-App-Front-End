@@ -67,7 +67,11 @@ function AddOptions({data, optionGroups, setOptionGroups}) {
   return (
     <div>
       <p className={browseDrawerStyles.drawerHeader}>Add Options Component</p>
-      {options}
+      {data.length > 0 ? options : 
+      <div className={browseDrawerStyles.loadingContainer}>
+        <p className={browseDrawerStyles.noOptions}>No options available.</p>
+      </div>
+      }
     </div>
   )
 }

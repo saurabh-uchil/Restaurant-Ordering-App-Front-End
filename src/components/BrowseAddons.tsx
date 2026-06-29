@@ -44,7 +44,11 @@ function BrowseAddons({data, addons, setAddons}) {
   return (
     <div>
       <h2 className={browseDrawerStyles.drawerHeader}>Add-ons</h2>
-        {addon}
+        {data.length > 0 ? addon : 
+          <div className={browseDrawerStyles.loadingContainer}>
+            <p className={browseDrawerStyles.noOptions}>No add-ons available.</p>
+          </div>
+        }
     </div>
   )
 }

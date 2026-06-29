@@ -9,6 +9,7 @@ export const browseDrawerStyles = {
     cardInfo:"bg-green-100 text-green-700 text-sm font-bold px-3 py-1 rounded-full",
     addonsContainer:"flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 m-2",
     drawerHeader:"text-center text-lg font-semibold mb-4",
+    noOptions:"text-gray-500 text-sm font-medium",
     addonsTitle:"text-sm font-semibold text-gray-800",
     addonsPrice:"bg-green-100 text-green-700 text-sm font-bold px-3 py-1 rounded-full",
     loadingContainer:"flex items-center justify-center h-screen",
