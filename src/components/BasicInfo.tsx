@@ -46,7 +46,7 @@ const BasicInfo = ({register, formState}: BasicInfoProps) => {
                 </div>
 
                 <div className={addToMenuStyles.courseSelect}>
-                    <Select label="Course Type" name="course" register={register} rules={{ required: "Course Type is required" }} error={errors.course} options={["Entree", "Mains", "Dessert", "Kids"]} />
+                    <Select label="Course Type" name="course" register={register} rules={{ required: "Course Type is required" }} error={errors.course} options={["Entree", "Mains", "Dessert", "Kids", "Sides", "Steaks"]} />
                 </div>
             </div>
 
