@@ -17,11 +17,20 @@ export const addToMenuStyles = {
 
   dynamicFieldButtons: 'flex items-center gap-2',
 
-  fieldDiv: 'border border-slate-200 bg-white rounded-2xl p-4 mb-4 shadow-sm transition-all duration-200 hover:shadow-md',
+  fieldDiv:
+  "border border-slate-200 bg-white rounded-2xl p-4 mb-4 shadow-sm transition-all duration-200 hover:shadow-md",
 
-  fieldInnerDiv: 'flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3',
+fieldInnerDiv:
+  "flex items-start gap-3",
 
-  fieldInputContainer: 'flex-1 w-full',
+fieldInputContainer:
+  "flex-1 min-w-0",
+
+deleteButtonContainer:
+  "flex-none pt-1",
+
+deleteBtn:
+  "flex items-center justify-center h-10 w-10 rounded-lg bg-red-50 text-red-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600",
 
   fieldGroupNameInput: 'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100',
 

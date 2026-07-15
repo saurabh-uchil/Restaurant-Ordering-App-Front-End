@@ -8,17 +8,6 @@ import { addToMenuStyles } from "../styles/addToMenu";
 
 const OptionsDiv = ({fields, register, remove, control, formState}) => {
     const {errors} = formState
-    /* const { errors, submitCount } = formState; */
-   /*  const [renderKey, setRenderKey] = useState(0); */
-    
-    /* Updating the renderKey to force re-render of the component when submitCount changes, 
-    this is to ensure that the validation errors are displayed correctly for dynamically added fields*/
-    
-    /* useEffect(() => {
-        if (submitCount > 0) {
-            setRenderKey(prev => prev + 1);
-        }
-    }, [submitCount]); */
 
 
     const options = fields.map((group, index) =>{
@@ -33,7 +22,7 @@ const OptionsDiv = ({fields, register, remove, control, formState}) => {
                                 </div>
                                 
                                 <div className={addToMenuStyles.nestedfieldContainer}>
-                                    <NestedOptions control={control} register={register} groupIndex={index} name="options" />
+                                    <NestedOptions control={control} register={register} groupIndex={index} name="options" formState={formState} />
                                 </div>
                             </div>
                     )

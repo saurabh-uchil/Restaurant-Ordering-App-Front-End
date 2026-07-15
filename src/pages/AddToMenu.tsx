@@ -19,11 +19,14 @@ import { useState } from "react";
 const AddToMenu = () => {
 
     const methods = useAddToFormHook();
+    
     const {register, handleSubmit, formState, control, setValue, reset} = methods;
-    const {isOpen, drawerContent, handleDrawerOpen, handleDrawerClose} = useMenuDrawerHook();
     const {existingData: dietaryAlternatives, setExistingData: setDietaryAlternatives, clearExistingData: clearDietaryAlternatives} = useGetExistingDataHook();
     const {existingData: addons, setExistingData: setAddons, clearExistingData: clearAddons} = useGetExistingDataHook();
     const {existingData: optionGroups, setExistingData: setOptionGroups, clearExistingData: clearOptionGroups} = useGetExistingDataHook();
+    
+    const {isOpen, drawerContent, handleDrawerOpen, handleDrawerClose} = useMenuDrawerHook();
+
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [uploadError, setUploadError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

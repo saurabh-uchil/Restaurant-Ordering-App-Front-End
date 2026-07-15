@@ -1,10 +1,11 @@
-import { IoAddOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import { menuCardStyles } from "../styles/viewMenuStyles";
 import { MdEdit } from "react-icons/md";
 
 const Cards = ({item}) => {
+  const navigate = useNavigate();
   return (
-    <article className={menuCardStyles.card}>
+    <article key={item._id} className={menuCardStyles.card}>
       <div className={menuCardStyles.imageContainer}>
         <img
           src={item.imageUrl}
@@ -17,8 +18,10 @@ const Cards = ({item}) => {
            /*  onClick={onButtonClick} */
             className={menuCardStyles.imageAction}
             /* aria-label={buttonLabel} */
+            onClick={() => navigate(`/editMenuItem/${item._id}`)}
         >
             {/* <IoAddOutline /> */}
+            
             <MdEdit />
         </button>
       </div>

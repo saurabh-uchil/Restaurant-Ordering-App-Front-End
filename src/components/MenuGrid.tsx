@@ -16,7 +16,7 @@ const MenuGrid = ({mode, data}) => {
 
     const card = searchedData.map((item) => {
         return (
-            <Cards key={item.id} item={item}/>
+            <Cards key={item._id} item={item}/>
         )})
     
     

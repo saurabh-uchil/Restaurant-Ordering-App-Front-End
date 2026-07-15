@@ -3,19 +3,25 @@ import { dragAndDropStyles } from '../styles/DragAndDrop';
 import Label from './Label';
 import Button from './Button';
 import { RiDeleteBin4Fill } from 'react-icons/ri';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const DragAndDrop = ({label, subLabel, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive}) => {
+const DragAndDrop = ({label, subLabel, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive, initialValue}) => {
     
+    const [currentImage, setCurrentImage] = useState(initialValue);
+
     const handleUpload = () => {
         upload();
     }
     
     const handleClearImage = () => {
         setFile(null);
+        setCurrentImage(null);
         setValue(name, null);
     }
+
     const dragActiveText = isDragActive ? "Drop the image here..." : "Drag & drop an image";
+
+    const previewImage = file?.preview || currentImage;
 
     //clean up
     useEffect(() => {
@@ -47,10 +53,10 @@ const DragAndDrop = ({label, subLabel, browseFilesText, fileSizeText, upload, se
             </div> 
             
 
-            {file && (
+            {previewImage && (
             <div className={dragAndDropStyles.filePreviewContainer}>
                 <img
-                src={file.preview}
+                src={previewImage}
                 alt="preview"
                 className={dragAndDropStyles.filePreviewImage}
                 />

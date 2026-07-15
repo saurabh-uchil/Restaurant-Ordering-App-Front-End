@@ -5,7 +5,13 @@ import { handleImageUpload } from "../services/imageUploaderService";
 import { addToMenuStyles } from "../styles/addToMenu";
 import DragAndDrop from "./DragAndDrop";
 
-const UploadImage = ({name, setValue}) => {
+type UploadImageProps = {
+    name: string,
+    setValue?: any,
+    initialValue?: any
+}
+
+const UploadImage = ({name, setValue, initialValue}:UploadImageProps) => {
 
     const {progress, uploadError, setProgress, setUploadError} = useUploaderHook();
     const { file, setFile, getRootProps, getInputProps, isDragActive } = useImageUploaderHook();
@@ -31,6 +37,7 @@ const UploadImage = ({name, setValue}) => {
                 browseFilesText="or click to browse files"  
                 fileSizeText="PNG or JPG upto 5MB"
                 file={file}
+                initialValue={initialValue}
                 setFile={setFile}
                 getRootProps={getRootProps}
                 getInputProps={getInputProps}

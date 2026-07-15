@@ -3,8 +3,8 @@ import type { RegisterOptions, UseFormRegister } from "react-hook-form";
 
 export type InputProps = {
     id: string;
-    type: string;
-    label: string;   
+    type?: string;
+    label?: string;   
     extraClass?: string;
     placeholder?: string;
     error?: any;
@@ -15,9 +15,12 @@ export type InputProps = {
 const Input = ({id, type, label, placeholder, extraClass, error, register, rules}: InputProps) => {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-black-700 mb-1">{label}</label> 
-      <input id={id} type={type} placeholder={placeholder} {...register(id, rules)} className={`w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${extraClass || ''}`}/>
-      {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
+      {label && <label htmlFor={id} className="block text-sm font-medium text-black-700 mb-1">{label}</label>} 
+      <input id={id} type={type} placeholder={placeholder} {...register(id, rules)} className={`w-full h-11 px-4 border border-gray-300 rounded-lg bg-white text-sm text-gray-700 placeholder:text-gray-400 transition-all duration-200 focus:border-[#28085e] focus:ring-4 focus:ring-[#28085e]/10 focus:outline-none ${extraClass || ''}`}/>
+      {error?.message && 
+      (
+        <p className="mt-1 text-xs text-red-500">{error.message}</p>
+      )}
     </div>
   )
 }

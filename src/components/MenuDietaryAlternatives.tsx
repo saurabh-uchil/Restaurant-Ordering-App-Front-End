@@ -8,42 +8,90 @@ import { RiDeleteBin4Fill } from "react-icons/ri";
 import Input from "./Input";
 import SelectedExisting from "./SelectedExisting";
 
-const MenuDietaryAlternatives = ({register, control, formState, drawerOpen, selectedDietaryAlternatives, setSelectedDietaryAlternatives}) => {
-
-    const { append, remove, fields } = useFieldArray({
+const MenuDietaryAlternatives = ({
+  register,
+  control,
+  formState,
+  drawerOpen,
+  selectedDietaryAlternatives,
+  setSelectedDietaryAlternatives,
+}) => {
+  const { append, remove, fields } = useFieldArray({
     control,
-    name: "dietaryAlternatives"
+    name: "dietaryAlternatives",
   });
 
-  
-    const dietaryAlternativesList = fields.map((field, index) => (
-                    <div className={addToMenuStyles.fieldDiv} key={field.id}>
-                        <div className={addToMenuStyles.fieldInnerDiv}>
-                            <Input label="" extraClass={addToMenuStyles.fieldInputContainer} register={register} id={`dietaryAlternatives.${index}.name`} placeholder="Dietary Alternative Name" type="text" />
-                            <Input label="" extraClass={addToMenuStyles.fieldInputContainer} register={register} id={`dietaryAlternatives.${index}.additionalPrice`} placeholder="Price" type="number" />
-                            <Button type="button" classes={addToMenuStyles.deleteButton} variant="transparent" icon={<RiDeleteBin4Fill />} onClick={() => remove(index)} />
-                        </div>
-                    </div>
-                ))
+  const dietaryAlternativesList = fields.map((field, index) => (
+    <div className={addToMenuStyles.fieldDiv} key={field.id}>
+      <div className={addToMenuStyles.fieldInnerDiv}>
+        <div className={addToMenuStyles.fieldInputContainer}>
+          <Input
+            register={register}
+            id={`dietaryAlternatives.${index}.name`}
+            placeholder="Dietary Alternative Name"
+            type="text"
+            rules={{
+              required: "Dietary alternative name is required",
+            }}
+            error={formState.errors?.dietaryAlternatives?.[index]?.name}
+          />
+        </div>
+
+        <div className={addToMenuStyles.fieldInputContainer}>
+          <Input
+            register={register}
+            id={`dietaryAlternatives.${index}.additionalPrice`}
+            placeholder="Price"
+            type="number"
+          />
+        </div>
+
+        <div className={addToMenuStyles.deleteButtonContainer}>
+          <Button
+            type="button"
+            classes={addToMenuStyles.deleteBtn}
+            variant="transparent"
+            icon={<RiDeleteBin4Fill />}
+            onClick={() => remove(index)}
+          />
+        </div>
+      </div>
+    </div>
+  ));
 
   return (
     <div>
       <div className={addToMenuStyles.dynamicFieldContainer}>
-                <Label label="Dietaries"/>
-                <div className={addToMenuStyles.dynamicFieldButtons}>
-                    <Button type="button" text="Browse Existing" variant="secondary" icon={<IoBook />} onClick={() => drawerOpen("Dietary")} />
-                    <Button type="button" variant="secondary" icon={<MdAdd />} text="Add Dietaries" onClick={()=>{append({name: "", additionalPrice:0})}}/>
-                </div>
-                
-            </div>
-            
-            <SelectedExisting label="Dietary Alternatives" selectedItems={selectedDietaryAlternatives} setSelectedItems={setSelectedDietaryAlternatives} />
-            
-            <div>
-                {dietaryAlternativesList}
-            </div>
-    </div>
-  )
-}
+        <Label label="Dietaries" />
+        <div className={addToMenuStyles.dynamicFieldButtons}>
+          <Button
+            type="button"
+            text="Browse Existing"
+            variant="secondary"
+            icon={<IoBook />}
+            onClick={() => drawerOpen("Dietary")}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            icon={<MdAdd />}
+            text="Add Dietaries"
+            onClick={() => {
+              append({ name: "", additionalPrice: 0 });
+            }}
+          />
+        </div>
+      </div>
 
-export default MenuDietaryAlternatives
+      <SelectedExisting
+        label="Dietary Alternatives"
+        selectedItems={selectedDietaryAlternatives}
+        setSelectedItems={setSelectedDietaryAlternatives}
+      />
+
+      <div>{dietaryAlternativesList}</div>
+    </div>
+  );
+};
+
+export default MenuDietaryAlternatives;

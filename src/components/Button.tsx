@@ -7,7 +7,7 @@ type buttonProps = {
 
 const variants: Record<string, string> = {
     primary: "bg-indigo-600 text-white hover:bg-indigo-700",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700",
+    secondary: "bg-gray-900 text-white hover:bg-gray-600",
     success: "bg-green-600 text-white hover:bg-green-700",
     danger: "bg-red-600 text-white hover:bg-red-700",
     transparent: "bg-transparent border border-gray-600 text-gray-800 hover:bg-gray-100",

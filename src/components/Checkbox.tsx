@@ -12,19 +12,27 @@ type CheckboxProps = {
 
 const Checkbox = ({ label, name, value, register, rules, error }: CheckboxProps) => {
   return (
-    <div className="mb-4">
-      <label>
+    <div className="mb-3">
+      <label className="flex items-center gap-3 cursor-pointer select-none">
         <input
           type="checkbox"
-          className="mr-2 leading-tight"
-          {...register(name, rules)}
           value={value}
+          {...register(name, rules)}
+          className="h-4 w-4 rounded border-gray-300 text-[#28085e] focus:ring-2 focus:ring-[#28085e]/20 focus:ring-offset-0"
         />
-        <span className="text-sm text-black-700">{label}</span>
+
+        <span className="text-sm font-medium text-gray-700">
+          {label}
+        </span>
       </label>
-      {error && <p className="text-red-500 text-xs italic">{error.message}</p>}
+
+      {error && (
+        <div className="mt-1 text-xs text-red-500">
+          {error.message}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default Checkbox
