@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router";
 import { landingPageStyles as style } from "../../styles/landingPage";
 
 const HeroSection = () => {
+   
+  const navigate = useNavigate();  
+    
   return (
     <div className={style.heroSection}>
         <span className={style.heroTag}>
@@ -18,7 +22,7 @@ const HeroSection = () => {
             kitchen sees it instantly, you manage the menu without lifting a pen.
         </p>
 
-        <button className={style.heroButton}>
+        <button className={style.heroButton} onClick={()=>navigate('/getStarted')}>
             Set up your restaurant
         </button>
     </div>

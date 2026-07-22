@@ -8,6 +8,8 @@ import ViewMenu from './pages/ViewMenu.tsx';
 import EditMenuItem from './pages/EditMenuItem.tsx';
 import AddFoodItem from './pages/AddFoodItem.tsx';
 import TestPage from './pages/TestPage.tsx';
+import Register from './pages/Register.tsx';
+import Login from './pages/Login.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,6 +21,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/viewMenu" element={<ViewMenu />} />
         <Route path="/editMenuItem/:id" element={<EditMenuItem />} />
         <Route path="/test" element={<TestPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/getStarted" element={<Register />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

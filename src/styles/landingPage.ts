@@ -19,7 +19,7 @@ export const landingPageStyles = {
 
   //Hero Section
 
-  heroSection: "mx-auto max-w-4xl px-6 pt-16 pb-20 text-center",
+  heroSection: "mx-auto max-w-4xl px-6 pt-10 pb-10 text-center",
 
   heroTag: "text-sm uppercase tracking-[0.2em] text-[#E2793D] font-mono",
 

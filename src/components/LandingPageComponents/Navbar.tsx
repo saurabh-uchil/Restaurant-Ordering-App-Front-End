@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router";
 import { landingPageStyles as style } from "../../styles/landingPage";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className={style.navbar}>
         <div className={style.logoContainer}>
@@ -9,9 +12,9 @@ const Navbar = () => {
         </div>
 
         <div className={style.navButtons}>
-          <button className={style.loginButton}>Log in</button>
+          <button className={style.loginButton} onClick={()=>navigate('/login')}>Log in</button>
 
-          <button className={style.getStartedButton} onClick={()=>alert('Get Started!!')}>
+          <button className={style.getStartedButton} onClick={()=>navigate('/getStarted')}>
             Get started
           </button>
         </div>
