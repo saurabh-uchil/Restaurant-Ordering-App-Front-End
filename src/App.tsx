@@ -1,14 +1,8 @@
-import FormCard from "./components/FormCard";
+import LandingPage from "./pages/LandingPage";
 
 export default function App() {
 
-
-
   return (
-    <div className="App">
-     <FormCard title="Add Food Item">
-      <h2>Home page</h2>
-     </FormCard>
-    </div>
+     <LandingPage />
   );
 }

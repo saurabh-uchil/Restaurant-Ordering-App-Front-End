@@ -20,11 +20,12 @@ type MenuFormProps = {
     isLoading: boolean;
     uploadSuccess: boolean;
     uploadError: boolean;
+    handleDelete?: () => Promise<void>;
 };
 
-const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError}: MenuFormProps) => {
+const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError, handleDelete}: MenuFormProps) => {
     
-   const {register, handleSubmit, formState, control, setValue, reset, watch} = useForm({mode: "all",
+   const {register, handleSubmit, formState, control, setValue, reset} = useForm({mode: "all",
         defaultValues: {
             name: initialData?.name || "",
             description: initialData?.description || "",
@@ -62,6 +63,21 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError}
         }
     };
 
+    const handleItemDelete = async () => {
+        try{
+            if(handleDelete){
+                await handleDelete();
+                reset(); 
+                setAddons([]);
+                setDietaryAlternatives([]);
+                setOptionGroups([]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
   return (
     <div>
         <Drawer anchor="right" open={isOpen} onClose={handleDrawerClose}>
@@ -85,7 +101,7 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError}
                    </button>
 
                    {initialData && (
-                     <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded" >
+                     <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded" onClick={handleItemDelete}>
                        Delete
                      </button>
                    )}

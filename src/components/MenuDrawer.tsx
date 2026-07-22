@@ -12,9 +12,9 @@ const [isLoading, setIsLoading] = useState(true);
 const [error, setError] = useState<string | null>(null);
 const [data, setData] = useState<any[]>([]);
 
-const baseURL = "http://localhost:3000/menu";
+const baseURL = "http://localhost:3000";
 
-const endPoint = component === "Options" ? `${baseURL}/options` : component === "Dietary" ? `${baseURL}/dietary-alternatives` : `${baseURL}/addons`;
+const endPoint = component === "Options" ? `${baseURL}/option-group` : component === "Dietary" ? `${baseURL}/dietary-alternatives` : `${baseURL}/addon`;
 
 
  async function fetchData() {

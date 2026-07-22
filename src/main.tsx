@@ -9,7 +9,6 @@ import EditMenuItem from './pages/EditMenuItem.tsx';
 import AddFoodItem from './pages/AddFoodItem.tsx';
 import TestPage from './pages/TestPage.tsx';
 
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

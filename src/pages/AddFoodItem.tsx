@@ -13,7 +13,7 @@ const AddFoodItem = () => {
     try{
       console.log("Submitting data:", data);
       setIsLoading(true);
-      await axios.post("http://localhost:3000/menu/test-add-food-item", data);
+      await axios.post("http://localhost:3000/menu/add-food-item", data);
       setUploadSuccess(true);
       setUploadError(false);
     } catch (error) {

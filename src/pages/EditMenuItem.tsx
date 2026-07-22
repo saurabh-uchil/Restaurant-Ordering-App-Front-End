@@ -43,9 +43,25 @@ const EditMenuItem = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`http://localhost:3000/menu/delete-food-item/${id}`);
+      setUploadSuccess(true);
+      setUploadError(false);
+      //setData(null); // Clear the data after deletion
+    } catch (error) {
+      console.error("Error deleting food item:", error);
+      setUploadError(true);
+      setUploadSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <FormCard title="Edit Menu Item">
-        {data && <MenuForm key={id} onSubmit={handleSubmit} initialData={data} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} />}
+        {data && <MenuForm key={id} onSubmit={handleSubmit} initialData={data} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} handleDelete={handleDelete} />}
     </FormCard>
   )
 }

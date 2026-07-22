@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(var(--rot-a));
+  }
+  50% {
+    transform: rotate(var(--rot-b));
+  }
+}
+
+.ticket {
+  animation: sway ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket {
+    animation: none;
+  }
+}
