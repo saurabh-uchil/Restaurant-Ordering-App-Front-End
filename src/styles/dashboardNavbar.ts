@@ -10,4 +10,6 @@ export const navbarStyles = {
   rightSection: "flex items-center gap-3",
 
   avatar:"flex h-8 w-8 items-center justify-center rounded-full bg-[#F8D8BF] text-xs font-semibold text-[#A45A2A]",
+
+  menuIcon: "md:hidden"
 };
