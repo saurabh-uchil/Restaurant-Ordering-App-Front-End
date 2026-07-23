@@ -3,6 +3,8 @@ import FormInput from "../components/AuthFormComponents/FormInput";
 import Navbar from "../components/LandingPageComponents/Navbar";
 import { authStyles as style } from "../styles/auth";
 import { Lock, Mail } from "lucide-react";
+import { rules } from "../data/validationRules";
+import { useNavigate } from "react-router";
 
 type LoginForm = {
   email: string;
@@ -17,11 +19,13 @@ const Login = () => {
     },
   });
 
+  const navigate = useNavigate();
   const { errors } = formState;
 
   const onFormSubmit = (data: LoginForm) => {
     console.log(data);
     reset();
+    navigate('/dashboard');
   };
 
   return (
@@ -43,13 +47,7 @@ const Login = () => {
                 icon={Mail}
                 register={register}
                 error={errors.email}
-                rules={{
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Please enter a valid email",
-                  },
-                }}
+                rules={rules.email}
               />
 
               <FormInput<LoginForm>
@@ -59,17 +57,11 @@ const Login = () => {
                 icon={Lock}
                 register={register}
                 error={errors.password}
-                rules={{
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                }}
+                rules={rules.password}
               />
 
               <button type="submit" className={style.submitButton}>
-                Submit
+                Login
               </button>
           </form>
         </div>
