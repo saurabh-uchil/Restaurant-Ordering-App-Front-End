@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "../components/AuthFormComponents/FormInput";
 import { HomeIcon, Lock, Mail, User } from "lucide-react";
 import Navbar from "../components/LandingPageComponents/Navbar";
+import { rules } from "../data/validationRules";
 
 type RegisterForm = {
   restaurantName: string;  
@@ -26,7 +27,6 @@ const Register = () => {
     console.log(data);
     reset();
   }  
-
 
   return (
     <div className={style.page}>
@@ -56,9 +56,7 @@ const Register = () => {
                         icon={User}
                         register={register}
                         error={errors.ownerName}
-                        rules={{
-                            required: "Owner name is required",
-                        }}
+                        rules={rules.ownerName}
                     />
 
                     <FormInput<RegisterForm>
@@ -68,9 +66,7 @@ const Register = () => {
                         icon={HomeIcon}
                         register={register}
                         error={errors.restaurantName}
-                        rules={{
-                            required: "Restaurant name is required",
-                        }}
+                        rules={rules.restaurantName}
                     />
 
                     <FormInput<RegisterForm>
@@ -80,13 +76,7 @@ const Register = () => {
                         icon={Mail}
                         register={register}
                         error={errors.email}
-                        rules={{
-                            required: "Email is required",
-                            pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Please enter a valid email",
-                            },
-                        }} 
+                        rules={rules.email} 
                     />
 
                     <FormInput<RegisterForm>
@@ -96,16 +86,10 @@ const Register = () => {
                         icon={Lock}
                         register={register}
                         error={errors.password}
-                        rules={{
-                            required: "Password is required",
-                            minLength: {
-                            value: 8,
-                            message: "Password must be at least 8 characters",
-                            },
-                        }}
+                        rules={rules.password}
                     />
                     
-                    <button type="submit" className={style.submitButton}>Submit</button>   
+                    <button type="submit" className={style.submitButton}>Register</button>   
                     
                 </form>
             
