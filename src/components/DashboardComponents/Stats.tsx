@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAuth, useCurrentUser } from "../../store/authStore";
+import RestaurantInfo from "./RestaurantInfo";
+import StatsCard from "./statsCard";
+import { ListOrderedIcon, MenuIcon, PersonStandingIcon } from "lucide-react";
+import QuickAcions from "./QuickAcions";
 
 const Stats = () => {
 
@@ -46,19 +50,28 @@ const Stats = () => {
 
   return (
     <div>
-      <p>Welcome back, {currentUser.username}</p>
+      {/* <p>Welcome back, {currentUser.username}</p> */}
 
-      {!restaurantId && <p>No restaurant ID found.</p>}
+      {/* {!restaurantId && <p>No restaurant ID found.</p>}
 
       {isFetching && <p>Fetching...</p>}
 
       {isError && <p>{error.message}</p>}
-
-      {data && 
+ */}
+      {/* {data && 
       <div>
         <p>Welcome to: {data.name}</p>
         <p>{data.description}</p>
-      </div> }
+      </div> } */}
+
+      {data && <RestaurantInfo userName={currentUser?.username} restaurantName={data.name} description={data.description}/>}
+      {data && <div className="flex">
+        <StatsCard name="menu" stats={2} icon={MenuIcon}/>
+        <StatsCard name="staff" stats={11} icon={PersonStandingIcon}/>
+        <StatsCard name="orders" stats={26} icon={ListOrderedIcon}/>
+      </div>
+      }
+      <QuickAcions />
     </div>
   );
 };
