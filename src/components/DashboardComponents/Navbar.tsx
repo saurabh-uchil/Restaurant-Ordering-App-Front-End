@@ -1,12 +1,22 @@
 
 import { Menu } from "lucide-react";
 import { navbarStyles as style } from "../../styles/dashboardNavbar";
+import type { userState } from "../../store/authStore";
 
 type NavbarProp = {
-  toggle: () => void
+  toggle: () => void,
+  currentUser: userState
 }
 
-const Navbar = ({toggle}:NavbarProp) => {
+const Navbar = ({toggle, currentUser}:NavbarProp) => {
+
+  const getInitials = (username:string) =>{
+    const nameArray = username.split(' ');
+    const upperCased = nameArray.map((word)=> word.charAt(0).toUpperCase());
+    const initials = upperCased[0].charAt(0)+ upperCased[1].charAt(0);
+    return initials;
+  }
+
   return (
     <nav className={style.navbar}>
 
@@ -17,7 +27,7 @@ const Navbar = ({toggle}:NavbarProp) => {
       </div>
 
       <div className={style.rightSection}>
-        <div className={style.avatar}>SU</div>
+        <div className={style.avatar}>{getInitials(currentUser?.username)}</div>
       </div>
       
     </nav>

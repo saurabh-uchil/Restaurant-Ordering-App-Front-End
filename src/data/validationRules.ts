@@ -1,6 +1,7 @@
 export const rules = {
-        ownerName: {required: "Owner name is required"},
+        username: {required: "Owner name is required"},
         restaurantName: {required: "Restaurant name is required"},
+        restaurantDescription: {required: "Restaurant description is required"},
         email:{
             required: "Email is required",
             pattern: {
