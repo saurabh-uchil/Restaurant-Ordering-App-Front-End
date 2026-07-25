@@ -1,15 +1,20 @@
 import { authStyles as style } from "../styles/auth";
 import { useForm } from "react-hook-form";
 import FormInput from "../components/AuthFormComponents/FormInput";
-import { HomeIcon, Lock, Mail, User } from "lucide-react";
+import { HomeIcon, Lock, Mail, Scroll, User } from "lucide-react";
 import Navbar from "../components/LandingPageComponents/Navbar";
 import { rules } from "../data/validationRules";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import AlertMessage from "../components/AuthFormComponents/AlertMessage";
+import ButtonWithLoader from "../components/AuthFormComponents/ButtonWithLoader";
 
 type RegisterForm = {
-  restaurantName: string;  
+  restaurantName: string;
+  restaurantDescription: string;  
   email: string;
   password: string;
-  ownerName: string;
+  username: string;
 };
 
 const Register = () => {
@@ -18,14 +23,37 @@ const Register = () => {
       email: "",
       password: "",
       restaurantName: "",
-      ownerName: ""  
+      restaurantDescription:"",
+      username: ""  
     },
   });
-  const {errors} = formState;
 
+  const {errors} = formState;
+  
+  const mutation = useMutation(
+    {
+        mutationFn: async (data: RegisterForm) => {
+        const response = await axios.post('http://localhost:3000/auth/register', data);
+        return response.data
+        },
+        onSuccess: (data) => {
+            console.log('Registered Successfully');
+            console.log(data);
+            reset();
+        },
+        onError: (error) => {
+            if (axios.isAxiosError(error)){
+                console.log(error.response?.data);
+                console.log(error.response?.status);
+            } 
+            else {
+            console.error(error);
+            }
+        },
+    }
+  );
   const onFormSubmit = (data: RegisterForm) =>{
-    console.log(data);
-    reset();
+    mutation.mutate(data);
   }  
 
   return (
@@ -50,13 +78,13 @@ const Register = () => {
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     
                     <FormInput<RegisterForm>
-                        name="ownerName"
+                        name="username"
                         type="text"
                         placeholder="Enter the owner name"
                         icon={User}
                         register={register}
-                        error={errors.ownerName}
-                        rules={rules.ownerName}
+                        error={errors.username}
+                        rules={rules.username}
                     />
 
                     <FormInput<RegisterForm>
@@ -67,6 +95,16 @@ const Register = () => {
                         register={register}
                         error={errors.restaurantName}
                         rules={rules.restaurantName}
+                    />
+
+                    <FormInput<RegisterForm>
+                        name="restaurantDescription"
+                        type="text"
+                        placeholder="Enter the restaurant description"
+                        icon={Scroll}
+                        register={register}
+                        error={errors.restaurantDescription}
+                        rules={rules.restaurantDescription}
                     />
 
                     <FormInput<RegisterForm>
@@ -89,8 +127,12 @@ const Register = () => {
                         rules={rules.password}
                     />
                     
-                    <button type="submit" className={style.submitButton}>Register</button>   
+                   <ButtonWithLoader text="Register" loadingText="Registering user..." isLoading={mutation.isPending} />
                     
+                    {mutation.isSuccess && <AlertMessage type="success" message="Registered Successfully!!"/>}
+
+                    {mutation.isError && <AlertMessage type="error" message={mutation.error.message} />}
+
                 </form>
             
             </div>  

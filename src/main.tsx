@@ -15,26 +15,38 @@ import Menu from './components/DashboardComponents/Menu.tsx';
 import Staff from './components/DashboardComponents/Staff.tsx';
 import Orders from './components/DashboardComponents/Orders.tsx';
 import Settings from './components/DashboardComponents/Settings.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Test from './pages/Test.tsx';
+import ProtectedRoute from './pages/ProtectedRoute.tsx';
+import Error401 from './pages/404.tsx';
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/addToMenu" element={<AddToMenu />} />
-        <Route path="/addFoodItem" element={<AddFoodItem />} />
-        <Route path="/viewMenu" element={<ViewMenu />} />
-        <Route path="/editMenuItem/:id" element={<EditMenuItem />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/getStarted" element={<Register />} />
-        <Route path ="/dashboard" element={<Dashboard />} >
-            <Route index element={<Stats />} />
-            <Route path="menu" element={<Menu />} />
-            <Route path="staff" element={<Staff />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/error" element={<Error401 />} />
+          <Route path="/addToMenu" element={<AddToMenu />} />
+          <Route path="/addFoodItem" element={<AddFoodItem />} />
+          <Route path="/viewMenu" element={<ViewMenu />} />
+          <Route path="/editMenuItem/:id" element={<EditMenuItem />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/getStarted" element={<Register />} />
+          <Route element={<ProtectedRoute />} >
+            <Route path ="/dashboard" element={<Dashboard />} >
+              <Route index element={<Stats />} />
+              <Route path="menu" element={<Menu />} />
+              <Route path="staff" element={<Staff />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Route>
+          <Route path="/test" element={<Test />} />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   </StrictMode>,
 )

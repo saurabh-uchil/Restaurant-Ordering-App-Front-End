@@ -17,11 +17,13 @@ export const authStyles = {
   // Form
   form: "space-y-3.5",
 
-  submitButton:"mt-6 w-full rounded-md bg-[#E2793D] px-4 py-3 text-sm font-semibold text-[#FBF8F2] transition-colors duration-200 hover:bg-[#C96730] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/40 disabled:cursor-not-allowed disabled:opacity-60",
-
+  submitButton:"mt-6 w-full rounded-md bg-[#E2793D] px-4 py-3 text-sm font-semibold text-[#FBF8F2] transition-colors duration-200 hover:bg-[#C96730] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/40 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center gap-2",
+  
   // Footer 
   footer: "text-xs mt-6 text-center",
 
   loginButton: "font-medium",
 
+  //LoaderButton
+  loader: "h-4 w-4 animate-spin"
 };

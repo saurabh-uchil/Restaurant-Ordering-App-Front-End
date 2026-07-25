@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/DashboardComponents/Navbar";
 import SideNav from "../components/DashboardComponents/SideNav";
+import { useCurrentUser } from "../store/authStore";
 
 
 const Dashboard = () => {
@@ -15,9 +16,11 @@ const Dashboard = () => {
     setIsSidebarOpen(false);
   };
 
+  const currentUser = useCurrentUser(state => state.currentUser);
+
   return (
     <div className="min-h-screen bg-white">
-      <Navbar toggle={toggleSidebar} />
+      <Navbar toggle={toggleSidebar} currentUser={currentUser} />
 
       <div className="flex">
         <SideNav
