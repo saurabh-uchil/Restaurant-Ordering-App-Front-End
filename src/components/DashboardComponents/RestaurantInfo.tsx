@@ -1,22 +1,55 @@
+import restaurantInfoStyle from "../../styles/restaurantInfo";
+
 type RestaurantInfoProp = {
-    userName: string,
-    restaurantName: string,
-    description: string,
-    img?:string
-}
+  userName: string;
+  restaurantName: string;
+  description: string;
+  img?: string;
+};
 
-const RestaurantInfo = ({userName, restaurantName, description, img}: RestaurantInfoProp) => {
+const RestaurantInfo = ({
+  userName,
+  restaurantName,
+  description,
+  img,
+}: RestaurantInfoProp) => {
+  const imgSrc = img || "/restaurant-avatar.svg";
 
-  const imgSrc = img ? img  :  "";
-  
   return (
-    <div>
-      <h5>Welcome back: {userName}</h5>
-      <h6>Here is what's happening at: {restaurantName}</h6>
-      <p>{description}</p>
-      <img src={imgSrc} />
-    </div>
-  )
-}
+    <section className={restaurantInfoStyle.container}>
+      <div className={restaurantInfoStyle.content}>
+        <img
+          src={imgSrc}
+          alt={restaurantName}
+          className={restaurantInfoStyle.image}
+        />
 
-export default RestaurantInfo
+        <div className={restaurantInfoStyle.details}>
+          <span className={restaurantInfoStyle.welcome}>
+            Welcome back, {userName} 👋
+          </span>
+
+          <h2 className={restaurantInfoStyle.title}>
+            {restaurantName}
+          </h2>
+
+          <p className={restaurantInfoStyle.description}>
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <div className={restaurantInfoStyle.actions}>
+        <button className={restaurantInfoStyle.primaryButton}>
+          Edit Restaurant
+        </button>
+
+        <button className={restaurantInfoStyle.secondaryButton}>
+          View Customer Page
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default RestaurantInfo;

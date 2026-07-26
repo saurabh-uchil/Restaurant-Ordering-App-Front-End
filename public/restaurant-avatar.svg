@@ -1,0 +1,18 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="24" fill="#E2793D"/>
+  <g transform="translate(64,64)">
+    <!-- fork -->
+    <g stroke="#FBF8F2" stroke-width="4" stroke-linecap="round" fill="none">
+      <line x1="-22" y1="-26" x2="-22" y2="26"/>
+      <line x1="-28" y1="-26" x2="-28" y2="-10"/>
+      <line x1="-22" y1="-26" x2="-22" y2="-10"/>
+      <line x1="-16" y1="-26" x2="-16" y2="-10"/>
+      <path d="M -28 -10 Q -22 -4 -16 -10"/>
+    </g>
+    <!-- knife -->
+    <g stroke="#FBF8F2" stroke-width="4" stroke-linecap="round" fill="none">
+      <line x1="22" y1="-26" x2="22" y2="26"/>
+      <path d="M 22 -26 C 30 -22, 30 -8, 22 -4"/>
+    </g>
+  </g>
+</svg>
