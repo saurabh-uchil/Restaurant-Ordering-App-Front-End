@@ -7,6 +7,9 @@ export default {
     extend: {
       fontFamily: {
         heading: ["Fraunces", "serif"],
+        sans: ["Inter", "sans-serif"],
+        serif: ["Fraunces", "serif"],
+        mono: ["IBM Plex Mono", "monospace"],
       },
     },
   },
