@@ -1,7 +1,7 @@
 import { errorTickets } from "../../styles/errorPage";
 
 type ErrorPageTicketsProps = {
-    status: 401 | 404 ;
+    status: 401 | 404 | 500 ;
     error: string;
     label: string
 }

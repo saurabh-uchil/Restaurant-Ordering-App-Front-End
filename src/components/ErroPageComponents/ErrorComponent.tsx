@@ -5,7 +5,7 @@ import Navbar from "../LandingPageComponents/Navbar";
 import { useNavigate } from "react-router";
 
 export type ErrorPageProps = {
-  status: 401 | 404 ;
+  status: 401 | 404 | 500;
   error: string;
   label: string;
   code: string;
