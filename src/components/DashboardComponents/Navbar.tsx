@@ -17,6 +17,23 @@ const Navbar = ({toggle, currentUser}:NavbarProp) => {
     return initials;
   }
 
+  const getDate = () =>{
+    const date = new Date();
+      const today = date.toLocaleDateString("en-AU", {
+        day: "numeric",    
+        month: "long",
+        year: "numeric"
+      });
+      
+      const day = date.toLocaleDateString("en-AU", {
+        weekday: "long"
+      });
+
+      const dateString = day+", "+today;
+      
+      return dateString;
+  }
+
   return (
     <nav className={style.navbar}>
 
@@ -27,6 +44,7 @@ const Navbar = ({toggle, currentUser}:NavbarProp) => {
       </div>
 
       <div className={style.rightSection}>
+        <div className={style.date}>{getDate()}</div>
         <div className={style.avatar}>{getInitials(currentUser?.username)}</div>
       </div>
       
