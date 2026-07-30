@@ -10,13 +10,8 @@ type StatsCardProps = {
   trendType?: "positive" | "warning" | "neutral";
 };
 
-const StatsCard = ({
-  name,
-  stats,
-  icon: Icon,
-  trend,
-  trendType = "positive",
-}: StatsCardProps) => {
+const StatsCard = ({ name, stats, icon: Icon, trend, trendType = "positive"}: StatsCardProps) => {
+  
   const trendClass = {
     positive: statsCardStyles.positiveTrend,
     warning: statsCardStyles.warningTrend,

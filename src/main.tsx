@@ -44,6 +44,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="staff" element={<Staff />} />
               <Route path="orders" element={<Orders />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="addItem" element={<AddFoodItem />} />
             </Route>
           </Route>
           <Route path="/test" element={<Test />} />

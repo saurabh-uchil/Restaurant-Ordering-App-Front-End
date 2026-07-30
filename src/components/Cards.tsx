@@ -3,6 +3,7 @@ import { menuCardStyles } from "../styles/viewMenuStyles";
 import { MdEdit } from "react-icons/md";
 
 const Cards = ({item}) => {
+  console.log(item)
   const navigate = useNavigate();
   return (
     <article key={item._id} className={menuCardStyles.card}>
@@ -47,7 +48,7 @@ const Cards = ({item}) => {
           )}
           {item.dietaryAlternatives.map((diet) => (
             <div>
-                 <span key={diet._id} className={menuCardStyles.dietaryBadge}>{diet.shortCode}</span>
+                 <span key={diet?._id} className={menuCardStyles.dietaryBadge}>{diet?.shortCode}</span>
            </div>
           ))}
         </div>

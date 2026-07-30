@@ -4,6 +4,10 @@ import { api } from "../../api/api";
 import { menuCardStyles } from "../../styles/viewMenuStyles";
 import { CircularProgress } from "@mui/material";
 import { useCurrentUser } from "../../store/authStore";
+import { PlusIcon, UtensilsCrossed } from "lucide-react";
+import { useNavigate } from "react-router";
+import DashboardHeader from "./DashboardHeader";
+
  
 const Menu = () => {
 
@@ -14,6 +18,7 @@ const Menu = () => {
     queryKey:['menu'],
     queryFn: async()=>{
       const {data} = await api.get(`/restaurant/${currentUser?.restaurant}/menu`);
+      console.log(data);
       return data;  
     }
   });
@@ -22,8 +27,11 @@ const Menu = () => {
                error ? <div className={menuCardStyles.loadingContainer}><p className={menuCardStyles.errorLoadingMessage}>{error.message}</p></div> 
                : <MenuGrid mode="menu" data={data}/>
 
+  const navigate = useNavigate();
+
   return (
     <div>
+      <DashboardHeader description="Manage your menu items, pricing and availability." title="Menu" icon={UtensilsCrossed} onButtonClick={()=>{navigate('/dashboard/addItem')}} buttonText="Add Item" buttonIcon={PlusIcon}/>
       {view}
     </div>
   )
