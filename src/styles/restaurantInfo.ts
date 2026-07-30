@@ -1,31 +1,54 @@
 const restaurantInfoStyle = {
   container:
-    "flex items-center justify-between gap-8 rounded-3xl border border-stone-200 bg-white p-8 shadow-sm",
+    "flex flex-col gap-5 rounded-2xl border border-[#E7DFD5] bg-[#FFFEFC] p-5 shadow-sm lg:flex-row lg:items-center lg:justify-between",
 
-  content: "flex flex-1 items-center gap-6",
+  content:
+    "flex flex-col gap-4 sm:flex-row sm:items-center",
 
   image:
-    "h-36 w-48 rounded-2xl object-cover bg-stone-100 border border-stone-200",
+    "h-24 w-full rounded-xl border border-[#E7DFD5] bg-stone-100 object-cover sm:h-24 sm:w-36",
 
-  details: "flex flex-col",
-
-  welcome:
-    "text-sm font-medium text-gray-500 mb-2",
+  details:
+    "flex flex-col",
 
   title:
-    "text-4xl font-bold text-gray-900 mb-3",
+    "font-heading text-xl font-semibold text-[#2F2A25]",
 
   description:
-    "max-w-xl text-base leading-7 text-gray-600",
+    "mt-1 max-w-xl text-sm leading-5 text-[#8B8177]",
+
+  metaContainer:
+    "mt-3 flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:gap-5",
+
+  address:
+    "flex items-center gap-1.5 text-[#8B8177]",
+
+  metaIcon:
+    "h-3.5 w-3.5 shrink-0 text-[#A45A2A]",
+
+  status:
+    "flex items-center gap-2",
+
+  openDot:
+    "h-2 w-2 rounded-full bg-emerald-500",
+
+  closedDot:
+    "h-2 w-2 rounded-full bg-red-500",
+
+  openText:
+    "font-medium text-emerald-700",
+
+  closedText:
+    "font-medium text-red-600",
 
   actions:
-    "flex flex-col gap-4",
+    "flex flex-col gap-2 sm:flex-row lg:flex-col",
 
   primaryButton:
-    "rounded-xl bg-[#E2793D] px-6 py-3 text-white font-semibold transition hover:bg-[#cc6932]",
+    "rounded-lg bg-[#E2793D] px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#CC6932]",
 
   secondaryButton:
-    "rounded-xl border border-stone-300 bg-white px-6 py-3 font-semibold text-gray-700 transition hover:bg-stone-50",
+    "rounded-lg border border-[#E7DFD5] bg-white px-4 py-2 text-sm font-medium text-[#2F2A25] transition-colors duration-200 hover:bg-[#FAF8F5]",
 };
 
 export default restaurantInfoStyle;

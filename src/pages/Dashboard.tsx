@@ -19,7 +19,7 @@ const Dashboard = () => {
   const currentUser = useCurrentUser(state => state.currentUser);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#FCFBF9]">
       <Navbar toggle={toggleSidebar} currentUser={currentUser} />
 
       <div className="flex">

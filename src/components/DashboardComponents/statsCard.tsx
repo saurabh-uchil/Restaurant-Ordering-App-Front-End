@@ -1,18 +1,48 @@
 import type { LucideIcon } from "lucide-react";
+import { statsCardStyles } from "../../styles/stats";
 
-type statsCardProp = {
-    name: string,
-    stats: number,
-    icon:LucideIcon
-}
-const statsCard = ({name,stats,icon: Icon}: statsCardProp) => {
+
+type StatsCardProps = {
+  name: string;
+  stats: number;
+  icon: LucideIcon;
+  trend?: string;
+  trendType?: "positive" | "warning" | "neutral";
+};
+
+const StatsCard = ({
+  name,
+  stats,
+  icon: Icon,
+  trend,
+  trendType = "positive",
+}: StatsCardProps) => {
+  const trendClass = {
+    positive: statsCardStyles.positiveTrend,
+    warning: statsCardStyles.warningTrend,
+    neutral: statsCardStyles.neutralTrend,
+  }[trendType];
+
   return (
-    <div className="flex border border-slate-200 rounded p-2 m-2">
-      <Icon className="m-2" />
-      <p className="m-2">{name}</p>
-      <p className="m-2">{stats}</p>
-    </div>
-  )
-}
+    <article className={statsCardStyles.container}>
+      <div className={statsCardStyles.iconWrapper}>
+        <Icon className={statsCardStyles.icon} strokeWidth={1.8} />
+      </div>
 
-export default statsCard
+      <div className={statsCardStyles.content}>
+        <p className={statsCardStyles.label}>{name}</p>
+
+        <p className={statsCardStyles.value}>{stats}</p>
+
+        {trend && (
+          <p className={`${statsCardStyles.trend} ${trendClass}`}>
+            {trendType === "positive" && "↑ "}
+            {trend}
+          </p>
+        )}
+      </div>
+    </article>
+  );
+};
+
+export default StatsCard;

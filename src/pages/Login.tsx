@@ -62,6 +62,13 @@ const Login = () => {
     mutation.mutate(data);
   };
 
+  const errorMessage = mutation.isError
+  ? axios.isAxiosError(mutation.error)
+    ? mutation.error.response?.data?.message ?? "Something went wrong."
+    : mutation.error instanceof Error
+      ? mutation.error.message
+      : "Something went wrong."
+  : "";
   return (
     <div className={style.page}>
       <Navbar />
@@ -98,7 +105,7 @@ const Login = () => {
                    
               {mutation.isSuccess && <AlertMessage type="success" message="Login Successfull!!"/>}
 
-              {mutation.isError && <AlertMessage type="error" message={mutation.error?.response.data.message} />}
+              {mutation.isError && <AlertMessage type="error" message={errorMessage} />}
 
           </form>
         </div>

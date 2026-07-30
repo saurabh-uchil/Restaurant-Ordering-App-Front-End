@@ -2,9 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAuth, useCurrentUser } from "../../store/authStore";
 import RestaurantInfo from "./RestaurantInfo";
+import StatsHeader from "./statsHeader";
 import StatsCard from "./statsCard";
-import { ListOrderedIcon, MenuIcon, PersonStandingIcon } from "lucide-react";
-import QuickAcions from "./QuickAcions";
+import { quickActionsStyles, statsCardStyles } from "../../styles/stats";
+import { popularItems } from "../../data/popularItemsMock";
+import QuickActions from "./QuickAcitons";
+import Popular from "./Popular";
+import { statsMock } from "../../data/quickActions";
+
 
 const Stats = () => {
 
@@ -13,12 +18,7 @@ const Stats = () => {
 
   const restaurantId = currentUser?.restaurant;
 
-  const {
-    data,
-    isFetching,
-    isError,
-    error,
-  } = useQuery({
+  const {data} = useQuery({
     queryKey: ["restaurant", restaurantId],
 
     queryFn: async () => {
@@ -28,50 +28,36 @@ const Stats = () => {
         },
       });
 
-      console.log("Restaurant response:", response.data);
-
       return response.data;
     },
-
     enabled: Boolean(restaurantId && accessToken),
-  });
-
-  console.log({
-    currentUser,
-    restaurantId,
-    accessToken,
-    data,
-    error,
   });
 
   if (!currentUser) {
     return <p>Current user is not available.</p>;
   }
 
+  const statsCards = statsMock.map((stat) => <StatsCard key={stat.name} {...stat} />);
+
   return (
     <div>
-      {/* <p>Welcome back, {currentUser.username}</p> */}
+      
+      {data && (
+        <>
+          <StatsHeader username={currentUser?.username ?? ""} />
 
-      {/* {!restaurantId && <p>No restaurant ID found.</p>}
+          <RestaurantInfo isOpen address="1 William St, Melbourne, VIC 3000" restaurantName={data.name} description={data.description} />
 
-      {isFetching && <p>Fetching...</p>}
+          <div className={statsCardStyles.parentDiv}>
+            {statsCards}
+          </div>
 
-      {isError && <p>{error.message}</p>}
- */}
-      {/* {data && 
-      <div>
-        <p>Welcome to: {data.name}</p>
-        <p>{data.description}</p>
-      </div> } */}
-
-      {data && <RestaurantInfo userName={currentUser?.username} restaurantName={data.name} description={data.description}/>}
-      {data && <div className="flex">
-        <StatsCard name="menu" stats={2} icon={MenuIcon}/>
-        <StatsCard name="staff" stats={11} icon={PersonStandingIcon}/>
-        <StatsCard name="orders" stats={26} icon={ListOrderedIcon}/>
-      </div>
-      }
-      <QuickAcions />
+          <div className={quickActionsStyles.parentDiv}>
+            <Popular items={popularItems} />
+            <QuickActions />
+          </div>
+        </>
+      )}
     </div>
   );
 };

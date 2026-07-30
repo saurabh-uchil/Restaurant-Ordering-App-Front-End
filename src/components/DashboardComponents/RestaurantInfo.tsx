@@ -1,18 +1,21 @@
+import { MapPin } from "lucide-react";
 import restaurantInfoStyle from "../../styles/restaurantInfo";
 
-type RestaurantInfoProp = {
-  userName: string;
+type RestaurantInfoProps = {
   restaurantName: string;
   description: string;
+  address: string;
+  isOpen: boolean;
   img?: string;
 };
 
 const RestaurantInfo = ({
-  userName,
   restaurantName,
   description,
+  address,
+  isOpen,
   img,
-}: RestaurantInfoProp) => {
+}: RestaurantInfoProps) => {
   const imgSrc = img || "/restaurant-avatar.svg";
 
   return (
@@ -25,10 +28,6 @@ const RestaurantInfo = ({
         />
 
         <div className={restaurantInfoStyle.details}>
-          <span className={restaurantInfoStyle.welcome}>
-            Welcome back, {userName} 👋
-          </span>
-
           <h2 className={restaurantInfoStyle.title}>
             {restaurantName}
           </h2>
@@ -36,16 +35,49 @@ const RestaurantInfo = ({
           <p className={restaurantInfoStyle.description}>
             {description}
           </p>
+
+          <div className={restaurantInfoStyle.metaContainer}>
+            <div className={restaurantInfoStyle.address}>
+              <MapPin className={restaurantInfoStyle.metaIcon} />
+              <span>{address}</span>
+            </div>
+
+            <div className={restaurantInfoStyle.status}>
+              <span
+                className={
+                  isOpen
+                    ? restaurantInfoStyle.openDot
+                    : restaurantInfoStyle.closedDot
+                }
+              />
+
+              <span
+                className={
+                  isOpen
+                    ? restaurantInfoStyle.openText
+                    : restaurantInfoStyle.closedText
+                }
+              >
+                {isOpen ? "Open today" : "Closed today"}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className={restaurantInfoStyle.actions}>
-        <button className={restaurantInfoStyle.primaryButton}>
+        <button
+          type="button"
+          className={restaurantInfoStyle.primaryButton}
+        >
           Edit Restaurant
         </button>
 
-        <button className={restaurantInfoStyle.secondaryButton}>
-          View Customer Page
+        <button
+          type="button"
+          className={restaurantInfoStyle.secondaryButton}
+        >
+           Customer Page
         </button>
       </div>
     </section>
