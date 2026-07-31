@@ -5,46 +5,50 @@ export const viewMenuStyles = {
 
 export const menuCardStyles = {
   card:
-    "group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+    "group flex h-full flex-col overflow-hidden rounded-2xl border border-[#ECE5DC] bg-[#FFFEFC] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
 
   imageContainer:
-    "relative aspect-[4/3] overflow-hidden bg-gray-100",
+  "relative aspect-[16/10] overflow-hidden bg-[#F8F5F1]",
 
   image:
     "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
 
   imageAction:
-  "absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl font-semibold text-gray-900 shadow-lg transition hover:scale-105 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2",
+    "absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#FFFEFC] text-2xl font-semibold text-[#2F2A25] shadow-lg transition hover:scale-105 hover:bg-[#FFF5EE] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/20",
+
   content:
-    "flex flex-1 flex-col p-5",
+    "flex flex-1 flex-col p-4",
 
   header:
-    "mb-3 flex items-start justify-between gap-3",
+    "mb-2 flex items-start justify-between gap-3",
 
   title:
-    "line-clamp-2 text-lg font-semibold tracking-tight text-gray-900",
+    "line-clamp-2 text-base font-semibold tracking-tight text-[#2F2A25]",
 
   price:
-    "rounded-full bg-gray-900 px-3 py-1 text-sm font-semibold text-white whitespace-nowrap",
+    "whitespace-nowrap rounded-full bg-[#3F3A36] px-3 py-1 text-sm font-semibold text-white",
 
   description:
-    "mb-4 line-clamp-2 text-sm leading-relaxed text-gray-600",
+    "mb-3 line-clamp-2 text-sm leading-relaxed text-[#8B8177]",
 
   dietaryContainer:
-    "mb-6 flex flex-wrap items-center gap-2",
+    "mb-4 flex flex-wrap items-center gap-2",
 
   dietaryText:
-    "w-full text-xs font-semibold uppercase tracking-wider text-gray-500",
+    "w-full text-xs font-semibold uppercase tracking-wider text-[#8B8177]",
 
   dietaryBadge:
     "inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700",
 
   button:
-    "mt-auto inline-flex h-11 items-center justify-center rounded-xl bg-gray-900 px-4 text-sm font-medium text-white transition hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 active:scale-[0.98]",
+    "mt-auto inline-flex h-11 items-center justify-center rounded-xl bg-[#E2793D] px-4 text-sm font-medium text-white transition hover:bg-[#C9662F] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/20 active:scale-[0.98]",
 
-  loadingContainer: "flex items-center justify-center h-screen",
-  
-  errorContainer: "flex items-center justify-center h-screen",
+  loadingContainer:
+    "flex items-center justify-center h-screen",
 
-  errorLoadingMessage:"text-red-700 mt-2 bg-red-100 border border-red-200 p-3 rounded-xl text-center text-sm font-medium"
+  errorContainer:
+    "flex items-center justify-center h-screen",
+
+  errorLoadingMessage:
+    "text-red-700 mt-2 bg-red-100 border border-red-200 p-3 rounded-xl text-center text-sm font-medium",
 };

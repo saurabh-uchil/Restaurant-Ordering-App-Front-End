@@ -28,9 +28,7 @@ const AddFoodItem = () => {
 
 
   return (
-    <FormCard  title="Add Food Item">
-        <MenuForm onSubmit={handleSubmit} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} />
-     </FormCard>   
+        <MenuForm onSubmit={handleSubmit} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} />  
   )
 }
 

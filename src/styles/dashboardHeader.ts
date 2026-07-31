@@ -10,7 +10,7 @@ export const dashboardHeaderStyles = {
     textWrapper: "flex flex-col",
 
     title:
-        "text-2xl font-semibold tracking-tight text-[#2F2A25]",
+        "text-xl font-semibold tracking-tight text-[#2F2A25]",
 
     description:
         "mt-1 text-sm text-[#8B8177]",
