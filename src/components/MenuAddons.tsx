@@ -1,12 +1,12 @@
-import { IoBook } from "react-icons/io5";
 import Button from "./Button";
-import Label from "./Label";
 import { MdAdd } from "react-icons/md";
 import { useFieldArray } from "react-hook-form";
 import { addToMenuStyles } from "../styles/addToMenu";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import Input from "./Input";
 import SelectedExisting from "./SelectedExisting";
+import { Puzzle } from "lucide-react";
+import { IoBook } from "react-icons/io5";
 
 const MenuAddons = ({
   control,
@@ -72,7 +72,12 @@ const MenuAddons = ({
   return (
     <div>
       <div className={addToMenuStyles.dynamicFieldContainer}>
-        <Label label="Addons" />
+        <div className={addToMenuStyles.dynamicFieldTitle}>
+          <div className={addToMenuStyles.sectionIcon}>
+            <Puzzle size={14} />
+          </div>
+          <p className={addToMenuStyles.sectionTitle}>Addons</p>
+        </div>
         <div className={addToMenuStyles.dynamicFieldButtons}>
           <Button
             type="button"

@@ -1,11 +1,10 @@
-import { IoCloudUpload } from 'react-icons/io5';
 import { dragAndDropStyles } from '../styles/DragAndDrop';
-import Label from './Label';
 import Button from './Button';
 import { RiDeleteBin4Fill } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
+import { ImageUp } from 'lucide-react';
 
-const DragAndDrop = ({label, subLabel, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive, initialValue}) => {
+const DragAndDrop = ({label, subLabel, icon: Icon, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive, initialValue}) => {
     
     const [currentImage, setCurrentImage] = useState(initialValue);
 
@@ -33,20 +32,27 @@ const DragAndDrop = ({label, subLabel, browseFilesText, fileSizeText, upload, se
   return (
     <div>
         <div className={dragAndDropStyles.dragDropContainer}>
-            <div>
-                <Label label={label} />
-                <Label label={subLabel} />
+            <div className={dragAndDropStyles.imageHeader}>
+                <div className={dragAndDropStyles.sectionIcon}>
+                    <Icon size={14} />
+                </div>
+
+                <div>
+                    <p className={dragAndDropStyles.sectionTitle}>{label}</p>
+                    <p className={dragAndDropStyles.imageSubLabel}>{subLabel}</p>
+                </div>
             </div>
             
             <div {...getRootProps()} className={dragAndDropStyles.selectImageContainer}>
                 
                 <div  className={dragAndDropStyles.selectImageDiv}>
-                    <IoCloudUpload  className={dragAndDropStyles.selectImageIcon}/>
+                    {/* <IoCloudUpload  className={dragAndDropStyles.selectImageIcon}/> */}
+                    <ImageUp size={20} className={dragAndDropStyles.selectImageIcon}/>
                 </div>
                 
                 <input {...getInputProps()} />
 
-                <p>{dragActiveText}</p>
+                <p className={dragAndDropStyles.dragActiveText}>{dragActiveText}</p>
 
                 <p className={dragAndDropStyles.browseFilesText}>{browseFilesText}</p>
                 <p className={dragAndDropStyles.fileSizeText}>{fileSizeText}</p>

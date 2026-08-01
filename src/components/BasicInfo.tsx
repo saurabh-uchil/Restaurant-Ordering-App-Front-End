@@ -7,6 +7,7 @@ import Select from "./Select";
 import { MENU_TYPES } from "../constants/addToMenuConstants";
 import Checkbox from "./Checkbox";
 import Label from "./Label";
+import { InfoIcon } from "lucide-react";
 
 
 type BasicInfoProps = {
@@ -31,7 +32,17 @@ const BasicInfo = ({register, formState}: BasicInfoProps) => {
 
 
   return (
-    <div>
+    <div>   
+          <div className={addToMenuStyles.sectionHeader}>
+            <div className={addToMenuStyles.sectionIcon}>
+                <InfoIcon size={14} />
+            </div>
+
+            <p className={addToMenuStyles.sectionTitle}>
+                Basic Info
+            </p>
+          </div>
+          
           <div className={addToMenuStyles.inputs}>
                 <Input id="name" type="text" label="Item name *" placeholder="Enter name" register={register} rules={{required: "Name is required"}} error={errors?.name}/>
           </div>

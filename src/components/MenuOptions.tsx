@@ -6,6 +6,7 @@ import { addToMenuStyles } from "../styles/addToMenu";
 import OptionsDiv from "./OptionsDiv";
 import { useFieldArray } from "react-hook-form";
 import SelectedExisting from "./SelectedExisting";
+import { List, ListIcon } from "lucide-react";
 
 const MenuOptions = ({register, control, formState, drawerOpen, selectedOptionGroups, setSelectedOptionGroups}) => {
     
@@ -18,7 +19,16 @@ const MenuOptions = ({register, control, formState, drawerOpen, selectedOptionGr
   return (
       <div>
         <div className={addToMenuStyles.dynamicFieldContainer}>
-               <Label label="Option Groups"/>
+              <div className={addToMenuStyles.dynamicFieldTitle}>
+                <div className={addToMenuStyles.sectionIcon}>
+                  <ListIcon size={14} />
+                </div>
+
+                <p className={addToMenuStyles.sectionTitle}>
+                Options
+                </p>
+
+              </div>
                <div className={addToMenuStyles.dynamicFieldButtons}>
                     <Button type="button" text="Browse Existing" variant="secondary" icon={<IoBook />} onClick={() => drawerOpen("Options")} />
                     <Button type="button" text="Add Option Group" variant="secondary" icon={<MdAdd />} onClick={() => append({name: "", choices: [{name: "", extraCost: 0}]})}/>

@@ -1,9 +1,15 @@
 export const addToMenuStyles = {
-  container: 'flex flex-col lg:flex-row gap-6 p-4 sm:p-6 bg-slate-50 min-h-screen',
+  container: 'flex flex-col lg:flex-row gap-6 p-4 sm:p-6 min-h-screen',
 
   form: 'order-2 lg:order-1 w-full lg:w-3/5 bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6 lg:p-8',
 
   inputs: 'mb-5',
+
+  sectionHeader:"mb-3 flex items-center gap-2",
+
+  sectionIcon: "flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#FCE8D8] text-[#C4632E]",
+
+  sectionTitle: "text-[13px] font-semibold text-[#2F2A25]",
 
   priceCourseContainer: 'flex flex-col md:flex-row gap-4 mb-5',
 
@@ -13,7 +19,9 @@ export const addToMenuStyles = {
 
   menuTypeCheckBox: 'flex items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50',
 
-  dynamicFieldContainer: 'flex items-center justify-between gap-3 mb-4',
+  dynamicFieldContainer: "flex items-center justify-between gap-4 mb-4",
+
+  dynamicFieldTitle:"flex items-center gap-2",
 
   dynamicFieldButtons: 'flex items-center gap-2',
 

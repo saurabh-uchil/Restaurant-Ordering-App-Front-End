@@ -4,6 +4,7 @@ import useUploaderHook from "../hooks/useUploaderHook";
 import { handleImageUpload } from "../services/imageUploaderService";
 import { addToMenuStyles } from "../styles/addToMenu";
 import DragAndDrop from "./DragAndDrop";
+import { ImageIcon } from "lucide-react";
 
 type UploadImageProps = {
     name: string,
@@ -33,6 +34,7 @@ const UploadImage = ({name, setValue, initialValue}:UploadImageProps) => {
                 setValue={setValue} 
                 name={name} 
                 label="Item Image *" 
+                icon={ImageIcon}
                 subLabel="Upload an Image that showcases your dish" 
                 browseFilesText="or click to browse files"  
                 fileSizeText="PNG or JPG upto 5MB"

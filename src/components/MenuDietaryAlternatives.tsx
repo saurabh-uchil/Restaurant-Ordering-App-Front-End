@@ -1,5 +1,4 @@
 import { useFieldArray } from "react-hook-form";
-import Label from "./Label";
 import Button from "./Button";
 import { MdAdd } from "react-icons/md";
 import { IoBook } from "react-icons/io5";
@@ -7,6 +6,7 @@ import { addToMenuStyles } from "../styles/addToMenu";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import Input from "./Input";
 import SelectedExisting from "./SelectedExisting";
+import { Leaf } from "lucide-react";
 
 const MenuDietaryAlternatives = ({
   register,
@@ -62,7 +62,12 @@ const MenuDietaryAlternatives = ({
   return (
     <div>
       <div className={addToMenuStyles.dynamicFieldContainer}>
-        <Label label="Dietaries" />
+        <div className={addToMenuStyles.dynamicFieldTitle}>
+          <div className={addToMenuStyles.sectionIcon}>
+            <Leaf size={14} />
+          </div>
+          <p className={addToMenuStyles.sectionTitle}>Dietary Alternatives</p>
+        </div>
         <div className={addToMenuStyles.dynamicFieldButtons}>
           <Button
             type="button"

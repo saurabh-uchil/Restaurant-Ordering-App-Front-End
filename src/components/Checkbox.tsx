@@ -2,7 +2,7 @@
 import type { RegisterOptions, UseFormRegister } from "react-hook-form";
 
 type CheckboxProps = {
-    label: string;
+    label?: string;
     name: string;
     value: string;
     register: UseFormRegister<any>;
@@ -12,7 +12,7 @@ type CheckboxProps = {
 
 const Checkbox = ({ label, name, value, register, rules, error }: CheckboxProps) => {
   return (
-    <div className="mb-3">
+    <div className="mt-2 mb-3">
       <label className="flex items-center gap-3 cursor-pointer select-none">
         <input
           type="checkbox"

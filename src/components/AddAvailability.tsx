@@ -5,6 +5,7 @@ import { AVAILABILITY_OPTIONS } from "../constants/addToMenuConstants";
 import Checkbox from "./Checkbox";
 import Label from "./Label";
 import { addToMenuStyles } from "../styles/addToMenu";
+import { Clock } from "lucide-react";
 
 type AddAvailabilityProps = {
     register: UseFormRegister<any>;
@@ -21,7 +22,12 @@ const availabilityOptions = AVAILABILITY_OPTIONS.map((option, index) => {
   return (
     <div>
       <div className={addToMenuStyles.inputs}>
-                <Label label="Available For Ordering"/>
+                 <div className={addToMenuStyles.dynamicFieldTitle}>
+                  <div className={addToMenuStyles.sectionIcon}>
+                    <Clock size={14} />
+                  </div>
+                  <p className={addToMenuStyles.sectionTitle}>Dietary Alternatives</p>
+                </div>
                 {availabilityOptions}
             </div>
     </div>
