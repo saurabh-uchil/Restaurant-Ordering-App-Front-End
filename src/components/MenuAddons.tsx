@@ -82,13 +82,13 @@ const MenuAddons = ({
           <Button
             type="button"
             text="Browse Existing"
-            variant="secondary"
+            variant="form"
             icon={<IoBook />}
             onClick={() => drawerOpen("Addons")}
           />
           <Button
             type="button"
-            variant="secondary"
+            variant="form"
             icon={<MdAdd />}
             text="Add Addons"
             onClick={() => {

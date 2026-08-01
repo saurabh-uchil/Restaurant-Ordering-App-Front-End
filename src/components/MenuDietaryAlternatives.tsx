@@ -66,21 +66,21 @@ const MenuDietaryAlternatives = ({
           <div className={addToMenuStyles.sectionIcon}>
             <Leaf size={14} />
           </div>
-          <p className={addToMenuStyles.sectionTitle}>Dietary Alternatives</p>
+          <p className={addToMenuStyles.sectionTitle}>Dietaries</p>
         </div>
         <div className={addToMenuStyles.dynamicFieldButtons}>
           <Button
             type="button"
             text="Browse Existing"
-            variant="secondary"
+            variant="form"
             icon={<IoBook />}
             onClick={() => drawerOpen("Dietary")}
           />
           <Button
             type="button"
-            variant="secondary"
+            variant="form"
             icon={<MdAdd />}
-            text="Add Dietaries"
+            text="New Dietary"
             onClick={() => {
               append({ name: "", additionalPrice: 0 });
             }}

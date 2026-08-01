@@ -13,6 +13,8 @@ import { useState } from "react";
 import useMenuDrawerHook from "../hooks/useMenuDrawerHook";
 import { useForm } from "react-hook-form";
 import { formattedData } from "../services/dataFormatterService";
+import Button from "./Button";
+import { Edit2, Plus, Trash2 } from "lucide-react";
 
 type MenuFormProps = {
     onSubmit: (data: any) => Promise<void>;
@@ -36,7 +38,7 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
             addons: [],
             dietaryAlternatives: [],
             options: [],
-            availability: initialData?.availability || {}, 
+            availability: initialData?.availability || [], 
             removableIngredients: initialData?.removableIngredients || [],
         }
     });
@@ -96,14 +98,21 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
                    <MenuRemovableIngredients control={control} />
                    <AddAvailability register={register} formState={formState} />
 
-                    <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded" >
-                     Submit
-                   </button>
-
+                    <Button
+                    type="submit"
+                    text={initialData ? "Update Item" : "Add Item"}
+                    icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />}
+                    variant="formPrimary"
+                    />
+    
                    {initialData && (
-                     <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded" onClick={handleItemDelete}>
-                       Delete
-                     </button>
+                     <Button
+                       type="submit"
+                       text="Delete"
+                       variant="formDanger"
+                       icon={<Trash2 size={14} />}
+                       onClick={handleItemDelete}
+                     />
                    )}
                    
                    {isLoading && <LinearProgress className="mt-2 mb-2" aria-label="Loading…" />}

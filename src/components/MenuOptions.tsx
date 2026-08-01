@@ -30,8 +30,8 @@ const MenuOptions = ({register, control, formState, drawerOpen, selectedOptionGr
 
               </div>
                <div className={addToMenuStyles.dynamicFieldButtons}>
-                    <Button type="button" text="Browse Existing" variant="secondary" icon={<IoBook />} onClick={() => drawerOpen("Options")} />
-                    <Button type="button" text="Add Option Group" variant="secondary" icon={<MdAdd />} onClick={() => append({name: "", choices: [{name: "", extraCost: 0}]})}/>
+                    <Button type="button" text="Browse Existing" variant="form" icon={<IoBook />} onClick={() => drawerOpen("Options")} />
+                    <Button type="button" text="New Group" variant="form" icon={<MdAdd />} onClick={() => append({name: "", choices: [{name: "", extraCost: 0}]})}/>
                </div>
         </div>
         <SelectedExisting label="Option Groups" selectedItems={selectedOptionGroups} setSelectedItems={setSelectedOptionGroups} />

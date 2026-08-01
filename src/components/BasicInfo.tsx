@@ -62,7 +62,9 @@ const BasicInfo = ({register, formState}: BasicInfoProps) => {
             </div>
 
             <div className={addToMenuStyles.inputs}>
-                <Label label="Menu Type *" />
+                <p className={addToMenuStyles.sectionTitle}>
+                Menu Type *
+                </p>
                 <div className={addToMenuStyles.menuTypeCheckBox}>
                     {menuChoice}
                 </div>

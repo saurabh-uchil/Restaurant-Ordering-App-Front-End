@@ -17,7 +17,7 @@ export const addToMenuStyles = {
 
   courseSelect: 'flex-1',
 
-  menuTypeCheckBox: 'flex items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50',
+  menuTypeCheckBox: 'mt-2 flex items-center justify-between gap-4 p-4 rounded-xl border border-slate-200 bg-[#F7F6F3]',
 
   dynamicFieldContainer: "flex items-center justify-between gap-4 mb-4",
 

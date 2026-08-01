@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RegisterOptions, UseFormRegister } from "react-hook-form";
+import { checkboxStyles } from "../styles/customComponents";
 
 type CheckboxProps = {
     label?: string;
@@ -10,29 +11,36 @@ type CheckboxProps = {
     error?: any;
 }& React.InputHTMLAttributes<HTMLInputElement>
 
-const Checkbox = ({ label, name, value, register, rules, error }: CheckboxProps) => {
+const Checkbox = ({
+  label,
+  name,
+  value,
+  register,
+  rules,
+  error,
+}: CheckboxProps) => {
   return (
-    <div className="mt-2 mb-3">
-      <label className="flex items-center gap-3 cursor-pointer select-none">
+    <div className={checkboxStyles.container}>
+      <label className={checkboxStyles.label}>
         <input
           type="checkbox"
           value={value}
           {...register(name, rules)}
-          className="h-4 w-4 rounded border-gray-300 text-[#28085e] focus:ring-2 focus:ring-[#28085e]/20 focus:ring-offset-0"
+          className={checkboxStyles.checkbox}
         />
 
-        <span className="text-sm font-medium text-gray-700">
+        <span className={checkboxStyles.text}>
           {label}
         </span>
       </label>
 
       {error && (
-        <div className="mt-1 text-xs text-red-500">
+        <p className={checkboxStyles.error}>
           {error.message}
-        </div>
+        </p>
       )}
     </div>
   );
 };
 
-export default Checkbox
+export default Checkbox;
