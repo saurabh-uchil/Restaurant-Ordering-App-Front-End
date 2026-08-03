@@ -28,10 +28,10 @@ const MenuDietaryAlternatives = ({
           <Input
             register={register}
             id={`dietaryAlternatives.${index}.name`}
-            placeholder="Dietary Alternative Name"
+            placeholder="Dietary Name"
             type="text"
             rules={{
-              required: "Dietary alternative name is required",
+              required: "Dietary name is required",
             }}
             error={formState.errors?.dietaryAlternatives?.[index]?.name}
           />
@@ -47,13 +47,16 @@ const MenuDietaryAlternatives = ({
         </div>
 
         <div className={addToMenuStyles.deleteButtonContainer}>
-          <Button
+          {/* <Button
             type="button"
             classes={addToMenuStyles.deleteBtn}
             variant="transparent"
             icon={<RiDeleteBin4Fill />}
             onClick={() => remove(index)}
-          />
+          /> */}
+          <button type="button" className={addToMenuStyles.deleteIcon} onClick={() => remove(index)} aria-label="Delete option group" >
+            <RiDeleteBin4Fill size={16} />
+          </button>
         </div>
       </div>
     </div>

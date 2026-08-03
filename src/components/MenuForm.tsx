@@ -98,22 +98,15 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
                    <MenuRemovableIngredients control={control} />
                    <AddAvailability register={register} formState={formState} />
 
-                    <Button
-                    type="submit"
-                    text={initialData ? "Update Item" : "Add Item"}
-                    icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />}
-                    variant="formPrimary"
-                    />
-    
-                   {initialData && (
-                     <Button
-                       type="submit"
-                       text="Delete"
-                       variant="formDanger"
-                       icon={<Trash2 size={14} />}
-                       onClick={handleItemDelete}
-                     />
-                   )}
+                    <div className={addToMenuStyles.formActions}>
+                        
+                        <Button type="submit" text={initialData ? "Update Item" : "Add Item"} icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />} variant="formPrimary" />
+
+                        {initialData && (
+                            <Button type="button" text="Delete" variant="formDanger" icon={<Trash2 size={14} />} onClick={handleItemDelete} />
+                        )}
+
+                    </div>
                    
                    {isLoading && <LinearProgress className="mt-2 mb-2" aria-label="Loading…" />}
                    {uploadSuccess && <p className={addToMenuStyles.successfulUploadMessage}>{successMessage}</p>}

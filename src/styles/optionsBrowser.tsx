@@ -1,31 +1,31 @@
 export const optionStyles = {
   container:
-    "flex flex-col gap-3 p-4 w-[320px] bg-gray-50 min-h-screen",
+    "flex w-full flex-col gap-3",
 
   label:
-    "block cursor-pointer",
+    "block w-full cursor-pointer",
 
   input:
     "peer hidden",
 
   card:
-    "bg-white border border-gray-200 rounded-lg p-4 shadow-sm transition-all duration-200 hover:shadow-md peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:ring-2 peer-checked:ring-purple-200",
+    "w-full rounded-xl border border-[#E8E5DE] bg-white p-3 transition-all duration-200 hover:border-[#D8D3C8] hover:shadow-sm peer-checked:border-[#E2793D] peer-checked:bg-[#FFF8F3] peer-checked:ring-2 peer-checked:ring-[#FCE8D8]",
 
   header:
-    "flex items-center justify-between mb-3",
+    "mb-3 flex items-center justify-between gap-3",
 
   title:
-    "text-sm font-semibold text-gray-800",
+    "min-w-0 truncate text-[13px] font-semibold text-[#2F2A25]",
 
   badge:
-    "bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-full",
+    "shrink-0 rounded-full border border-[#F4D5BE] bg-[#FCE8D8] px-2 py-0.5 text-[10px] font-semibold text-[#C4632E]",
 
   choicesContainer:
     "flex flex-wrap gap-2",
 
   choice:
-    "flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full text-xs text-gray-700",
+    "flex items-center gap-1.5 rounded-full border border-[#E8E5DE] bg-[#F7F6F3] px-2.5 py-1 text-xs font-medium text-[#5F584F]",
 
   extraCost:
-    "text-green-600 font-semibold",
+    "font-semibold text-[#C4632E]",
 };

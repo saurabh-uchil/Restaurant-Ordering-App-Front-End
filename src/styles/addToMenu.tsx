@@ -26,13 +26,13 @@ export const addToMenuStyles = {
   dynamicFieldButtons: 'flex items-center gap-2',
 
   fieldDiv:
-  "border border-slate-200 bg-white rounded-2xl p-4 mb-4 shadow-sm transition-all duration-200 hover:shadow-md",
+  "mb-4 rounded-xl border border-[#E8E5DE] bg-[#F7F6F3] p-4",
 
 fieldInnerDiv:
-  "flex items-start gap-3",
+  "flex items-start gap-2",
 
 fieldInputContainer:
-  "flex-1 min-w-0",
+  "min-w-0 flex-1",
 
 deleteButtonContainer:
   "flex-none pt-1",
@@ -40,11 +40,14 @@ deleteButtonContainer:
 deleteBtn:
   "flex items-center justify-center h-10 w-10 rounded-lg bg-red-50 text-red-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600",
 
-  fieldGroupNameInput: 'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100',
+  fieldGroupNameInput:"bg-white",
 
-  deleteButton: 'flex items-center justify-center h-10 w-10 rounded-lg bg-red-50 text-red-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600 flex-none',
+  deleteButton: "flex h-9 w-9 shrink-0 items-center justify-center self-center rounded-lg p-0",
 
-  nestedfieldContainer: 'mt-3 space-y-3',
+  deleteIcon:
+  "flex h-11 w-7 shrink-0 items-center justify-center text-[#B84A44] transition-colors duration-200 hover:text-[#963A35]",
+
+  nestedfieldContainer: "mt-3 space-y-3 border-t border-[#E8E5DE] pt-3",
 
   imageUploadContainer: 'order-1 lg:order-2 w-full lg:w-2/5 bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6 h-fit lg:sticky lg:top-6',
   
@@ -54,5 +57,38 @@ deleteBtn:
 
   progressBarColor: '#2563eb',
 
-  errorMessage: 'text-red-600 bg-red-200 p-2 rounded text-center text-sm'
+  errorMessage: 'text-red-600 bg-red-200 p-2 rounded text-center text-sm',
+
+  formActions: "mt-5 flex items-center gap-2",
 }
+
+export const nestedOptionsStyles = {
+  container:
+    "w-full",
+
+  header:
+    "mb-3 flex items-center justify-between gap-3",
+
+  title:
+    "text-[13px] font-semibold text-[#2F2A25]",
+
+  choicesContainer:
+    "space-y-2",
+
+  choiceRow:
+    "flex items-start gap-2 rounded-lg border border-[#E8E5DE] bg-white p-3",
+
+  choiceInput:
+    "min-w-0 flex-[2]",
+
+  costInput:
+    "min-w-0 flex-1",
+
+  deleteButton:
+    "flex h-11 w-7 shrink-0 items-center justify-center text-[#B84A44] transition-colors duration-200 hover:text-[#963A35]",
+
+  emptyText:
+    "py-2 text-xs text-[#8C8676]",
+
+  
+};

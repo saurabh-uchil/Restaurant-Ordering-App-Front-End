@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import FormCard from "../components/FormCard";
 import MenuForm from "../components/MenuForm";
 import axios from "axios";
 
@@ -60,9 +59,10 @@ const EditMenuItem = () => {
   };
 
   return (
-    <FormCard title="Edit Menu Item">
-        {data && <MenuForm key={id} onSubmit={handleSubmit} initialData={data} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} handleDelete={handleDelete} />}
-    </FormCard>
+   <>
+    {data && <MenuForm key={id} onSubmit={handleSubmit} initialData={data} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} handleDelete={handleDelete} />}
+   </>
+        
   )
 }
 export default EditMenuItem

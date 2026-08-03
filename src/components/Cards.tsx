@@ -19,7 +19,7 @@ const Cards = ({item}) => {
            /*  onClick={onButtonClick} */
             className={menuCardStyles.imageAction}
             /* aria-label={buttonLabel} */
-            onClick={() => navigate(`/editMenuItem/${item._id}`)}
+            onClick={() => navigate(`/dashboard/editItem/${item._id}`)}
         >
             {/* <IoAddOutline /> */}
             

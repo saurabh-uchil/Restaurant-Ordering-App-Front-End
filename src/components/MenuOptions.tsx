@@ -1,12 +1,11 @@
 import { IoBook } from "react-icons/io5";
 import Button from "./Button";
-import Label from "./Label";
 import { MdAdd } from "react-icons/md";
 import { addToMenuStyles } from "../styles/addToMenu";
 import OptionsDiv from "./OptionsDiv";
 import { useFieldArray } from "react-hook-form";
 import SelectedExisting from "./SelectedExisting";
-import { List, ListIcon } from "lucide-react";
+import {  ListIcon } from "lucide-react";
 
 const MenuOptions = ({register, control, formState, drawerOpen, selectedOptionGroups, setSelectedOptionGroups}) => {
     

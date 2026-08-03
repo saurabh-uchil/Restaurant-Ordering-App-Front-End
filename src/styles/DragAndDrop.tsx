@@ -42,4 +42,23 @@ export const dragAndDropStyles = {
    
   dragActiveText:
   "text-sm text-[#8C8676]",  
+
+
+  imagePreview:
+  "relative overflow-hidden rounded-xl border border-[#E8E5DE] bg-white",
+
+previewImage:
+  "h-56 w-full object-cover",
+
+clearImageButton:
+  "flex h-8 w-8 items-center justify-center rounded-lg bg-white/95 text-[#B84A44] shadow-sm transition-all duration-200 hover:bg-[#FFF5F4] hover:text-[#963A35]",
+
+previewActions:
+  "absolute right-3 top-3 flex items-center gap-2",
+
+uploadIconButton:
+  "flex h-8 w-8 items-center justify-center rounded-lg bg-white/95 text-[#C4632E] shadow-sm transition-all duration-200 hover:bg-[#FCE8D8]",
+
+deleteIconButton:
+  "flex h-8 w-8 items-center justify-center rounded-lg bg-white/95 text-[#B84A44] shadow-sm transition-all duration-200 hover:bg-[#FFF5F4]",
 };

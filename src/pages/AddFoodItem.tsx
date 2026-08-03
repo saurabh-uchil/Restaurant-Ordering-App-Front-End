@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MenuForm from "../components/MenuForm";
 import axios from "axios";
+import { useAuth, useCurrentUser } from "../store/authStore";
 
 const AddFoodItem = () => {
 
@@ -8,14 +9,20 @@ const AddFoodItem = () => {
    const [uploadError, setUploadError] = useState(false);
    const [isLoading, setIsLoading] = useState(false); 
 
+   const currentUser = useCurrentUser((state) => state.currentUser);
+
+
   const handleSubmit = async (data) => {
     try{
+      console.log(currentUser);
       console.log("Submitting data:", data);
       setIsLoading(true);
-      await axios.post("http://localhost:3000/menu/add-food-item", data);
+      if(currentUser && currentUser.restaurant){
+      await axios.post("http://localhost:3000/menu/add-food-item", { ...data, restaurant_Id: currentUser.restaurant });
       setUploadSuccess(true);
       setUploadError(false);
-    } catch (error) {
+    }
+  } catch (error) {
       console.error("Error adding food item:", error);
       setUploadError(true);
       setUploadSuccess(false);

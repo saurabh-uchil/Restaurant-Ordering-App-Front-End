@@ -1,20 +1,55 @@
 export const browseDrawerStyles = {
-    container:"flex flex-col gap-3 p-4 w-[320px] bg-gray-50 min-h-screen",
-    input:"hidden peer",
-    label:"cursor-pointer",
-    card:"flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 shadow-sm transition-all duration-200 hover:shadow-md peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-200",
-    cardItem:"flex items-center gap-2",
-    cardTitle:"text-sm font-semibold text-gray-800",
-    cardBadge:"bg-blue-100 text-blue-700 text-[10px] font-semibold px-2 py-0.5 rounded-full",
-    cardInfo:"bg-green-100 text-green-700 text-sm font-bold px-3 py-1 rounded-full",
-    addonsContainer:"flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 m-2",
-    drawerHeader:"text-center text-lg font-semibold mb-4",
-    noOptions:"text-gray-500 text-sm font-medium",
-    addonsTitle:"text-sm font-semibold text-gray-800",
-    addonsPrice:"bg-green-100 text-green-700 text-sm font-bold px-3 py-1 rounded-full",
-    loadingContainer:"flex items-center justify-center h-screen",
-    errorMessage:"text-red-500 text-sm font-semibold",
-    drawerContent:"p-4 w-90",
-    drawerContentLoading:"flex items-center justify-center h-screen",
-    errorLoadingMessage:"text-red-700 mt-2 bg-red-100 border border-red-200 p-3 rounded-xl text-center text-sm font-medium"
-}
+  container:
+    "flex min-h-screen w-full flex-col gap-3 overflow-x-hidden bg-[#FCFBF9]",
+
+  input:
+    "hidden peer",
+
+  label:
+    "block w-full cursor-pointer",
+
+  card:
+    "flex w-full items-center justify-between gap-3 rounded-xl border border-[#E8E5DE] bg-white p-3 transition-all duration-200 hover:border-[#D8D3C8] hover:shadow-sm peer-checked:border-[#E2793D] peer-checked:bg-[#FFF8F3] peer-checked:ring-2 peer-checked:ring-[#FCE8D8]",
+
+  cardItem:
+    "flex min-w-0 flex-1 items-center gap-2",
+
+  cardTitle:
+    "truncate text-[13px] font-semibold text-[#2F2A25]",
+
+  cardBadge:
+    "shrink-0 rounded-full border border-[#F4D5BE] bg-[#FCE8D8] px-2 py-0.5 text-[10px] font-semibold text-[#C4632E]",
+
+  cardInfo:
+    "shrink-0 rounded-full bg-[#F7F6F3] px-2.5 py-1 text-xs font-semibold text-[#5F584F]",
+
+  addonsContainer:
+    "flex w-full items-center justify-between gap-3 rounded-xl border border-[#E8E5DE] bg-white p-3 transition-all duration-200 hover:border-[#D8D3C8] hover:shadow-sm",
+
+  drawerHeader:
+    "mb-3 w-full text-center text-sm font-semibold text-[#2F2A25]",
+
+  noOptions:
+    "w-full rounded-xl border border-dashed border-[#D8D3C8] bg-[#F7F6F3] p-4 text-center text-xs font-medium text-[#8C8676]",
+
+  addonsTitle:
+    "min-w-0 flex-1 truncate text-[13px] font-semibold text-[#2F2A25]",
+
+  addonsPrice:
+    "shrink-0 rounded-full bg-[#FCE8D8] px-2.5 py-1 text-xs font-semibold text-[#C4632E]",
+
+  loadingContainer:
+    "flex h-screen items-center justify-center",
+
+  errorMessage:
+    "text-xs font-medium text-[#B84A44]",
+
+  drawerContent:
+    "w-[90vw] max-w-[400px] overflow-x-hidden bg-[#FCFBF9] p-4",
+
+  drawerContentLoading:
+    "flex h-screen items-center justify-center bg-[#FCFBF9]",
+
+  errorLoadingMessage:
+    "mt-2 rounded-xl border border-[#E8B4B0] bg-[#FFF5F4] p-3 text-center text-xs font-medium text-[#B84A44]",
+};

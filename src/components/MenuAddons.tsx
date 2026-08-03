@@ -57,13 +57,16 @@ const MenuAddons = ({
         </div>
 
         <div className={addToMenuStyles.deleteButtonContainer}>
-          <Button
+         {/*  <Button
             type="button"
             classes={addToMenuStyles.deleteButton}
             variant="transparent"
             icon={<RiDeleteBin4Fill />}
             onClick={() => remove(index)}
-          />
+          /> */}
+          <button type="button" className={addToMenuStyles.deleteIcon} onClick={() => remove(index)} aria-label="Delete option group" >
+            <RiDeleteBin4Fill size={16} />
+          </button>
         </div>
       </div>
     </div>

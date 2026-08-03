@@ -1,8 +1,8 @@
 export const inputStyles = {
-    label: "mb-1 block text-[13px] font-semibold text-[#2F2A25]",
-    input: "h-11 w-full rounded-lg border border-[#E8E5DE] bg-white px-4 text-sm text-[#2F2A25] placeholder:text-[#8C8676] outline-none transition-all duration-200 hover:border-[#D8D3C8] focus:border-[#E2793D] focus:ring-4 focus:ring-[#FCE8D8]",
-    error: "mt-1 text-xs font-medium text-[#B84A44]",
-}
+  label: "mb-1 block text-[13px] font-semibold text-[#2F2A25]",
+  input: "h-11 w-full rounded-lg border border-[#E8E5DE] bg-white px-4 text-sm text-[#2F2A25] placeholder:text-[#8C8676] outline-none transition-all duration-200 hover:border-[#D8D3C8] focus:border-[#E2793D] focus:ring-4 focus:ring-[#FCE8D8]",
+  error: "mt-1.5 px-4 text-xs font-medium text-[#B84A44]",
+};
 
 export const buttonStyles: Record<string, string> = {
     base: "inline-flex items-center gap-2 px-4 py-2 rounded-md",
