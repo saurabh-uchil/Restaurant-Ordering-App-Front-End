@@ -57,9 +57,15 @@ deleteBtn:
 
   progressBarColor: '#2563eb',
 
-  errorMessage: 'text-red-600 bg-red-200 p-2 rounded text-center text-sm',
+  /* errorMessage: 'text-red-600 bg-red-200 p-2 rounded text-center text-sm', */
 
   formActions: "mt-5 flex items-center gap-2",
+
+  successMessage:
+  "mt-3 flex items-center gap-2 rounded-lg border border-[#CFE3D4] bg-[#F3F8F4] px-3 py-2.5 text-[13px] font-medium text-[#477052]",
+
+  errorMessage:
+  "mt-3 flex items-center gap-2 rounded-lg border border-[#E8C7C3] bg-[#FFF5F4] px-3 py-2.5 text-[13px] font-medium text-[#B84A44]",
 }
 
 export const nestedOptionsStyles = {

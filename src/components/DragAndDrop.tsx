@@ -1,11 +1,9 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { dragAndDropStyles } from '../styles/DragAndDrop';
-import Button from './Button';
-import { RiDeleteBin4Fill } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
-import { ImageUp, Trash2, Upload } from 'lucide-react';
-import { IoCloudUpload } from 'react-icons/io5';
+import { CheckCircle2, CircleAlert, ImageUp, LoaderCircle, Trash2, Upload } from 'lucide-react';
 
-const DragAndDrop = ({label, subLabel, icon: Icon, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive, initialValue}) => {
+const DragAndDrop = ({label, subLabel, icon: Icon, browseFilesText, fileSizeText, upload, setValue, name, file, setFile, getRootProps, getInputProps, isDragActive, initialValue, isUploading, isUploadSuccess, progress, uploadError, resetImage}) => {
     
     const [currentImage, setCurrentImage] = useState(initialValue);
 
@@ -23,7 +21,14 @@ const DragAndDrop = ({label, subLabel, icon: Icon, browseFilesText, fileSizeText
 
     const previewImage = file?.preview || currentImage;
 
-    //clean up
+
+    useEffect(() => {
+        if (!resetImage) return;
+
+        setCurrentImage(null);
+      }, [resetImage]);
+
+      //clean up
     useEffect(() => {
             return () => {
             if (file) URL.revokeObjectURL(file.preview);
@@ -32,46 +37,78 @@ const DragAndDrop = ({label, subLabel, icon: Icon, browseFilesText, fileSizeText
 
   return (
    <div className={dragAndDropStyles.dragDropContainer}>
-  <div className={dragAndDropStyles.imageHeader}>
-    <div className={dragAndDropStyles.sectionIcon}>
-      <Icon size={14} />
-    </div>
+      <div className={dragAndDropStyles.imageHeader}>
+        <div className={dragAndDropStyles.sectionIcon}>
+          <Icon size={14} />
+        </div>
 
-    <div>
-      <p className={dragAndDropStyles.sectionTitle}>{label}</p>
-      <p className={dragAndDropStyles.imageSubLabel}>{subLabel}</p>
-    </div>
-  </div>
-
-  {!previewImage ? (
-    <div {...getRootProps()} className={dragAndDropStyles.selectImageContainer}>
-      <div className={dragAndDropStyles.selectImageDiv}>
-        <ImageUp className={dragAndDropStyles.selectImageIcon} />
+        <div>
+          <p className={dragAndDropStyles.sectionTitle}>{label}</p>
+          <p className={dragAndDropStyles.imageSubLabel}>{subLabel}</p>
+        </div>
       </div>
 
-      <input {...getInputProps()} />
-
-      <p className={dragAndDropStyles.dragActiveText}>{dragActiveText}</p>
-      <p className={dragAndDropStyles.browseFilesText}>{browseFilesText}</p>
-      <p className={dragAndDropStyles.fileSizeText}>{fileSizeText}</p>
-    </div>
-  ) : (
+  {previewImage ? (
+  <>
     <div className={dragAndDropStyles.imagePreview}>
-  <img src={previewImage} alt="Menu item preview" className={dragAndDropStyles.previewImage} />
+      <img src={previewImage} alt="Menu item preview" className={dragAndDropStyles.previewImage} />
 
-  <div className={dragAndDropStyles.previewActions}>
-    {file && (
-      <button type="button" className={dragAndDropStyles.uploadIconButton} onClick={handleUpload} aria-label="Upload image">
-        <Upload size={15} />
-      </button>
+      {isUploading && (
+        <div className={dragAndDropStyles.uploadOverlay}>
+          <LoaderCircle size={22} className="animate-spin text-white" />
+
+          <span className={dragAndDropStyles.progressPercentage}>
+            {Math.round(progress)}%
+          </span>
+
+          <p className={dragAndDropStyles.uploadingText}>
+            Uploading...
+          </p>
+        </div>
+      )}
+
+      {!isUploading && (
+        <div className={dragAndDropStyles.previewActions}>
+          {file && !isUploadSuccess && (
+            <button type="button" className={dragAndDropStyles.uploadIconButton} onClick={handleUpload} aria-label="Upload image">
+              <Upload size={15} />
+            </button>
+          )}
+
+          <button type="button" className={dragAndDropStyles.deleteIconButton} onClick={handleClearImage} aria-label="Clear image">
+            <Trash2 size={15} />
+          </button>
+        </div>
+      )}
+    </div>
+
+    {isUploadSuccess && (
+      <div className={dragAndDropStyles.uploadSuccess}>
+        <CheckCircle2 size={14} />
+        <span>Image uploaded successfully</span>
+      </div>
     )}
 
-    <button type="button" className={dragAndDropStyles.deleteIconButton} onClick={handleClearImage} aria-label="Clear image">
-      <Trash2 size={15} />
-    </button>
+    {uploadError && (
+      <div className={dragAndDropStyles.uploadError}>
+        <CircleAlert size={14} />
+        <span>Unable to upload image. Please try again.</span>
+      </div>
+    )}
+  </>
+) : (
+  <div {...getRootProps()} className={dragAndDropStyles.selectImageContainer}>
+    <div className={dragAndDropStyles.selectImageDiv}>
+      <ImageUp className={dragAndDropStyles.selectImageIcon} />
+    </div>
+
+    <input {...getInputProps()} />
+
+    <p className={dragAndDropStyles.dragActiveText}>{dragActiveText}</p>
+    <p className={dragAndDropStyles.browseFilesText}>{browseFilesText}</p>
+    <p className={dragAndDropStyles.fileSizeText}>{fileSizeText}</p>
   </div>
-</div>
-  )}
+)}
 </div>
   )
 }

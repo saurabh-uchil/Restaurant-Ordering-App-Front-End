@@ -1,7 +1,7 @@
 import { api } from "../api";
 
-export const addMenuItem = async (restaurantId: string, data: any) => {
-  const response = await api.post(`/menu/${restaurantId}`, data);
+export const addMenuItem = async (restaurant_Id: string, data: any) => {
+  const response = await api.post(`food-items/addItem`, {...data, restaurant_Id});
   return response.data;
 };
 

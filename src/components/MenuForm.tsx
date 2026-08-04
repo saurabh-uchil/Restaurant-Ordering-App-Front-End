@@ -14,7 +14,7 @@ import useMenuDrawerHook from "../hooks/useMenuDrawerHook";
 import { useForm } from "react-hook-form";
 import { formattedData } from "../services/dataFormatterService";
 import Button from "./Button";
-import { Edit2, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, CircleAlert, Edit2, Plus, Trash2 } from "lucide-react";
 
 type MenuFormProps = {
     onSubmit: (data: any) => Promise<void>;
@@ -23,9 +23,10 @@ type MenuFormProps = {
     uploadSuccess: boolean;
     uploadError: boolean;
     handleDelete?: () => Promise<void>;
+    error: any;
 };
 
-const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError, handleDelete}: MenuFormProps) => {
+const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError, handleDelete, error}: MenuFormProps) => {
     
    const {register, handleSubmit, formState, control, setValue, reset} = useForm({mode: "all",
         defaultValues: {
@@ -48,18 +49,22 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
     const [dietaryAlternatives, setDietaryAlternatives] = useState(initialData?.dietaryAlternatives || []);
     const [addons, setAddons] = useState(initialData?.addons || []);
     const [optionGroups, setOptionGroups] = useState(initialData?.options || []);
+    const [imageReset, setImageReset] = useState(false);
 
     const successMessage = initialData ? "Item updated successfully!" : "Item added successfully!";
-    const errorMessage = initialData ? "Error updating item. Please try again." : "Error adding item. Please try again.";
-
+    
     const handleFormSubmit = async (data) => {
         try {
             const updatedData = formattedData(data, dietaryAlternatives, addons, optionGroups); 
             await onSubmit(updatedData);
-            reset(); 
-            setAddons([]);
-            setDietaryAlternatives([]);
-            setOptionGroups([]);
+
+            if(!initialData){
+                reset(); 
+                setAddons([]);
+                setDietaryAlternatives([]);
+                setOptionGroups([]);
+                setImageReset(true);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -78,6 +83,16 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
             console.error(error);
         }
     }
+
+    const getErrorMessage = (error: any) => {
+        const message = error?.response?.data?.message;
+
+        if (Array.isArray(message)) {
+            return "Some information is invalid. Please check the form and try again.";
+        }
+
+        return message || "Something went wrong. Please try again.";
+    };
 
 
   return (
@@ -100,7 +115,7 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
 
                     <div className={addToMenuStyles.formActions}>
                         
-                        <Button type="submit" text={initialData ? "Update Item" : "Add Item"} icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />} variant="formPrimary" />
+                        <Button type="submit" text={initialData ? "Update Item" : "Add Item"} loadingText={initialData ? "Updating..." : "Adding..."} icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />} variant="formPrimary" isLoading={isLoading} />
 
                         {initialData && (
                             <Button type="button" text="Delete" variant="formDanger" icon={<Trash2 size={14} />} onClick={handleItemDelete} />
@@ -108,14 +123,29 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
 
                     </div>
                    
-                   {isLoading && <LinearProgress className="mt-2 mb-2" aria-label="Loading…" />}
-                   {uploadSuccess && <p className={addToMenuStyles.successfulUploadMessage}>{successMessage}</p>}
+                   {/* {isLoading && <LinearProgress className="mt-2 mb-2" aria-label="Loading…" />} */}
+                   {/* {uploadSuccess && <p className={addToMenuStyles.successfulUploadMessage}>{successMessage}</p>}
                    {uploadError && <p className={addToMenuStyles.failedUploadMessage}>{errorMessage}</p>}
-                
+                    */}
+                   {uploadSuccess && (
+                    <div className={addToMenuStyles.successMessage}>
+                        <CheckCircle2 size={16} className="shrink-0" />
+                        <span>{successMessage}</span>
+                    </div>
+                    )}
+
+                    {uploadError && (
+                    <div className={addToMenuStyles.errorMessage}>
+                        <CircleAlert size={16} className="shrink-0" />
+                        <span>
+                        {getErrorMessage(error)}
+                        </span>
+                    </div>
+)}
                 </form>  
             </div>
 
-            <UploadImage setValue={setValue} name="imageUrl" initialValue={initialData?.imageUrl} />
+            <UploadImage setValue={setValue} name="imageUrl" initialValue={initialData?.imageUrl} resetImage={imageReset} onResetComplete={() => setImageReset(false)}/>
         
         </div>
 

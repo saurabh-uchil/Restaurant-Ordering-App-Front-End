@@ -1,4 +1,4 @@
-import { Line } from "rc-progress";
+import { useEffect } from "react";
 import useImageUploaderHook from "../hooks/useImageUploaderHook";
 import useUploaderHook from "../hooks/useUploaderHook";
 import { handleImageUpload } from "../services/imageUploaderService";
@@ -9,23 +9,36 @@ import { ImageIcon } from "lucide-react";
 type UploadImageProps = {
     name: string,
     setValue?: any,
-    initialValue?: any
+    initialValue?: any,
+    resetImage?: boolean,
+    onResetComplete?: () => void,
 }
 
-const UploadImage = ({name, setValue, initialValue}:UploadImageProps) => {
+const UploadImage = ({name, setValue, initialValue, resetImage, onResetComplete}:UploadImageProps) => {
 
     const {progress, uploadError, setProgress, setUploadError} = useUploaderHook();
     const { file, setFile, getRootProps, getInputProps, isDragActive } = useImageUploaderHook();
+
+    useEffect(() => {
+        if (!resetImage) return;
+
+        setFile(null);
+        setProgress(0);
+        setUploadError(false);
+
+        onResetComplete?.();
+    }, [resetImage]);
+
+    
 
     const handleUpload = () => {
         if (!file) return;
         handleImageUpload(file, setValue, setProgress, setUploadError);
     }
 
-    const progressBar = progress > 0 && progress < 100 ? <Line percent={progress} strokeWidth={2} strokeColor={addToMenuStyles.progressBarColor} /> : null;
-    const errorMessage = uploadError ? <p className={addToMenuStyles.errorMessage}>Upload failed!</p> : null;
-    const uploadSuccess = progress === 100 ? <p className={addToMenuStyles.successfulUploadMessage}>Upload complete!</p> : null;
-    
+    const isUploading = progress > 0 && progress < 100;
+    const isUploadSuccess = progress === 100;
+
     return (
         <div className={addToMenuStyles.imageUploadContainer}>
                    
@@ -44,10 +57,12 @@ const UploadImage = ({name, setValue, initialValue}:UploadImageProps) => {
                 getRootProps={getRootProps}
                 getInputProps={getInputProps}
                 isDragActive={isDragActive}
+                isUploading={isUploading}
+                isUploadSuccess={isUploadSuccess}
+                progress={progress}
+                uploadError={uploadError}
+                resetImage={resetImage}
             />
-            {progressBar}
-            {errorMessage}
-            {uploadSuccess}
             
         </div>
     )

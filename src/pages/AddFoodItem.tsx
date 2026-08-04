@@ -1,18 +1,19 @@
-import { useState } from "react";
+
 import MenuForm from "../components/MenuForm";
-import axios from "axios";
-import { useAuth, useCurrentUser } from "../store/authStore";
+
+import { useCurrentUser } from "../store/authStore";
+import { useAddItem } from "../api/apihooks/useAddItem";
 
 const AddFoodItem = () => {
 
-   const [uploadSuccess, setUploadSuccess] = useState(false);
+   /* const [uploadSuccess, setUploadSuccess] = useState(false);
    const [uploadError, setUploadError] = useState(false);
-   const [isLoading, setIsLoading] = useState(false); 
+   const [isLoading, setIsLoading] = useState(false);  */
 
    const currentUser = useCurrentUser((state) => state.currentUser);
 
 
-  const handleSubmit = async (data) => {
+  /* const handleSubmit = async (data) => {
     try{
       console.log(currentUser);
       console.log("Submitting data:", data);
@@ -30,11 +31,21 @@ const AddFoodItem = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }; */
 
+  const {mutateAsync, isPending, isError, isSuccess, error} = useAddItem(); 
+
+
+  const submitForm = async (data) => {
+    if(!currentUser || !currentUser.restaurant){
+      console.error("No restaurant ID found for the current user.");
+      return;
+    }
+    await mutateAsync({ restaurantId: currentUser.restaurant, data });
+  }
 
   return (
-        <MenuForm onSubmit={handleSubmit} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} />  
+        <MenuForm onSubmit={submitForm} isLoading={isPending} uploadSuccess={isSuccess} uploadError={isError} error={error} />  
   )
 }
 
