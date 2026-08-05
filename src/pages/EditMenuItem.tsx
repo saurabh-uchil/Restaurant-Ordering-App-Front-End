@@ -1,68 +1,70 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import MenuForm from "../components/MenuForm";
-import axios from "axios";
+import { useCurrentUser } from "../store/authStore";
+import { useGetItemById, useEditFoodItem, useDeleteFoodItem } from "../api/apihooks/useMenu";
+import { ContentState } from "../components/ContentState";
+import { menuItemContentStates } from "../data/validationMessages";
 
 const EditMenuItem = () => {
     const { id } = useParams();
+
+    const navigate = useNavigate();
+
+    const currentUser = useCurrentUser(state => state.currentUser);
      
-    const [data, setData] = useState(null);
-    const [uploadSuccess, setUploadSuccess] = useState(false);
-    const [uploadError, setUploadError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const {data, isPending: isFetching, isError: isFetchError, error: fetchError} = useGetItemById(id);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch(`http://localhost:3000/menu/food-item/${id}`);
-                const result = await response.json();
-                console.log("Fetched Data:", result);
-                setData(result);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-        fetchData();
-    }, [id]);
+    const { mutateAsync, isPending: isEditing, isSuccess:editSuccess, isError: isEditError, error: editError } = useEditFoodItem();
 
-  const handleSubmit = async (data) => {
-    try{
-      console.log("Submitting data:", data);
-      setIsLoading(true);
-      await axios.put(`http://localhost:3000/menu/update-food-item/${id}`, data);
-      setUploadSuccess(true);
-      setUploadError(false);
-    } catch (error) {
-      console.error("Error updating food item:", error);
-      setUploadError(true);
-      setUploadSuccess(false);
-      throw error;
-    } finally {
-      setIsLoading(false);
+    const { mutateAsync: deleteItem, isPending: isDeleting, isError: isDeleteError, error: deleteError } = useDeleteFoodItem();
+
+    const handleSubmit = async (data) => {
+      if (!id || !currentUser?.restaurant) return;
+      await mutateAsync({id, item: {...data, restaurant_Id: currentUser.restaurant}});
+    };
+
+    const handleDelete = async () => {
+      if(!id) return;
+      await deleteItem(id);
+      
+      navigate("/dashboard/menu",{
+        state: {
+            notification: {
+            variant: "success",
+            message: `${data?.name || "Item"} deleted successfully`,
+          },
+        },
+      });
+      
+    };
+
+    if(isFetching){
+      return <ContentState type={menuItemContentStates.loading.type} title={menuItemContentStates.loading.title} />
     }
-  };
 
-  const handleDelete = async () => {
-    try {
-      setIsLoading(true);
-      await axios.delete(`http://localhost:3000/menu/delete-food-item/${id}`);
-      setUploadSuccess(true);
-      setUploadError(false);
-      //setData(null); // Clear the data after deletion
-    } catch (error) {
-      console.error("Error deleting food item:", error);
-      setUploadError(true);
-      setUploadSuccess(false);
-    } finally {
-      setIsLoading(false);
+    if(isFetchError){
+      return <ContentState type={menuItemContentStates.error.type} title={menuItemContentStates.error.title} description={fetchError?.message || menuItemContentStates.error.description} />
     }
-  };
+
+    if(!data){
+      return <ContentState type={menuItemContentStates.empty.type} title={menuItemContentStates.empty.title} description={menuItemContentStates.empty.description} />
+    }
 
   return (
-   <>
-    {data && <MenuForm key={id} onSubmit={handleSubmit} initialData={data} isLoading={isLoading} uploadSuccess={uploadSuccess} uploadError={uploadError} handleDelete={handleDelete} />}
-   </>
-        
+    <>
+      <MenuForm
+        onSubmit={handleSubmit}
+        initialData={data}
+        isSubmitting={isEditing}
+        submitSuccess={editSuccess}
+        submitError={isEditError}
+        submitErrorData={editError}
+        handleDelete={handleDelete}
+        isDeleting={isDeleting}
+        deleteError={isDeleteError}
+        deleteErrorData={deleteError}
+      />
+    </>  
   )
 }
 export default EditMenuItem

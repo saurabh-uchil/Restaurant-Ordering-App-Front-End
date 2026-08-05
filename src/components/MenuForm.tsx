@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Drawer, LinearProgress } from "@mui/material";
+import { Drawer } from "@mui/material";
 import MenuDrawer from "./MenuDrawer";
 import BasicInfo from "./BasicInfo";
 import MenuOptions from "./MenuOptions";
@@ -15,18 +15,23 @@ import { useForm } from "react-hook-form";
 import { formattedData } from "../services/dataFormatterService";
 import Button from "./Button";
 import { CheckCircle2, CircleAlert, Edit2, Plus, Trash2 } from "lucide-react";
+import { generalErrorMessage, invalidInfoMessage, successMsg } from "../data/validationMessages";
 
 type MenuFormProps = {
     onSubmit: (data: any) => Promise<void>;
     initialData?: any;
-    isLoading: boolean;
-    uploadSuccess: boolean;
-    uploadError: boolean;
+    isSubmitting?: boolean;
+    submitSuccess?: boolean;
+    submitError?: boolean;
+    submitErrorData?: any;
+
     handleDelete?: () => Promise<void>;
-    error: any;
+    isDeleting?: boolean;
+    deleteError?: boolean;
+    deleteErrorData?: any;
 };
 
-const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError, handleDelete, error}: MenuFormProps) => {
+const MenuForm = ({onSubmit, initialData, isSubmitting, submitSuccess, submitError, submitErrorData, handleDelete, isDeleting, deleteError, deleteErrorData}: MenuFormProps) => {
     
    const {register, handleSubmit, formState, control, setValue, reset} = useForm({mode: "all",
         defaultValues: {
@@ -51,7 +56,7 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
     const [optionGroups, setOptionGroups] = useState(initialData?.options || []);
     const [imageReset, setImageReset] = useState(false);
 
-    const successMessage = initialData ? "Item updated successfully!" : "Item added successfully!";
+    const successMessage = initialData ? successMsg.edit : successMsg.add;
     
     const handleFormSubmit = async (data) => {
         try {
@@ -70,28 +75,14 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
         }
     };
 
-    const handleItemDelete = async () => {
-        try{
-            if(handleDelete){
-                await handleDelete();
-                reset(); 
-                setAddons([]);
-                setDietaryAlternatives([]);
-                setOptionGroups([]);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     const getErrorMessage = (error: any) => {
         const message = error?.response?.data?.message;
 
         if (Array.isArray(message)) {
-            return "Some information is invalid. Please check the form and try again.";
+            return invalidInfoMessage;
         }
 
-        return message || "Something went wrong. Please try again.";
+        return message || generalErrorMessage;
     };
 
 
@@ -115,33 +106,34 @@ const MenuForm = ({onSubmit, initialData, isLoading, uploadSuccess, uploadError,
 
                     <div className={addToMenuStyles.formActions}>
                         
-                        <Button type="submit" text={initialData ? "Update Item" : "Add Item"} loadingText={initialData ? "Updating..." : "Adding..."} icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />} variant="formPrimary" isLoading={isLoading} />
+                        <Button type="submit" text={initialData ? "Update Item" : "Add Item"} loadingText={initialData ? "Updating..." : "Adding..."} icon={initialData ? <Edit2 size={14} /> : <Plus size={14} />} variant="formPrimary" isLoading={isSubmitting} />
 
                         {initialData && (
-                            <Button type="button" text="Delete" variant="formDanger" icon={<Trash2 size={14} />} onClick={handleItemDelete} />
+                            <Button type="button" text="Delete" variant="formDanger" icon={<Trash2 size={14} />} onClick={handleDelete} />
                         )}
 
                     </div>
                    
-                   {/* {isLoading && <LinearProgress className="mt-2 mb-2" aria-label="Loading…" />} */}
-                   {/* {uploadSuccess && <p className={addToMenuStyles.successfulUploadMessage}>{successMessage}</p>}
-                   {uploadError && <p className={addToMenuStyles.failedUploadMessage}>{errorMessage}</p>}
-                    */}
-                   {uploadSuccess && (
+                   {submitSuccess && (
                     <div className={addToMenuStyles.successMessage}>
-                        <CheckCircle2 size={16} className="shrink-0" />
+                        <CheckCircle2 size={16} className={addToMenuStyles.buttonIcons} />
                         <span>{successMessage}</span>
                     </div>
                     )}
 
-                    {uploadError && (
+                    {submitError && (
                     <div className={addToMenuStyles.errorMessage}>
-                        <CircleAlert size={16} className="shrink-0" />
-                        <span>
-                        {getErrorMessage(error)}
-                        </span>
+                        <CircleAlert size={16} className={addToMenuStyles.buttonIcons} />
+                        <span>{getErrorMessage(submitErrorData)}</span>
                     </div>
-)}
+                    )}
+
+                    {deleteError && (
+                    <div className={addToMenuStyles.errorMessage}>
+                        <CircleAlert size={16} className={addToMenuStyles.buttonIcons} />
+                        <span>{getErrorMessage(deleteErrorData)}</span>
+                    </div>
+                    )}
                 </form>  
             </div>
 

@@ -1,5 +1,5 @@
 import ErrorComponent from "../components/ErroPageComponents/ErrorComponent";
-import { UnauthorizedErrorMessage } from "../data/errorMessages";
+import { UnauthorizedErrorMessage } from "../data/validationMessages";
 
 
 const UnauthorizedPage = () => {

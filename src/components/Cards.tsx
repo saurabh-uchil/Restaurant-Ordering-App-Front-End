@@ -47,8 +47,8 @@ const Cards = ({item}) => {
             <p className={menuCardStyles.dietaryText}>Also available as</p>
           )}
           {item.dietaryAlternatives.map((diet) => (
-            <div>
-                 <span key={diet?._id} className={menuCardStyles.dietaryBadge}>{diet?.shortCode}</span>
+            <div key={diet?._id}>
+                 <span  className={menuCardStyles.dietaryBadge}>{diet?.shortCode}</span>
            </div>
           ))}
         </div>

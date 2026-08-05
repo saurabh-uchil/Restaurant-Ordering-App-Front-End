@@ -1,5 +1,5 @@
 import ErrorComponent from "../components/ErroPageComponents/ErrorComponent";
-import { NotFoundErrorMessage } from "../data/errorMessages";
+import { NotFoundErrorMessage } from "../data/validationMessages";
 
 const NotFound = () => {
   return (

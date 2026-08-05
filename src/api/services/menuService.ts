@@ -5,18 +5,23 @@ export const addMenuItem = async (restaurant_Id: string, data: any) => {
   return response.data;
 };
 
+export const getMenuItemById = async (menuItemId: string) => {
+  const response = await api.get(`/menu/food-item/${menuItemId}`);
+  return response.data;
+}
+
 export const getMenuItems = async (restaurantId: string) => {
   const response = await api.get(`/menu/${restaurantId}`);
   return response.data;
 }
 
-export const editMenuItem = async (restaurantId: string, data: any) => {
-  const response = await api.put(`/menu/${restaurantId}`, data);
+export const editMenuItem = async (itemId:string, data: any) => {
+  const response = await api.put(`/menu/update-food-item/${itemId}`, data);
   return response.data;
 };
 
-export const deleteMenuItem = async (restaurantId: string, menuItemId: string) => {
-  const response = await api.delete(`/menu/${restaurantId}/${menuItemId}`);
+export const deleteMenuItem = async (itemId: string) => {
+  const response = await api.delete(`menu/delete-food-item/${itemId}`);
   return response.data;
 };
 

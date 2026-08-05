@@ -66,6 +66,8 @@ deleteBtn:
 
   errorMessage:
   "mt-3 flex items-center gap-2 rounded-lg border border-[#E8C7C3] bg-[#FFF5F4] px-3 py-2.5 text-[13px] font-medium text-[#B84A44]",
+
+  buttonIcons: "shrink-0"
 }
 
 export const nestedOptionsStyles = {
@@ -94,7 +96,5 @@ export const nestedOptionsStyles = {
     "flex h-11 w-7 shrink-0 items-center justify-center text-[#B84A44] transition-colors duration-200 hover:text-[#963A35]",
 
   emptyText:
-    "py-2 text-xs text-[#8C8676]",
-
-  
+    "py-2 text-xs text-[#8C8676]"
 };

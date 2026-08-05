@@ -2,7 +2,7 @@
 import MenuForm from "../components/MenuForm";
 
 import { useCurrentUser } from "../store/authStore";
-import { useAddItem } from "../api/apihooks/useAddItem";
+import { useAddItem } from "../api/apihooks/useMenu";
 
 const AddFoodItem = () => {
 

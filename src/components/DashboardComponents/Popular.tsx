@@ -13,7 +13,7 @@ const Popular = ({ items }: PopularProps) => {
 
   const popularItems = items.slice(0, 4).map((item, index) => {
     return(
-      <PopularItem  item={item} index={index}/>
+      <PopularItem key={index}  item={item} index={index}/>
     );
   });
 

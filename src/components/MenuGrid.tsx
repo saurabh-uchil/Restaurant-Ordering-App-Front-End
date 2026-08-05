@@ -4,6 +4,7 @@ import Cards from "./Cards";
 import Filters from "./Filters";
 import SearchBar from "./SearchBar";
 
+
 const MenuGrid = ({mode, data}) => {
 
     const filters = ['All', 'Entree', 'Mains', 'Dessert', 'Kids', 'Sides', 'Steaks'];
@@ -18,8 +19,7 @@ const MenuGrid = ({mode, data}) => {
         return (
             <Cards key={item._id} item={item}/>
         )})
-    
-    
+     
   return (
     <div className={viewMenuStyles.cardContainer}>
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center px-4 lg:px-0">
