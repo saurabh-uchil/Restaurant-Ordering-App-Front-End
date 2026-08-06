@@ -3,7 +3,8 @@ import MenuForm from "../components/MenuForm";
 import { useCurrentUser } from "../store/authStore";
 import { useGetItemById, useEditFoodItem, useDeleteFoodItem } from "../api/apihooks/useMenu";
 import { ContentState } from "../components/ContentState";
-import { menuItemContentStates } from "../data/validationMessages";
+import { editItemContentStates } from "../data/validationMessages";
+
 
 const EditMenuItem = () => {
     const { id } = useParams();
@@ -39,15 +40,15 @@ const EditMenuItem = () => {
     };
 
     if(isFetching){
-      return <ContentState type={menuItemContentStates.loading.type} title={menuItemContentStates.loading.title} />
+      return <ContentState type={editItemContentStates.loading.type} title={editItemContentStates.loading.title} />
     }
 
     if(isFetchError){
-      return <ContentState type={menuItemContentStates.error.type} title={menuItemContentStates.error.title} description={fetchError?.message || menuItemContentStates.error.description} />
+      return <ContentState type={editItemContentStates.error.type} title={editItemContentStates.error.title} description={fetchError?.message || editItemContentStates.error.description} />
     }
 
     if(!data){
-      return <ContentState type={menuItemContentStates.empty.type} title={menuItemContentStates.empty.title} description={menuItemContentStates.empty.description} />
+      return <ContentState type={editItemContentStates.empty.type} title={editItemContentStates.empty.title} description={editItemContentStates.empty.description} />
     }
 
   return (

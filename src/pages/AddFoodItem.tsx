@@ -35,6 +35,7 @@ const AddFoodItem = () => {
 
   const {mutateAsync, isPending, isError, isSuccess, error} = useAddItem(); 
 
+  console.log({ isPending, isError, isSuccess, error });
 
   const submitForm = async (data) => {
     if(!currentUser || !currentUser.restaurant){
@@ -45,7 +46,7 @@ const AddFoodItem = () => {
   }
 
   return (
-        <MenuForm onSubmit={submitForm} isLoading={isPending} uploadSuccess={isSuccess} uploadError={isError} error={error} />  
+        <MenuForm onSubmit={submitForm} isSubmitting={isPending} submitSuccess={isSuccess} submitError={isError} submitErrorData={error} />  
   )
 }
 

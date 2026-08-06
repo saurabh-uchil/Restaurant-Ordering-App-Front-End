@@ -1,27 +1,47 @@
 export const notificationStyles = {
   container:
-    "flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-[13px] font-medium shadow-sm",
+    "fixed top-20 right-5 z-50 flex w-[calc(100%-2rem)] max-w-[380px] items-center justify-between gap-3 rounded-xl border px-4 py-3.5 shadow-lg backdrop-blur-sm sm:right-6",
 
   content:
-    "flex min-w-0 items-center gap-2",
+    "flex min-w-0 items-center gap-3",
+
+  iconContainer:
+    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+
+  message:
+    "text-[13px] font-medium leading-5",
 
   icon:
     "shrink-0",
 
   closeButton:
-    "flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors duration-200 hover:bg-black/5",
+    "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-black/5",
 
   variants: {
     success:
-      "border-[#CFE3D4] bg-[#F3F8F4] text-[#477052]",
+      "border-[#D6E5D9] bg-[#F7FBF8] text-[#41694B]",
 
     error:
-      "border-[#E8C7C3] bg-[#FFF5F4] text-[#B84A44]",
+      "border-[#EBCBC7] bg-[#FFF7F6] text-[#A94741]",
 
     warning:
-      "border-[#F1D6A8] bg-[#FFF9EE] text-[#9A6825]",
+      "border-[#EEDDBB] bg-[#FFFBF3] text-[#8A632A]",
 
     info:
-      "border-[#D9D5CC] bg-[#F7F6F3] text-[#5F584F]",
+      "border-[#E8E5DE] bg-[#FCFBF9] text-[#5F584F]",
+  },
+
+  iconVariants: {
+    success:
+      "bg-[#E5F1E8] text-[#477052]",
+
+    error:
+      "bg-[#F9E5E3] text-[#B84A44]",
+
+    warning:
+      "bg-[#F8EDD8] text-[#9A6825]",
+
+    info:
+      "bg-[#F0EEE9] text-[#6B655B]",
   },
 };
