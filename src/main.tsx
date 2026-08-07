@@ -19,6 +19,7 @@ import Test from './pages/Test.tsx';
 import ProtectedRoute from './pages/ProtectedRoute.tsx';
 import Error401 from './pages/UnauthorizedPage.tsx';
 import NotFound from './pages/NotFound.tsx';
+import CustomerLandingPage from './components/CustomerPage/CustomerLandingPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/login" element={<Login />} />
           <Route path="/getStarted" element={<Register />} />
           <Route path="/notFound" element={<NotFound />} />
+          <Route path="/customer" element={<CustomerLandingPage />} />
           <Route element={<ProtectedRoute />} >
             <Route path ="/dashboard" element={<Dashboard />} >
               <Route index element={<Stats />} />
