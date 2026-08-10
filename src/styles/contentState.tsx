@@ -14,11 +14,9 @@ export const contentStateStyles = {
   errorIconContainer:
     "mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF5F4] text-[#B84A44]",
 
-  title:
-    "text-base font-semibold text-[#2F2A25]",
-
-  description:
-    "mt-1.5 max-w-sm text-sm leading-6 text-[#8C8676]",
+  title: "text-base font-semibold text-[#4A453E]",
+  
+  description: "mt-2 text-sm leading-6 text-[#8C8676]",
 
   action:
     "mt-4",
