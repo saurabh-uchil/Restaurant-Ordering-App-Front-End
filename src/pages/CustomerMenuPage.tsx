@@ -1,5 +1,7 @@
 import { useParams, useSearchParams } from "react-router";
-import { useGetMenu } from "../api/apihooks/useRestaurant";
+import { useGetMenu, useRestuarant } from "../api/apihooks/useRestaurant";
+import CustomerHeader from "../components/CustomerPage/CustomerHeader";
+import {customerHeaderStyles as styles} from "../styles/CustomerPage/customerPage";
 
 const CustomerMenuPage = () => {
 
@@ -11,16 +13,22 @@ const CustomerMenuPage = () => {
 
   const { data, isPending, isError, error, } = useGetMenu(restaurantSlugName);
 
-  console.log(data);
+   const { data: restaurantDetails, isPending: fetchingRestaurant, isError: restaurantHasError, error: restaurantError } = useRestuarant(restaurantSlugName);
+
+  console.log(restaurantDetails);
 
   return (
-    <div>
-      <h4>Customer Menu Page</h4>
-      <p>Restaurant: {restaurant}</p>
-      <p>Table: {table}</p>
-    </div>
+  <div className={styles.page}>
+    <div className={styles.container}>
+      {data && <CustomerHeader
+        restaurant={restaurantDetails.name}
+        table={table}
+      />}
 
-  )
+      {/* rest of customer menu */}
+    </div>
+  </div>
+);
 }
 
 export default CustomerMenuPage
