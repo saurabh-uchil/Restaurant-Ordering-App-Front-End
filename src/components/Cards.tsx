@@ -1,10 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { menuCardStyles } from "../styles/viewMenuStyles";
 import { MdEdit } from "react-icons/md";
+import { ShoppingCart } from "lucide-react";
 
-const Cards = ({item}) => {
+const Cards = ({item, mode}) => {
   console.log(item)
   const navigate = useNavigate();
+
+  const actionButton = mode == 'admin'? 
+          <button className={menuCardStyles.imageAction} onClick={() => navigate(`/dashboard/editItem/${item._id}`)}>
+            <MdEdit />
+         </button> : mode == 'customer' ? 
+         <button className={menuCardStyles.imageAction} onClick={() => alert(`${item.name}Added to cart`)}>
+             <ShoppingCart />
+         </button> : '';
   return (
     <article key={item._id} className={menuCardStyles.card}>
       <div className={menuCardStyles.imageContainer}>
@@ -15,16 +24,7 @@ const Cards = ({item}) => {
           className={menuCardStyles.image}
         />
 
-         <button
-           /*  onClick={onButtonClick} */
-            className={menuCardStyles.imageAction}
-            /* aria-label={buttonLabel} */
-            onClick={() => navigate(`/dashboard/editItem/${item._id}`)}
-        >
-            {/* <IoAddOutline /> */}
-            
-            <MdEdit />
-        </button>
+         {actionButton}
       </div>
 
       <div className={menuCardStyles.content}>
