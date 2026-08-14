@@ -1,13 +1,18 @@
 import { useParams, useSearchParams } from "react-router";
-import { useGetMenu,useRestuarant} from "../api/apihooks/useRestaurant";
+import { useGetMenu, useRestuarant } from "../api/apihooks/useRestaurant";
 import CustomerHeader from "../components/CustomerPage/CustomerHeader";
 import ContentState from "../components/ContentState";
-import { customerHeaderStyles as styles } from "../styles/CustomerPage/customerPage";
-import { viewMenuStyles } from "../styles/viewMenuStyles";
+import {
+  customerHeaderStyles as styles,
+  customerMenuPageStyles as pageStyles,
+} from "../styles/CustomerPage/customerPage";
 import Filters from "../components/Filters";
 import SearchBar from "../components/SearchBar";
 import { useState } from "react";
 import Cards from "../components/Cards";
+import { filters } from "../data/filters";
+import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
+import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -17,7 +22,7 @@ const CustomerMenuPage = () => {
   const table = searchParams.get("table");
 
   const {
-    data: menu,
+    data: menu = [],
     isPending: isMenuPending,
     isError: isMenuError,
     error: menuError,
@@ -30,18 +35,46 @@ const CustomerMenuPage = () => {
     error: restaurantError,
   } = useRestuarant(restaurantSlugName);
 
-  const filters = ['All', 'Entree', 'Mains', 'Dessert', 'Kids', 'Sides', 'Steaks'];
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
-    const [selectedFilter, setSelectedFilter] = useState('All');
-    const [searchTerm, setSearchTerm] = useState('');
+  const filteredData =
+    selectedFilter === "All"
+      ? menu
+      : menu.filter((item) => item.course === selectedFilter);
 
-    const filteredData = selectedFilter === 'All' ? menu : menu.filter((item) => item.course === selectedFilter);
-    const searchedData = filteredData.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));    
+  const searchedData = filteredData.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-    const card = searchedData.map((item) => {
-        return (
-            <Cards key={item._id} item={item} mode="customer"/>
-        )})
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(
+  theme.breakpoints.down("sm")
+  );
+
+  const handleAddToCart = (item) => {
+    setSelectedItem(item);
+    setIsDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setSelectedItem(null);
+    setIsDrawerOpen(false);
+  };
+
+  const card = searchedData.map((item) => {
+    return (
+      <Cards
+        key={item._id}
+        item={item}
+        mode="customer"
+        onAddToCart={handleAddToCart}
+      />
+    );
+  });
 
   // Validate URL
   if (!restaurantSlugName || !table) {
@@ -86,8 +119,7 @@ const CustomerMenuPage = () => {
         type="error"
         title="Unable to load menu"
         description={
-          menuError?.message ||
-          "Something went wrong while loading the menu."
+          menuError?.message || "Something went wrong while loading the menu."
         }
       />
     );
@@ -118,28 +150,41 @@ const CustomerMenuPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <CustomerHeader
-          restaurant={restaurantDetails.name}
-          table={table}
-        />
+        <CustomerHeader restaurant={restaurantDetails.name} />
 
-        {/* Search */}
+        <section className={pageStyles.hero}>
+          <p className={pageStyles.heroEyebrow}>Table {table}</p>
 
-        {/* Filters */}
+          <h2 className={pageStyles.heroTitle}>What would you like to eat?</h2>
 
-        {/* Customer Menu */}
+          <p className={pageStyles.heroDescription}>
+            Browse the menu and choose something you’ll enjoy.
+          </p>
+        </section>
 
-         <div className={viewMenuStyles.cardContainer}>
-          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center px-4 lg:px-0">
-            <Filters filterArray={filters} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+        <section className={pageStyles.menuSection}>
+          <div className={pageStyles.controls}>
+            <Filters
+              filterArray={filters}
+              selectedFilter={selectedFilter}
+              setSelectedFilter={setSelectedFilter}
+            />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
-          <div className={viewMenuStyles.cardGridCols}>
-            {card}
-          </div>
-         </div>
 
+          <div className={pageStyles.menuGrid}>{card}</div>
+        </section>
       </div>
+
+      <Drawer
+        anchor={isMobile ? "bottom" : "right"}
+        open={isDrawerOpen}
+        onClose={handleDrawerClose}
+      >
+        {selectedItem && (
+          <ItemCustomizer item={selectedItem} handleClose={handleDrawerClose} />
+        )}
+      </Drawer>
     </div>
   );
 };

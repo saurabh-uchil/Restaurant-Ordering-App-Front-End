@@ -1,25 +1,15 @@
 import { Moon, ShoppingCart } from "lucide-react";
-import {customerHeaderStyles as styles} from "../../styles/CustomerPage/customerPage";
+import { customerHeaderStyles as styles } from "../../styles/CustomerPage/customerPage";
 
 type CustomerHeaderProps = {
   restaurant: string;
-  table: string|null;
 };
 
-const CustomerHeader = ({
-  restaurant,
-  table,
-}: CustomerHeaderProps) => {
+const CustomerHeader = ({ restaurant }: CustomerHeaderProps) => {
   return (
     <header className={styles.header}>
       <div className={styles.restaurantInfo}>
-        <h1 className={styles.restaurantName}>
-          {restaurant}
-        </h1>
-
-        <p className={styles.tableNumber}>
-          Table {table}
-        </p>
+        <h1 className={styles.restaurantName}>{restaurant}</h1>
       </div>
 
       <div className={styles.actions}>
@@ -38,9 +28,7 @@ const CustomerHeader = ({
         >
           <ShoppingCart size={21} />
 
-          <span className={styles.cartBadge}>
-            0
-          </span>
+          <span className={styles.cartBadge}>0</span>
         </button>
       </div>
     </header>

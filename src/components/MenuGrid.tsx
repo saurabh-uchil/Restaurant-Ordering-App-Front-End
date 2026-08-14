@@ -3,11 +3,10 @@ import { viewMenuStyles } from "../styles/viewMenuStyles";
 import Cards from "./Cards";
 import Filters from "./Filters";
 import SearchBar from "./SearchBar";
+import { filters } from "../data/filters";
 
 
 const MenuGrid = ({mode, data}) => {
-
-    const filters = ['All', 'Entree', 'Mains', 'Dessert', 'Kids', 'Sides', 'Steaks'];
 
     const [selectedFilter, setSelectedFilter] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');

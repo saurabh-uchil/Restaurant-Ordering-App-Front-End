@@ -3,7 +3,13 @@ import { menuCardStyles } from "../styles/viewMenuStyles";
 import { MdEdit } from "react-icons/md";
 import { ShoppingCart } from "lucide-react";
 
-const Cards = ({item, mode}) => {
+type CardProps = {
+  item: any,
+  mode: 'customer' | 'admin',
+  onAddToCart?: (item: any)=>void
+}
+
+const Cards = ({item, mode, onAddToCart}:CardProps) => {
   console.log(item)
   const navigate = useNavigate();
 
@@ -11,7 +17,7 @@ const Cards = ({item, mode}) => {
           <button className={menuCardStyles.imageAction} onClick={() => navigate(`/dashboard/editItem/${item._id}`)}>
             <MdEdit />
          </button> : mode == 'customer' ? 
-         <button className={menuCardStyles.imageAction} onClick={() => alert(`${item.name}Added to cart`)}>
+         <button className={menuCardStyles.imageAction} onClick={() => onAddToCart?.(item)}>
              <ShoppingCart />
          </button> : '';
   return (
