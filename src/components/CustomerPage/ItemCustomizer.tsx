@@ -31,7 +31,10 @@ const ItemCustomizer = ({
       </header>
 
       <div className={styles.content}>
-        {/* Options will go here later */}
+        <form>
+            <label>Special Instructions</label>
+            <textarea placeholder="Add a note for the chef"/>
+        </form>
       </div>
     </div>
   );
