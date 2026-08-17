@@ -71,9 +71,6 @@ quantityButton:
 quantityValue:
   "min-w-5 text-center text-sm font-semibold text-[#2F2A25]",  
 
-addToCartButton:
-  "mt-5 w-full rounded-xl bg-[#E2793D] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#C96A35] active:bg-[#B85F30]",  
-
 itemInfo:
   "border-b border-[#E8E4DE] pb-5",
 
@@ -82,5 +79,11 @@ itemImage:
 
 itemDescription:
   "text-sm leading-6 text-[#7B756C]",
+
+cartFooter:
+  "sticky bottom-0 border-t border-[#E8E4DE] bg-[#FCFBF9] pt-4",
+
+addToCartButton:
+  "flex w-full items-center justify-between rounded-xl bg-[#E2793D] px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#C96A2F] active:scale-[0.99]",  
 
 };

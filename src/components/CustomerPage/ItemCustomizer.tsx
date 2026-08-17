@@ -10,6 +10,8 @@ type ItemCustomizerProps = {
 const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
   const [quantity, setQuantity] = useState(1);
 
+  const total = item.price * quantity;
+
   const options = item.options ?? [];
 
   const imgageUrl = item.imageUrl;
@@ -77,6 +79,18 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
     </label>
   ));
 
+  const removableIngredients = item.removableIngredients ?? [];
+
+  const removableIngredientsDiv = removableIngredients.map((ingredient) => (
+    <label key={ingredient} className={styles.choiceRow}>
+      <div className={styles.choiceInfo}>
+        <input type="checkbox" value={ingredient} className={styles.checkbox} />
+
+        <span className={styles.choiceName}>{ingredient}</span>
+      </div>
+    </label>
+  ));
+
   return (
     <div className={styles.container}>
       <div className={styles.mobileHandle} />
@@ -105,7 +119,6 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
         </div>
 
         <form className={styles.form}>
-          
           <section className={styles.section}>{optionsDiv}</section>
 
           {addons.length > 0 && (
@@ -121,6 +134,14 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
               <p className={styles.sectionTitle}>Dietary alternatives</p>
 
               <div className={styles.choiceList}>{dietaryAlternativesDiv}</div>
+            </section>
+          )}
+
+          {removableIngredients.length > 0 && (
+            <section className={styles.section}>
+              <p className={styles.sectionTitle}>Remove ingredients</p>
+
+              <div className={styles.choiceList}>{removableIngredientsDiv}</div>
             </section>
           )}
 
@@ -140,9 +161,9 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
               <button
                 type="button"
                 className={styles.quantityButton}
-                onClick={() =>
-                  setQuantity((quantity) => Math.max(1, quantity - 1))
-                }
+                onClick={() => {
+                  setQuantity((quantity) => Math.max(1, quantity - 1));
+                }}
                 disabled={quantity === 1}
                 aria-label="Decrease quantity"
               >
@@ -154,7 +175,9 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
               <button
                 type="button"
                 className={styles.quantityButton}
-                onClick={() => setQuantity((quantity) => quantity + 1)}
+                onClick={() => {
+                  setQuantity((quantity) => quantity + 1);
+                }}
                 aria-label="Increase quantity"
               >
                 <Plus size={16} />
@@ -162,9 +185,12 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
             </div>
           </div>
 
-          <button type="button" className={styles.addToCartButton}>
-            Add to Cart
-          </button>
+          <div className={styles.cartFooter}>
+            <button className={styles.addToCartButton}>
+              <span>Add to Cart</span>
+              <span>${total.toFixed(2)}</span>
+            </button>
+          </div>
         </form>
       </div>
     </div>
