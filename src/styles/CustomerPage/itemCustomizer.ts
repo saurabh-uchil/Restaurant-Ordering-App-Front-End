@@ -73,4 +73,14 @@ quantityValue:
 
 addToCartButton:
   "mt-5 w-full rounded-xl bg-[#E2793D] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#C96A35] active:bg-[#B85F30]",  
+
+itemInfo:
+  "border-b border-[#E8E4DE] pb-5",
+
+itemImage:
+  "mb-4 h-48 w-full rounded-2xl object-cover",
+
+itemDescription:
+  "text-sm leading-6 text-[#7B756C]",
+
 };

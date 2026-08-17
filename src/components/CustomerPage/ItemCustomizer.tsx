@@ -12,6 +12,8 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
 
   const options = item.options ?? [];
 
+  const imgageUrl = item.imageUrl;
+
   const optionsDiv =
     options.length > 0 ? (
       options.map((option) => (
@@ -96,16 +98,14 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
       </header>
 
       <div className={styles.content}>
+        <div className={styles.itemInfo}>
+          <img src={imgageUrl} alt={item.name} className={styles.itemImage} />
+
+          <p className={styles.itemDescription}>{item.description}</p>
+        </div>
+
         <form className={styles.form}>
-          <section className={styles.section}>
-            <label className={styles.sectionTitle}>Special Instructions</label>
-
-            <textarea
-              placeholder="Add a note for the chef"
-              className={styles.textarea}
-            />
-          </section>
-
+          
           <section className={styles.section}>{optionsDiv}</section>
 
           {addons.length > 0 && (
@@ -123,6 +123,15 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
               <div className={styles.choiceList}>{dietaryAlternativesDiv}</div>
             </section>
           )}
+
+          <section className={styles.section}>
+            <label className={styles.sectionTitle}>Special Instructions</label>
+
+            <textarea
+              placeholder="Add a note for the chef"
+              className={styles.textarea}
+            />
+          </section>
 
           <div className={styles.quantityContainer}>
             <p className={styles.quantityLabel}>Quantity</p>
