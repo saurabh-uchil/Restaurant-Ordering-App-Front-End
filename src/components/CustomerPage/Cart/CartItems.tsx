@@ -37,11 +37,65 @@ const CartItems = () => {
                 </p>
               </div>
 
-              {/* {item.description && (
-                <p className={styles.itemDescription}>
-                  {item.description}
-                </p>
-              )} */}
+              {item.options && Object.entries(item.options).length > 0 && (
+                <div className={styles.optionsContainer}>
+                  <p className={styles.customizationLabel}>Options</p>
+
+                  <div className={styles.optionsList}>
+                    {Object.entries(item.options ?? {}).map(([name, value]) => (
+                      <div key={name} className={styles.optionRow}>
+                        <span className={styles.optionName}>{name}</span>
+
+                        <span className={styles.optionValue}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.customizations}>
+                {item.addons?.length > 0 && (
+                  <div className={styles.customizationGroup}>
+                    <span className={styles.customizationLabel}>Add-ons</span>
+
+                    <div className={styles.customizationList}>
+                      {item.addons.map((addon, i) => (
+                        <span key={i} className={styles.customizationTag}>
+                          {addon}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {item.dietaryAlternatives?.length > 0 && (
+                  <div className={styles.customizationGroup}>
+                    <span className={styles.customizationLabel}>Dietary</span>
+
+                    <div className={styles.customizationList}>
+                      {item.dietaryAlternatives.map((da, i) => (
+                        <span key={i} className={styles.customizationTag}>
+                          {da}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {item.removableIngredients?.length > 0 && (
+                  <div className={styles.customizationGroup}>
+                    <span className={styles.customizationLabel}>Removed</span>
+
+                    <div className={styles.customizationList}>
+                      {item.removableIngredients.map((ra, i) => (
+                        <span key={i} className={styles.customizationTag}>
+                          {ra}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {item.specialInstructions && (
                 <p className={styles.specialInstructions}>
@@ -64,9 +118,7 @@ const CartItems = () => {
                   <Minus size={14} />
                 </button>
 
-                <span className={styles.quantityValue}>
-                  {item.quantity}
-                </span>
+                <span className={styles.quantityValue}>{item.quantity}</span>
 
                 <button
                   type="button"
@@ -78,10 +130,7 @@ const CartItems = () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              className={styles.editButton}
-            >
+            <button type="button" className={styles.editButton}>
               Edit
             </button>
           </div>

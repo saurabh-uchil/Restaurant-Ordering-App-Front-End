@@ -59,6 +59,28 @@ export const cartStyles = {
 
   summaryPlaceholder:
     "rounded-2xl border border-[#E8E5DE] bg-white p-5 shadow-sm",
+
+  customizations: "mt-3 flex flex-col gap-2",
+
+  customizationGroup: "flex flex-wrap items-center gap-2",
+
+  customizationLabel: "shrink-0 text-[11px] font-medium text-[#8C8676]",
+
+  customizationList: "flex flex-wrap gap-1.5",
+
+  customizationTag:
+    "rounded-full bg-[#F7F3EE] px-2.5 py-1 text-[11px] font-medium text-[#5F584F]",
+
+  optionsContainer: "mt-3 rounded-xl bg-[#F7F6F3] px-3 py-2.5",
+
+  optionsList: "flex flex-wrap gap-1.5 mt-2",
+
+  optionRow:
+    "flex w-fit max-w-full items-center gap-1.5 rounded-full bg-white px-2.5 py-1",
+
+  optionName: "text-[11px] text-[#8C8676]",
+
+  optionValue: "text-[11px] font-semibold text-[#5F584F]",
 };
 
 export const cartInfoStyles = {

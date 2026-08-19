@@ -87,8 +87,15 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
   const addToCart = useCart(state => state.addToCart);
 
   const handleAddToCart = (data) => {
+
+    const selectedOptions = Object.fromEntries(
+      Object.entries(data.options ?? {}).filter(
+        ([, value]) => typeof value === "string" && value.trim() !== ""
+      )
+    );
+    
     const {_id:itemId, name, price, imageUrl} = item;
-    const cartItem = {...data, itemId, name, basePrice: price, imageUrl};
+    const cartItem = {...data, itemId, name, options:selectedOptions, basePrice: price, imageUrl};
     console.log(cartItem);
     addToCart(cartItem);
   }
