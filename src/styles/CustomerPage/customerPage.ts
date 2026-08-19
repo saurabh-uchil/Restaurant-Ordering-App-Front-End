@@ -4,7 +4,7 @@ export const customerHeaderStyles = {
     "min-h-screen w-full bg-[#FCFBF9] text-[#1E1B16]",
 
   container:
-    "mx-auto min-h-screen w-full max-w-7xl",
+    "w-full px-4 sm:px-6 lg:px-0",
 
   header:
     "flex w-full items-center justify-between px-5 py-5 sm:px-6",

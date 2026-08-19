@@ -150,7 +150,7 @@ const CustomerMenuPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <CustomerHeader restaurant={restaurantDetails.name} />
+        <CustomerHeader restaurant={restaurantDetails.name} slug={restaurantSlugName} table={table}/>
 
         <section className={pageStyles.hero}>
           <p className={pageStyles.heroEyebrow}>Table {table}</p>

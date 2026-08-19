@@ -4,6 +4,7 @@ import CustomizeOptions from "./CustomizeOptions";
 import RemovableIngredient from "./RemovableIngredient";
 import { FormProvider, useForm } from "react-hook-form";
 import { calculateExtraCost } from "../../services/calculateCostService";
+import { useCart } from "../../store/cartStore";
 
 type ItemCustomizerProps = {
   item: any;
@@ -83,6 +84,15 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
     />
   );
 
+  const addToCart = useCart(state => state.addToCart);
+
+  const handleAddToCart = (data) => {
+    const {_id:itemId, name, price, imageUrl} = item;
+    const cartItem = {...data, itemId, name, basePrice: price, imageUrl};
+    console.log(cartItem);
+    addToCart(cartItem);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.mobileHandle} />
@@ -113,7 +123,7 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
         <FormProvider {...methods}>
           <form
             className={styles.form}
-            onSubmit={handleSubmit((data) => console.log(data))}
+            onSubmit={handleSubmit(handleAddToCart)}
           >
             {options.length > 0 && (
               <>
