@@ -1,8 +1,9 @@
 import { create } from "zustand";
 
-type cartItem = {
+export type CartItem = {
     name: string,
     itemId: string,
+    cartItemId:string,
     imageUrl: string
     basePrice: number,
     extraCost?: number, 
@@ -15,11 +16,11 @@ type cartItem = {
 }
 
 type cartState = {
-    myCart: cartItem[],
-    addToCart: (item:cartItem) => void
+    myCart: CartItem[],
+    addToCart: (item:CartItem) => void
 }
 
 export const useCart = create<cartState>((set) => ({
     myCart: [],
-    addToCart: (item: cartItem) => set((state) => ({ myCart: [...state.myCart, item] }))
+    addToCart: (item: CartItem) => set((state) => ({ myCart: [...state.myCart, item] }))
 }));

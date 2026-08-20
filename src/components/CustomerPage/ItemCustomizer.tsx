@@ -4,22 +4,24 @@ import CustomizeOptions from "./CustomizeOptions";
 import RemovableIngredient from "./RemovableIngredient";
 import { FormProvider, useForm } from "react-hook-form";
 import { calculateExtraCost } from "../../services/calculateCostService";
-import { useCart } from "../../store/cartStore";
+import { useCart, type CartItem } from "../../store/cartStore";
 
 type ItemCustomizerProps = {
   item: any;
   handleClose: () => void;
+  handleToast?: (item: string) => void;
+  cartItem?: CartItem;
 };
 
-const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
+const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustomizerProps) => {
   const methods = useForm({
     defaultValues: {
-      quantity: 1,
-      specialInstructions: "",
-      addons: [],
-      dietaryAlternatives: [],
-      removableIngredients: [],
-      options: {},
+      quantity: cartItem?.quantity ?? 1,
+      specialInstructions: cartItem?.specialInstructions ?? "",
+      addons: cartItem?.addons ?? [],
+      dietaryAlternatives: cartItem?.dietaryAlternatives ?? [],
+      removableIngredients: cartItem?.removableIngredients ?? [],
+      options: cartItem?.options ?? {},
     },
   });
 
@@ -94,10 +96,16 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
       )
     );
     
+    const cartItemId = crypto.randomUUID();
     const {_id:itemId, name, price, imageUrl} = item;
-    const cartItem = {...data, itemId, name, options:selectedOptions, basePrice: price, imageUrl};
-    console.log(cartItem);
+    const cartItem = {...data, itemId, name, options:selectedOptions, basePrice: price, imageUrl, cartItemId};
     addToCart(cartItem);
+    handleClose();
+    handleToast?.(name);
+  }
+
+  const handleEditCartItem = (data) =>{
+    console.log(data)
   }
 
   return (
@@ -130,7 +138,7 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
         <FormProvider {...methods}>
           <form
             className={styles.form}
-            onSubmit={handleSubmit(handleAddToCart)}
+            onSubmit={handleSubmit(cartItem? handleEditCartItem  : handleAddToCart)}
           >
             {options.length > 0 && (
               <>
@@ -192,7 +200,7 @@ const ItemCustomizer = ({ item, handleClose }: ItemCustomizerProps) => {
 
             <div className={styles.cartFooter}>
               <button type="submit" className={styles.addToCartButton}>
-                <span>Add to Cart</span>
+                <span>{cartItem? "Save" :"Add to Cart"}</span>
                 <span>${total.toFixed(2)}</span>
               </button>
             </div>

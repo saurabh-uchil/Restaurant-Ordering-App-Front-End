@@ -13,6 +13,7 @@ import Cards from "../components/Cards";
 import { filters } from "../data/filters";
 import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
+import Notification from "../components/Notification";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -49,11 +50,19 @@ const CustomerMenuPage = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  
+
   const theme = useTheme();
-  const isMobile = useMediaQuery(
-  theme.breakpoints.down("sm")
-  );
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [showToast, setShowToast] = useState({ visible: false, itemName: "" });
+
+  const handleShowToast = (itemName: string) => {
+    setShowToast({ visible: true, itemName });
+
+    setTimeout(() => {
+      setShowToast({ visible: false, itemName: "" });
+    }, 3000);
+  };
 
   const handleAddToCart = (item) => {
     setSelectedItem(item);
@@ -150,7 +159,24 @@ const CustomerMenuPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <CustomerHeader restaurant={restaurantDetails.name} slug={restaurantSlugName} table={table}/>
+        <CustomerHeader
+          restaurant={restaurantDetails.name}
+          slug={restaurantSlugName}
+          table={table}
+        />
+
+        {showToast.visible && (
+          <Notification
+            variant="success"
+            message={`${showToast.itemName} added to cart`}
+            onClose={() =>
+              setShowToast({
+                visible: false,
+                itemName: "",
+              })
+            }
+          />
+        )}
 
         <section className={pageStyles.hero}>
           <p className={pageStyles.heroEyebrow}>Table {table}</p>
@@ -182,7 +208,11 @@ const CustomerMenuPage = () => {
         onClose={handleDrawerClose}
       >
         {selectedItem && (
-          <ItemCustomizer item={selectedItem} handleClose={handleDrawerClose} />
+          <ItemCustomizer
+            item={selectedItem}
+            handleClose={handleDrawerClose}
+            handleToast={handleShowToast}
+          />
         )}
       </Drawer>
     </div>

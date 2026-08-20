@@ -5,10 +5,14 @@ import CustomerHeader from "../CustomerHeader";
 import CartItems from "../Cart/CartItems";
 import { cartStyles as styles } from "../../../styles/cart";
 import CartInfo from "../Cart/CartInfo";
-import { useCart } from "../../../store/cartStore";
+import { useCart, type CartItem } from "../../../store/cartStore";
 import EmptyCart from "./EmptyCart";
 import OrderSummary from "./OrderSummary";
 import CartNotices from "./CartNotices";
+import { Drawer, useMediaQuery, useTheme } from "@mui/material";
+import { useState } from "react";
+import ItemCustomizer from "../ItemCustomizer";
+import { useGetItemById } from "../../../api/apihooks/useMenu";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -19,7 +23,24 @@ const Cart = () => {
   const table = searchParams.get("table");
 
   const myCart = useCart((state) => state.myCart);
+  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
+  const [isDrawerOpen , setIsDrawerOpen] = useState(false);
+
+  const {data: menuItem, isPending: isFetching, isError: isFetchError, error: fetchError} = useGetItemById(selectedItem?.itemId);
+
+  const handleDrawer = () => {
+    setIsDrawerOpen(isDrawerOpen => !isDrawerOpen);
+  } 
+
+  const handleEdit = (item:CartItem) => {
+    setSelectedItem(item);
+    handleDrawer();
+  }
+  
   const {
     data: restaurantDetails,
     isPending: isRestaurantPending,
@@ -95,7 +116,7 @@ const Cart = () => {
           <div className={styles.cartLayout}>
             <main className={styles.itemsColumn}>
               <CartInfo table={table} />
-              <CartItems />
+              <CartItems handleEdit={handleEdit}/>
             </main>
 
             <aside className={styles.summaryColumn}>
@@ -108,6 +129,20 @@ const Cart = () => {
           </div>
         )}
       </div>
+
+      <Drawer
+        anchor={isMobile ? "bottom" : "right"}
+        open={isDrawerOpen}
+        onClose={handleDrawer}
+      >
+        {selectedItem && menuItem && (
+          <ItemCustomizer
+            item={menuItem}
+            handleClose={handleDrawer}
+            cartItem={selectedItem}
+          />
+        )}
+      </Drawer>
     </div>
   );
 };
