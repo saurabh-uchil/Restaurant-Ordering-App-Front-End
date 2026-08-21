@@ -13,6 +13,7 @@ import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import ItemCustomizer from "../ItemCustomizer";
 import { useGetItemById } from "../../../api/apihooks/useMenu";
+import Notification from "../../Notification";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -23,12 +24,30 @@ const Cart = () => {
   const table = searchParams.get("table");
 
   const myCart = useCart((state) => state.myCart);
+  const deleteCartItem = useCart((state)=> state.deleteCartItem);
   
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
   const [isDrawerOpen , setIsDrawerOpen] = useState(false);
+
+  const [showToast, setShowToast] = useState<{
+    visible: boolean;
+    itemName: string;
+    variant: "success" | "error" | "warning" | "info";
+  }>({ visible: false, itemName: "", variant: "success" });
+
+  const handleShowToast = (
+    itemName: string,
+    variant: "success" | "error" | "warning" | "info"
+  ) => {
+    setShowToast({ visible: true, itemName, variant });
+
+    setTimeout(() => {
+      setShowToast({ visible: false, itemName: "", variant: "success" });
+    }, 3000);
+  };
 
   const {data: menuItem, isPending: isFetching, isError: isFetchError, error: fetchError} = useGetItemById(selectedItem?.itemId);
 
@@ -40,7 +59,11 @@ const Cart = () => {
     setSelectedItem(item);
     handleDrawer();
   }
-  
+  const handleDelete = (cartItemId: string) =>{
+    deleteCartItem(cartItemId);
+    handleShowToast(cartItemId, "error");
+  }
+
   const {
     data: restaurantDetails,
     isPending: isRestaurantPending,
@@ -105,6 +128,20 @@ const Cart = () => {
           table={table}
         />
 
+        {showToast.visible && (
+          <Notification
+            variant={showToast.variant}
+            message={showToast.variant == "error" ? `${showToast.itemName} removed from the cart`: `${showToast.itemName} updated successfully`}
+            onClose={() =>
+              setShowToast({
+                visible: false,
+                itemName: "",
+                variant:"success"
+              })
+            }
+          />
+        )}
+
       <div className={styles.container}>
         {!hasItems ? (
           <EmptyCart
@@ -116,7 +153,7 @@ const Cart = () => {
           <div className={styles.cartLayout}>
             <main className={styles.itemsColumn}>
               <CartInfo table={table} />
-              <CartItems handleEdit={handleEdit}/>
+              <CartItems handleEdit={handleEdit} handleDelete={handleDelete}/>
             </main>
 
             <aside className={styles.summaryColumn}>
@@ -140,6 +177,7 @@ const Cart = () => {
             item={menuItem}
             handleClose={handleDrawer}
             cartItem={selectedItem}
+            handleToast={handleShowToast}
           />
         )}
       </Drawer>

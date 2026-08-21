@@ -1,12 +1,13 @@
 import { Minus, Plus } from "lucide-react";
-import { useCart } from "../../../store/cartStore";
+import { useCart, type CartItem } from "../../../store/cartStore";
 import { cartStyles as styles } from "../../../styles/cart";
 
 type CartItemsProps = {
-  handleEdit: (item)=> void;
+  handleEdit: (item:CartItem)=> void;
+  handleDelete: (cartItemId:string) =>void
 }
 
-const CartItems = ({handleEdit}:CartItemsProps) => {
+const CartItems = ({handleEdit, handleDelete}:CartItemsProps) => {
   const myCart = useCart((state) => state.myCart);
 
   if (myCart.length === 0) {
@@ -136,6 +137,10 @@ const CartItems = ({handleEdit}:CartItemsProps) => {
 
             <button type="button" className={styles.editButton} onClick={()=>handleEdit(item)}>
               Edit
+            </button>
+
+            <button type="button" className={styles.editButton} onClick={()=>handleDelete(item.cartItemId)}>
+              Delete
             </button>
           </div>
         </div>

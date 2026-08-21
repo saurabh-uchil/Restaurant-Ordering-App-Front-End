@@ -25,6 +25,7 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
     },
   });
 
+
   const { handleSubmit, register, watch, setValue } = methods;
 
   const quantity = watch("quantity");
@@ -87,6 +88,7 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
   );
 
   const addToCart = useCart(state => state.addToCart);
+  const editCartItem = useCart(state => state.editCartItem);
 
   const handleAddToCart = (data) => {
 
@@ -105,7 +107,9 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
   }
 
   const handleEditCartItem = (data) =>{
-    console.log(data)
+    editCartItem({...cartItem, ...data});
+    handleClose();
+    handleToast?.(cartItem?.name ?? item.name);
   }
 
   return (
