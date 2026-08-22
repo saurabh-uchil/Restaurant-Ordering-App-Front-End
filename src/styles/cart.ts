@@ -81,6 +81,19 @@ export const cartStyles = {
   optionName: "text-[11px] text-[#8C8676]",
 
   optionValue: "text-[11px] font-semibold text-[#5F584F]",
+
+  drawerPaper: "w-full sm:w-[400px]",
+
+  drawerContent: "flex h-full w-full flex-col",
+
+  actions:
+    "flex shrink-0 items-center gap-1.5",
+
+  actionButton:
+    "flex h-8 w-8 items-center justify-center rounded-lg text-[#7B756C] transition-colors hover:bg-[#F5F2ED] hover:text-[#C4632E] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
+
+  deleteButton:
+    "hover:bg-[#FEF0EC] hover:text-[#C4632E]",
 };
 
 export const cartInfoStyles = {

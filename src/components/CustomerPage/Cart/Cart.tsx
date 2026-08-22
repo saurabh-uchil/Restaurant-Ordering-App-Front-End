@@ -14,6 +14,7 @@ import { useState } from "react";
 import ItemCustomizer from "../ItemCustomizer";
 import { useGetItemById } from "../../../api/apihooks/useMenu";
 import Notification from "../../Notification";
+import DrawerState from "../../DrawerState";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -24,13 +25,13 @@ const Cart = () => {
   const table = searchParams.get("table");
 
   const myCart = useCart((state) => state.myCart);
-  const deleteCartItem = useCart((state)=> state.deleteCartItem);
-  
+  const deleteCartItem = useCart((state) => state.deleteCartItem);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
-  const [isDrawerOpen , setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [showToast, setShowToast] = useState<{
     visible: boolean;
@@ -40,7 +41,7 @@ const Cart = () => {
 
   const handleShowToast = (
     itemName: string,
-    variant: "success" | "error" | "warning" | "info"
+    variant: "success" | "error" | "warning" | "info" = "success",
   ) => {
     setShowToast({ visible: true, itemName, variant });
 
@@ -49,20 +50,26 @@ const Cart = () => {
     }, 3000);
   };
 
-  const {data: menuItem, isPending: isFetching, isError: isFetchError, error: fetchError} = useGetItemById(selectedItem?.itemId);
+  const {
+    data: menuItem,
+    isPending: isFetching,
+    isError: isFetchError,
+    error: fetchError,
+  } = useGetItemById(selectedItem?.itemId);
 
   const handleDrawer = () => {
-    setIsDrawerOpen(isDrawerOpen => !isDrawerOpen);
-  } 
+    setIsDrawerOpen((isDrawerOpen) => !isDrawerOpen);
+  };
 
-  const handleEdit = (item:CartItem) => {
+  const handleEdit = (item: CartItem) => {
     setSelectedItem(item);
     handleDrawer();
-  }
-  const handleDelete = (cartItemId: string) =>{
-    deleteCartItem(cartItemId);
-    handleShowToast(cartItemId, "error");
-  }
+  };
+
+  const handleDelete = (cartItem: CartItem) => {
+    deleteCartItem(cartItem);
+    handleShowToast(cartItem.name, "error");
+  };
 
   const {
     data: restaurantDetails,
@@ -123,24 +130,28 @@ const Cart = () => {
   return (
     <div className={styles.page}>
       <CustomerHeader
-          restaurant={restaurantDetails.name}
-          slug={restaurantSlugName}
-          table={table}
-        />
+        restaurant={restaurantDetails.name}
+        slug={restaurantSlugName}
+        table={table}
+      />
 
-        {showToast.visible && (
-          <Notification
-            variant={showToast.variant}
-            message={showToast.variant == "error" ? `${showToast.itemName} removed from the cart`: `${showToast.itemName} updated successfully`}
-            onClose={() =>
-              setShowToast({
-                visible: false,
-                itemName: "",
-                variant:"success"
-              })
-            }
-          />
-        )}
+      {showToast.visible && (
+        <Notification
+          variant={showToast.variant}
+          message={
+            showToast.variant == "error"
+              ? `${showToast.itemName} removed from the cart`
+              : `${showToast.itemName} updated successfully`
+          }
+          onClose={() =>
+            setShowToast({
+              visible: false,
+              itemName: "",
+              variant: "success",
+            })
+          }
+        />
+      )}
 
       <div className={styles.container}>
         {!hasItems ? (
@@ -153,34 +164,65 @@ const Cart = () => {
           <div className={styles.cartLayout}>
             <main className={styles.itemsColumn}>
               <CartInfo table={table} />
-              <CartItems handleEdit={handleEdit} handleDelete={handleDelete}/>
+              <CartItems handleEdit={handleEdit} handleDelete={handleDelete} />
             </main>
 
             <aside className={styles.summaryColumn}>
-              <OrderSummary  
-              onContinueShopping={() =>
-              navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`)
-            }/>
+              <OrderSummary
+                onContinueShopping={() =>
+                  navigate(
+                    `/restaurant/${restaurantSlugName}/menu?table=${table}`,
+                  )
+                }
+              />
               <CartNotices />
             </aside>
           </div>
         )}
       </div>
 
-      <Drawer
-        anchor={isMobile ? "bottom" : "right"}
-        open={isDrawerOpen}
-        onClose={handleDrawer}
-      >
-        {selectedItem && menuItem && (
-          <ItemCustomizer
-            item={menuItem}
-            handleClose={handleDrawer}
-            cartItem={selectedItem}
-            handleToast={handleShowToast}
-          />
-        )}
-      </Drawer>
+      {isDrawerOpen && (
+        <Drawer
+          anchor={isMobile ? "bottom" : "right"}
+          open={isDrawerOpen}
+          onClose={handleDrawer}
+          slotProps={{
+            paper: {
+              className: styles.drawerPaper,
+            },
+          }}
+        >
+          <div className={styles.drawerContent}>
+            {isFetching && (
+              <DrawerState
+                type="loading"
+                title="Loading customization..."
+                description="Getting the latest options for this item."
+              />
+            )}
+
+            {isFetchError && (
+              <DrawerState
+                type="error"
+                title="Unable to edit this item"
+                description={
+                  fetchError?.message ||
+                  "We couldn't load the item's customization options."
+                }
+              />
+            )}
+
+            {selectedItem && menuItem && !isFetchError && !isFetching && (
+              <ItemCustomizer
+                item={menuItem}
+                handleClose={handleDrawer}
+                cartItem={selectedItem}
+                handleToast={handleShowToast}
+              />
+            )}
+          </div>
+        </Drawer>
+      )}
     </div>
   );
 };

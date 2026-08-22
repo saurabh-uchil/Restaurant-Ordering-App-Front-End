@@ -1,13 +1,13 @@
-import { Minus, Plus } from "lucide-react";
+import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
 import { useCart, type CartItem } from "../../../store/cartStore";
 import { cartStyles as styles } from "../../../styles/cart";
 
 type CartItemsProps = {
-  handleEdit: (item:CartItem)=> void;
-  handleDelete: (cartItemId:string) =>void
-}
+  handleEdit: (item: CartItem) => void;
+  handleDelete: (cartItem: CartItem) => void;
+};
 
-const CartItems = ({handleEdit, handleDelete}:CartItemsProps) => {
+const CartItems = ({ handleEdit, handleDelete }: CartItemsProps) => {
   const myCart = useCart((state) => state.myCart);
 
   if (myCart.length === 0) {
@@ -135,13 +135,27 @@ const CartItems = ({handleEdit, handleDelete}:CartItemsProps) => {
               </div>
             </div>
 
-            <button type="button" className={styles.editButton} onClick={()=>handleEdit(item)}>
-              Edit
-            </button>
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={styles.actionButton}
+                onClick={() => handleEdit(item)}
+                aria-label={`Edit ${item.name}`}
+                title="Edit item"
+              >
+                <Pencil size={16} />
+              </button>
 
-            <button type="button" className={styles.editButton} onClick={()=>handleDelete(item.cartItemId)}>
-              Delete
-            </button>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${styles.deleteButton}`}
+                onClick={() => handleDelete(item)}
+                aria-label={`Delete ${item.name}`}
+                title="Delete item"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
           </div>
         </div>
       ))}

@@ -20,7 +20,7 @@ type cartState = {
   myCart: CartItem[];
   addToCart: (item: CartItem) => void;
   editCartItem: (item: CartItem) => void;
-  deleteCartItem: (cartItemId: string) => void;
+  deleteCartItem: (cartItem: CartItem) => void;
 };
 
 export const useCart = create<cartState>((set) => ({
@@ -38,6 +38,6 @@ export const useCart = create<cartState>((set) => ({
         }
     }),
 
-  deleteCartItem: (cartItemId: string) => 
-    set((state)=> ({myCart: state.myCart.filter((item)=> item.cartItemId !== cartItemId)}))  
+  deleteCartItem: (cartItem: CartItem) => 
+    set((state)=> ({myCart: state.myCart.filter((item)=> item.cartItemId !== cartItem.cartItemId)}))  
 }));
