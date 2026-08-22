@@ -1,3 +1,5 @@
+import type { CartItem } from "../store/cartStore";
+
 export const calculateExtraCost = (item, selectedValues) => {
   let extraCost = 0;
 
@@ -25,4 +27,23 @@ export const calculateExtraCost = (item, selectedValues) => {
   });
 
   return extraCost;
+};
+
+export const getItemTotal = (item: CartItem) => {
+  const optionsTotal = Object.values(item.options).reduce(
+    (acc, curr) => acc + curr.extraCost,
+    0
+  );
+
+  const addonsTotal = item.addons.reduce(
+    (acc, curr) => acc + curr.extraCost,
+    optionsTotal
+  );
+
+  const dietaryAlternativesTotal = item.dietaryAlternatives.reduce(
+    (acc, curr) => acc + curr.extraCost,
+    addonsTotal
+  );
+
+  return item.basePrice + dietaryAlternativesTotal;
 };

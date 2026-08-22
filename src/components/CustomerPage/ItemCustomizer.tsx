@@ -5,6 +5,11 @@ import RemovableIngredient from "./RemovableIngredient";
 import { FormProvider, useForm } from "react-hook-form";
 import { calculateExtraCost } from "../../services/calculateCostService";
 import { useCart, type CartItem } from "../../store/cartStore";
+import {
+  buildSelectedAddons,
+  buildSelectedDietaryAlternatives,
+  buildSelectedOptions,
+} from "../../services/transformService";
 
 type ItemCustomizerProps = {
   item: any;
@@ -13,28 +18,32 @@ type ItemCustomizerProps = {
   cartItem?: CartItem;
 };
 
-const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustomizerProps) => {
+const ItemCustomizer = ({
+  item,
+  handleClose,
+  handleToast,
+  cartItem,
+}: ItemCustomizerProps) => {
   const methods = useForm({
     defaultValues: {
       quantity: cartItem?.quantity ?? 1,
       specialInstructions: cartItem?.specialInstructions ?? "",
-      addons: cartItem?.addons ?? [],
-      dietaryAlternatives: cartItem?.dietaryAlternatives ?? [],
+      addons: cartItem?.addons?.map((addon) => addon.name) ?? [],
+      dietaryAlternatives: cartItem?.dietaryAlternatives?.map((alternative) => alternative.name) ?? [],
       removableIngredients: cartItem?.removableIngredients ?? [],
-      options: cartItem?.options ?? {},
+      options: Object.fromEntries(Object.entries(cartItem?.options ?? {}).map(([name, choice]) => [name, choice.name]))
     },
   });
-
 
   const { handleSubmit, register, watch, setValue } = methods;
 
   const quantity = watch("quantity");
 
-  const selectedValues  = watch();
+  const selectedValues = watch();
 
   const extraCost = calculateExtraCost(item, selectedValues);
 
-  const total = (item.price + extraCost) * quantity ;
+  const total = (item.price + extraCost) * quantity;
 
   const imgageUrl = item.imageUrl;
 
@@ -87,30 +96,60 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
     />
   );
 
-  const addToCart = useCart(state => state.addToCart);
-  const editCartItem = useCart(state => state.editCartItem);
+  const addToCart = useCart((state) => state.addToCart);
+  const editCartItem = useCart((state) => state.editCartItem);
 
   const handleAddToCart = (data) => {
-
-    const selectedOptions = Object.fromEntries(
-      Object.entries(data.options ?? {}).filter(
-        ([, value]) => typeof value === "string" && value.trim() !== ""
-      )
+    const selectedOptions = buildSelectedOptions(item, data.options);
+    const selectedAddons = buildSelectedAddons(item, data.addons);
+    const selectedDietaryAlternatives = buildSelectedDietaryAlternatives(
+      item,
+      data.dietaryAlternatives,
     );
-    
     const cartItemId = crypto.randomUUID();
-    const {_id:itemId, name, price, imageUrl} = item;
-    const cartItem = {...data, itemId, name, options:selectedOptions, basePrice: price, imageUrl, cartItemId};
+
+    const { _id: itemId, name, price, imageUrl } = item;
+    const cartItem = {
+      ...data,
+      itemId,
+      name,
+      options: selectedOptions,
+      addons: selectedAddons,
+      dietaryAlternatives: selectedDietaryAlternatives,
+      basePrice: price,
+      imageUrl,
+      cartItemId,
+    };
     addToCart(cartItem);
     handleClose();
     handleToast?.(name);
-  }
+  };
 
-  const handleEditCartItem = (data) =>{
-    editCartItem({...cartItem, ...data});
+  const handleEditCartItem = (data) => {
+
+    console.log("EDIT FORM DATA:", data);
+
+    const selectedOptions = buildSelectedOptions(item, data.options);
+    const selectedAddons = buildSelectedAddons(item, data.addons);
+    const selectedDietaryAlternatives = buildSelectedDietaryAlternatives(
+      item,
+      data.dietaryAlternatives,
+    );
+
+    console.log("SELECTED OPTIONS:", selectedOptions);
+    console.log("SELECTED ADDONS:", selectedAddons);
+    console.log("SELECTED DIETARY:", selectedDietaryAlternatives);
+
+    editCartItem({
+      ...cartItem,
+      ...data,
+      options: selectedOptions,
+      addons: selectedAddons,
+      dietaryAlternatives: selectedDietaryAlternatives,
+    });
     handleClose();
     handleToast?.(cartItem?.name ?? item.name);
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -142,7 +181,9 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
         <FormProvider {...methods}>
           <form
             className={styles.form}
-            onSubmit={handleSubmit(cartItem? handleEditCartItem  : handleAddToCart)}
+            onSubmit={handleSubmit(
+              cartItem ? handleEditCartItem : handleAddToCart,
+            )}
           >
             {options.length > 0 && (
               <>
@@ -204,7 +245,7 @@ const ItemCustomizer = ({ item, handleClose, handleToast, cartItem }: ItemCustom
 
             <div className={styles.cartFooter}>
               <button type="submit" className={styles.addToCartButton}>
-                <span>{cartItem? "Save" :"Add to Cart"}</span>
+                <span>{cartItem ? "Save" : "Add to Cart"}</span>
                 <span>${total.toFixed(2)}</span>
               </button>
             </div>

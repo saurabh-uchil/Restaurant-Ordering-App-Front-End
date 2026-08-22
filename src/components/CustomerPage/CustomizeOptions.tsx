@@ -10,7 +10,7 @@ type CustomOptionsProps = {
     option: Choices[],
     title? :string,
     type: "radio" | "checkbox",
-    fieldName?: string
+    fieldName: string
 }
 
 const CustomizeOptions = ({option, title, type, fieldName}:CustomOptionsProps) => {

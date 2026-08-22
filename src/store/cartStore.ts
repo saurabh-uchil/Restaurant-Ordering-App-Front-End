@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 
+type SelectedItem = {
+  name: string;
+  extraCost: number;
+};
+
 export type CartItem = {
   name: string;
   itemId: string;
@@ -10,10 +15,10 @@ export type CartItem = {
   extraCost?: number;
   specialInstructions?: string;
   quantity: number;
-  addons: string[];
-  dietaryAlternatives: string[];
+  addons: SelectedItem[];
+  dietaryAlternatives: SelectedItem[];
   removableIngredients: string[];
-  options: Record<string, string>;
+  options: Record<string, SelectedItem>;
 };
 
 type cartState = {

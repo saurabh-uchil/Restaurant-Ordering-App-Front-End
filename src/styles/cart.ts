@@ -1,6 +1,68 @@
 export const cartStyles = {
   page: "min-h-screen w-full bg-[#FCFBF9] text-[#1E1B16]",
 
+  itemsContainer: "flex flex-col gap-4",
+
+  cartItem: "w-full rounded-xl border border-gray-200 bg-white p-4 shadow-sm",
+
+  itemMain: "flex gap-4",
+
+  itemImage: "h-24 w-24 shrink-0 rounded-lg object-cover",
+
+  itemInfo: "min-w-0 flex-1",
+
+  itemHeader: "mb-3 flex items-start justify-between gap-3",
+
+  itemName: "text-lg font-semibold text-gray-900",
+
+  actions: "flex shrink-0 items-center gap-1",
+
+  actionButton:
+    "flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900",
+
+  deleteButton: "hover:bg-red-50 hover:text-red-600",
+
+  priceBreakdown: "mt-4 w-full",
+
+  priceRow: "flex items-center justify-between gap-4 text-sm",
+
+  priceLabel: "text-gray-600",
+
+  priceValue: "font-medium text-gray-700",
+
+  priceDivider: "my-3 border-t border-gray-200",
+
+  totalRow:
+    "mt-2 flex items-center justify-between gap-4 text-base font-semibold text-gray-900",
+
+  optionsContainer: "mt-3",
+
+  optionsList: "mt-1 flex flex-col gap-1",
+
+  optionRow: "flex items-start justify-between gap-4 text-sm",
+
+  optionName: "text-gray-500",
+
+  optionValue: "text-right font-medium text-gray-700",
+
+  customizations: "mt-3 flex flex-col gap-3",
+
+  customizationGroup: "flex flex-col gap-1",
+
+  customizationLabel: "text-sm font-medium text-gray-700",
+
+  customizationList: "flex flex-wrap gap-2",
+
+  customizationTag: "rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-700",
+
+  specialInstructions: "mt-3 text-sm italic text-gray-500",
+
+  emptyCart: "flex flex-col items-center justify-center py-12 text-center",
+
+  emptyCartTitle: "text-lg font-semibold text-gray-900",
+
+  emptyCartDescription: "mt-2 text-sm text-gray-500",
+
   container: "mx-auto w-full max-w-7xl",
 
   cartLayout:
@@ -10,29 +72,12 @@ export const cartStyles = {
 
   summaryColumn: "min-w-0 w-full lg:sticky lg:top-6 lg:self-start",
 
-  itemsContainer: "flex flex-col gap-4",
-
   content:
     "grid grid-cols-1 gap-6 px-4 pb-24 pt-5 sm:px-6 lg:grid-cols-[minmax(0,48rem)_360px] lg:justify-center lg:px-8",
-
-  cartItem:
-    "rounded-2xl border border-[#E8E5DE] bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5",
-
-  itemMain: "flex gap-4",
-
-  itemImage: "h-24 w-24 shrink-0 rounded-xl object-cover sm:h-28 sm:w-28",
-
-  itemInfo: "min-w-0 flex-1",
-
-  itemHeader: "flex items-start justify-between gap-3",
-
-  itemName: "text-base font-semibold text-[#2F2A25] sm:text-lg",
 
   itemPrice: "shrink-0 text-sm font-semibold text-[#C4632E] sm:text-base",
 
   itemDescription: "mt-1 text-sm leading-5 text-[#7B756C]",
-
-  specialInstructions: "mt-2 text-xs leading-5 text-[#8C8676]",
 
   itemFooter:
     "mt-4 flex items-center justify-between border-t border-[#EEEAE4] pt-4",
@@ -50,50 +95,12 @@ export const cartStyles = {
   editButton:
     "text-xs font-semibold text-[#C4632E] transition-colors hover:text-[#E2793D]",
 
-  emptyCart:
-    "rounded-2xl border border-dashed border-[#D8D3C8] bg-white p-8 text-center",
-
-  emptyCartTitle: "text-base font-semibold text-[#2F2A25]",
-
-  emptyCartDescription: "mt-1.5 text-sm leading-5 text-[#8C8676]",
-
   summaryPlaceholder:
     "rounded-2xl border border-[#E8E5DE] bg-white p-5 shadow-sm",
-
-  customizations: "mt-3 flex flex-col gap-2",
-
-  customizationGroup: "flex flex-wrap items-center gap-2",
-
-  customizationLabel: "shrink-0 text-[11px] font-medium text-[#8C8676]",
-
-  customizationList: "flex flex-wrap gap-1.5",
-
-  customizationTag:
-    "rounded-full bg-[#F7F3EE] px-2.5 py-1 text-[11px] font-medium text-[#5F584F]",
-
-  optionsContainer: "mt-3 rounded-xl bg-[#F7F6F3] px-3 py-2.5",
-
-  optionsList: "flex flex-wrap gap-1.5 mt-2",
-
-  optionRow:
-    "flex w-fit max-w-full items-center gap-1.5 rounded-full bg-white px-2.5 py-1",
-
-  optionName: "text-[11px] text-[#8C8676]",
-
-  optionValue: "text-[11px] font-semibold text-[#5F584F]",
 
   drawerPaper: "w-full sm:w-[400px]",
 
   drawerContent: "flex h-full w-full flex-col",
-
-  actions:
-    "flex shrink-0 items-center gap-1.5",
-
-  actionButton:
-    "flex h-8 w-8 items-center justify-center rounded-lg text-[#7B756C] transition-colors hover:bg-[#F5F2ED] hover:text-[#C4632E] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
-
-  deleteButton:
-    "hover:bg-[#FEF0EC] hover:text-[#C4632E]",
 };
 
 export const cartInfoStyles = {
