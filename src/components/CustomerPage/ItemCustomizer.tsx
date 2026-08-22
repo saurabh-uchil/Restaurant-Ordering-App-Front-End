@@ -45,6 +45,7 @@ const ItemCustomizer = ({
 
   const total = (item.price + extraCost) * quantity;
 
+
   const imgageUrl = item.imageUrl;
 
   const options = item.options ?? [];

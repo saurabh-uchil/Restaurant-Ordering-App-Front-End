@@ -17,6 +17,7 @@ import Notification from "../../Notification";
 import DrawerState from "../../DrawerState";
 import { getCartTotal } from "../../../services/calculateCostService";
 import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
+import { useOrder } from "../../../api/apihooks/useOrder";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -80,6 +81,8 @@ const Cart = () => {
     error: restaurantError,
   } = useRestuarant(restaurantSlugName);
 
+  const {mutateAsync, isPending, isError, isSuccess, error} = useOrder();
+
   // Validate URL
   if (!restaurantSlugName || !table) {
     return (
@@ -137,8 +140,10 @@ const Cart = () => {
   const taxAmt = (cartTotal * (tax / 100)).toFixed(2);
   const total = (cartTotal + Number(serviceFeeAmt) + Number(taxAmt)).toFixed(2);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     console.log(myCart);
+    console.log(table);
+      await mutateAsync({ items:myCart, table: Number(table)});
   };
 
   return (
