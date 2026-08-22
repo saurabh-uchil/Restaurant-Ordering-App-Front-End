@@ -15,6 +15,8 @@ import ItemCustomizer from "../ItemCustomizer";
 import { useGetItemById } from "../../../api/apihooks/useMenu";
 import Notification from "../../Notification";
 import DrawerState from "../../DrawerState";
+import { getCartTotal } from "../../../services/calculateCostService";
+import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -126,6 +128,18 @@ const Cart = () => {
   }
 
   const hasItems = myCart.length;
+  const cartTotal = getCartTotal(myCart);
+
+  const serviceFee = serviceCharge;
+  const tax = taxCharge;
+
+  const serviceFeeAmt = (cartTotal * (serviceFee / 100)).toFixed(2);
+  const taxAmt = (cartTotal * (tax / 100)).toFixed(2);
+  const total = (cartTotal + Number(serviceFeeAmt) + Number(taxAmt)).toFixed(2);
+
+  const handleCheckout = () => {
+    console.log(myCart);
+  };
 
   return (
     <div className={styles.page}>
@@ -174,6 +188,11 @@ const Cart = () => {
                     `/restaurant/${restaurantSlugName}/menu?table=${table}`,
                   )
                 }
+                subtotal={cartTotal.toFixed(2)}
+                serviceFee={serviceFeeAmt}
+                tax={taxAmt}
+                onCheckout={handleCheckout}
+                total={total}
               />
               <CartNotices />
             </aside>

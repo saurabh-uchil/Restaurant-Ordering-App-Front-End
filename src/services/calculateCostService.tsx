@@ -32,18 +32,27 @@ export const calculateExtraCost = (item, selectedValues) => {
 export const getItemTotal = (item: CartItem) => {
   const optionsTotal = Object.values(item.options).reduce(
     (acc, curr) => acc + curr.extraCost,
-    0
+    0,
   );
 
   const addonsTotal = item.addons.reduce(
     (acc, curr) => acc + curr.extraCost,
-    optionsTotal
+    optionsTotal,
   );
 
   const dietaryAlternativesTotal = item.dietaryAlternatives.reduce(
     (acc, curr) => acc + curr.extraCost,
-    addonsTotal
+    addonsTotal,
   );
 
   return item.basePrice + dietaryAlternativesTotal;
+};
+
+export const getCartTotal = (cart: CartItem[]) => {
+  const total = cart.reduce((acc, curr) => {
+    const itemTotal = getItemTotal(curr) * curr.quantity;
+    return acc + itemTotal;
+  }, 0);
+
+  return total;
 };
