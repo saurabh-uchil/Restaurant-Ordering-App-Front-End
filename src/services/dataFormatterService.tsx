@@ -23,7 +23,7 @@ export const formattedData = (data, existingDietaryAlternatives, existingAddons,
 }
 
 export const addExistingIdsToData = (data, existingItems) => {
-    console.log("Existing Items:", existingItems);
+    //console.log("Existing Items:", existingItems);
  const arrayOfExistingIds = existingItems.map((item: any) => ({id: item._id}));
  const updatedData = [...data, ...arrayOfExistingIds];
  return updatedData;

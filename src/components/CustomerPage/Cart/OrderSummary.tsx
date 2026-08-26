@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { orderSummaryStyles as styles } from "../../../styles/cart";
 
 type OrderSummaryProps = {
@@ -7,7 +7,10 @@ type OrderSummaryProps = {
   tax?: string;
   total?: string;
   onContinueShopping: () => void;
-  onCheckout: () => void
+  onConfirmOrder: () => void;
+  isPending?: boolean;
+  isError?: boolean;
+  error?: Error | null;
 };
 
 const OrderSummary = ({
@@ -16,10 +19,11 @@ const OrderSummary = ({
   tax,
   total,
   onContinueShopping,
-  onCheckout
+  onConfirmOrder,
+  isPending,
+  isError,
+  error,
 }: OrderSummaryProps) => {
-  
-
   return (
     <section className={styles.container}>
       <h2 className={styles.title}>Order Summary</h2>
@@ -46,10 +50,39 @@ const OrderSummary = ({
         <span>${total}</span>
       </div>
 
-      <button type="button" className={styles.checkoutButton} onClick={onCheckout}>
+      {/* <button
+        type="button"
+        className={styles.checkoutButton}
+        onClick={() => alert("Handle Checkout")}
+      >
         <span>Proceed to Checkout</span>
         <ArrowRight size={17} />
+      </button> */}
+
+      <button
+        type="button"
+        className={styles.checkoutButton}
+        onClick={onConfirmOrder}
+        disabled={isPending}
+      >
+        {isPending ? (
+          <>
+            <Loader2 size={17} className="animate-spin" />
+            <span>Placing Order...</span>
+          </>
+        ) : (
+          <>
+            <span>Confirm Order</span>
+            <ArrowRight size={17} />
+          </>
+        )}
       </button>
+
+      {isError && (
+        <p className={styles.errorMessage}>
+          {error?.message ?? "Unable to place your order. Please try again."}
+        </p>
+      )}
 
       <button
         type="button"

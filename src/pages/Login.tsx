@@ -36,7 +36,7 @@ const Login = () => {
     },
     onSuccess: (data) => {
         const {_id, username, role, restaurant, accessToken, message} = data
-        console.log(message);
+        //console.log(message);
         setAccessToken(accessToken);
         setCurrentUser({_id, username, role, restaurant});
         reset();
@@ -44,9 +44,9 @@ const Login = () => {
     },
     onError: (error) => {
         if (axios.isAxiosError(error)){
-          console.log("Axios Error");
-          console.log(error.response?.data);
-          console.log(error.response?.status);
+          //console.log("Axios Error");
+          //console.log(error.response?.data);
+          //console.log(error.response?.status);
         } 
         else {
             console.error(error);

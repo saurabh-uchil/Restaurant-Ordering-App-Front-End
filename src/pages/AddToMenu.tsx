@@ -35,7 +35,7 @@ const AddToMenu = () => {
         try{
             setIsLoading(true);
             const updatedData = formattedData(data, dietaryAlternatives, addons, optionGroups); 
-            console.log("Updated Data:", updatedData);
+            //console.log("Updated Data:", updatedData);
             await axios.post("http://localhost:3000/menu/add-food-item", updatedData);
             
             setIsLoading(false);
@@ -50,7 +50,7 @@ const AddToMenu = () => {
             setIsLoading(false);
             setUploadSuccess(false);
             setUploadError(true);
-            console.log(error.response?.data || error.message);
+            //console.log(error.response?.data || error.message);
         }
         
     }

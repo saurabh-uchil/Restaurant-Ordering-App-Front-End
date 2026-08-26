@@ -14,14 +14,16 @@ import { useState } from "react";
 import ItemCustomizer from "../ItemCustomizer";
 import { useGetItemById } from "../../../api/apihooks/useMenu";
 import Notification from "../../Notification";
-import DrawerState from "../../DrawerState";
+import FeedbackState from "../../FeedbackState";
 import { getCartTotal } from "../../../services/calculateCostService";
 import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
 import { useOrder } from "../../../api/apihooks/useOrder";
+import { normaliseCartData } from "../../../services/structureCartData";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
   const restaurantSlugName = restaurant ?? "";
+
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -29,6 +31,7 @@ const Cart = () => {
 
   const myCart = useCart((state) => state.myCart);
   const deleteCartItem = useCart((state) => state.deleteCartItem);
+  const clearCart = useCart((state) => state.clearCart);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -81,7 +84,31 @@ const Cart = () => {
     error: restaurantError,
   } = useRestuarant(restaurantSlugName);
 
-  const {mutateAsync, isPending, isError, isSuccess, error} = useOrder();
+  const restaurantId = restaurantDetails && restaurantDetails._id;
+
+  const { mutateAsync, isPending, isError, error } = useOrder();
+
+  const hasItems = myCart.length;
+  const cartTotal = getCartTotal(myCart);
+
+  const serviceFee = serviceCharge;
+  const tax = taxCharge;
+
+  const serviceFeeAmt = (cartTotal * (serviceFee / 100)).toFixed(2);
+  const taxAmt = (cartTotal * (tax / 100)).toFixed(2);
+  const total = (cartTotal + Number(serviceFeeAmt) + Number(taxAmt)).toFixed(2);
+
+  const confirmOrder = async () => {
+    try {
+      const updatedData = normaliseCartData(myCart, table, restaurantId);
+      const data = await mutateAsync(updatedData);
+      const orderId = data?.orderId;
+      clearCart();
+      navigate(`/restaurant/${restaurantSlugName}/order/${orderId}?table=${table}`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Validate URL
   if (!restaurantSlugName || !table) {
@@ -129,22 +156,6 @@ const Cart = () => {
       />
     );
   }
-
-  const hasItems = myCart.length;
-  const cartTotal = getCartTotal(myCart);
-
-  const serviceFee = serviceCharge;
-  const tax = taxCharge;
-
-  const serviceFeeAmt = (cartTotal * (serviceFee / 100)).toFixed(2);
-  const taxAmt = (cartTotal * (tax / 100)).toFixed(2);
-  const total = (cartTotal + Number(serviceFeeAmt) + Number(taxAmt)).toFixed(2);
-
-  const handleCheckout = async () => {
-    console.log(myCart);
-    console.log(table);
-      await mutateAsync({ items:myCart, table: Number(table)});
-  };
 
   return (
     <div className={styles.page}>
@@ -196,8 +207,11 @@ const Cart = () => {
                 subtotal={cartTotal.toFixed(2)}
                 serviceFee={serviceFeeAmt}
                 tax={taxAmt}
-                onCheckout={handleCheckout}
+                onConfirmOrder={confirmOrder}
                 total={total}
+                isPending={isPending}
+                isError={isError}
+                error={error}
               />
               <CartNotices />
             </aside>
@@ -218,7 +232,7 @@ const Cart = () => {
         >
           <div className={styles.drawerContent}>
             {isFetching && (
-              <DrawerState
+              <FeedbackState
                 type="loading"
                 title="Loading customization..."
                 description="Getting the latest options for this item."
@@ -226,7 +240,7 @@ const Cart = () => {
             )}
 
             {isFetchError && (
-              <DrawerState
+              <FeedbackState
                 type="error"
                 title="Unable to edit this item"
                 description={

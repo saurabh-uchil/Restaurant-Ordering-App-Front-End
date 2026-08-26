@@ -15,8 +15,8 @@ const AddFoodItem = () => {
 
   /* const handleSubmit = async (data) => {
     try{
-      console.log(currentUser);
-      console.log("Submitting data:", data);
+      //console.log(currentUser);
+      //console.log("Submitting data:", data);
       setIsLoading(true);
       if(currentUser && currentUser.restaurant){
       await axios.post("http://localhost:3000/menu/add-food-item", { ...data, restaurant_Id: currentUser.restaurant });
@@ -35,7 +35,7 @@ const AddFoodItem = () => {
 
   const {mutateAsync, isPending, isError, isSuccess, error} = useAddItem(); 
 
-  console.log({ isPending, isError, isSuccess, error });
+  //console.log({ isPending, isError, isSuccess, error });
 
   const submitForm = async (data) => {
     if(!currentUser || !currentUser.restaurant){

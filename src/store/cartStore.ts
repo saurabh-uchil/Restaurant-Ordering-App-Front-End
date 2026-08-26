@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-unused-labels */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 
@@ -26,6 +28,7 @@ type cartState = {
   addToCart: (item: CartItem) => void;
   editCartItem: (item: CartItem) => void;
   deleteCartItem: (cartItem: CartItem) => void;
+  clearCart: () => void;
 };
 
 export const useCart = create<cartState>((set) => ({
@@ -36,7 +39,7 @@ export const useCart = create<cartState>((set) => ({
 
   editCartItem: (updatedItem: CartItem) =>
     set((state) => {
-        console.log(updatedItem);
+        //console.log(updatedItem);
         return {
             myCart: state.myCart.map((item) =>
             item.cartItemId === updatedItem.cartItemId ? updatedItem : item)
@@ -44,5 +47,7 @@ export const useCart = create<cartState>((set) => ({
     }),
 
   deleteCartItem: (cartItem: CartItem) => 
-    set((state)=> ({myCart: state.myCart.filter((item)=> item.cartItemId !== cartItem.cartItemId)}))  
+    set((state)=> ({myCart: state.myCart.filter((item)=> item.cartItemId !== cartItem.cartItemId)})),
+  
+  clearCart: () => set({ myCart: [] })
 }));

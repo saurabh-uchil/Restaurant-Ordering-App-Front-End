@@ -17,7 +17,7 @@ const Test = () => {
     }
   });
   
-  console.log(usersData);
+  //console.log(usersData);
   //const suggestions = text ? data.filter((country)=> country.toLowerCase().includes(text.trim().toLowerCase())) : [];
   
   const suggestions = text && usersData ? usersData?.filter((user)=> user.name.toLowerCase().includes(text.trim().toLowerCase())) : [];
@@ -31,8 +31,8 @@ const Test = () => {
       <div className={suggestionsClass} onClick={()=>{setText(s.name); setHideSuggestions(true)}}key={s.id}>{s.name}</div>
     )
   })
-    console.log(text);
-    console.log(suggestions);
+    //console.log(text);
+    //console.log(suggestions);
   
   return (
     <div className="w-100 m-4">

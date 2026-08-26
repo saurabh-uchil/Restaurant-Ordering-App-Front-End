@@ -37,14 +37,14 @@ const Register = () => {
         return response.data
         },
         onSuccess: (data) => {
-            console.log('Registered Successfully');
-            console.log(data);
+            //console.log('Registered Successfully');
+            //console.log(data);
             reset();
         },
         onError: (error) => {
             if (axios.isAxiosError(error)){
-                console.log(error.response?.data);
-                console.log(error.response?.status);
+                //console.log(error.response?.data);
+                //console.log(error.response?.status);
             } 
             else {
             console.error(error);

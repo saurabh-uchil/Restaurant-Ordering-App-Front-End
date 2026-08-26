@@ -141,7 +141,10 @@ export const orderSummaryStyles = {
 
   continueButton:
     "mt-3 w-full rounded-xl border border-[#D8D3CC] bg-[#FCFBF9] px-4 py-3 text-sm font-semibold text-[#5F584F] transition-colors hover:bg-[#F5F2ED]",
-};
+
+   errorMessage:
+    "mt-3 text-center text-sm font-medium leading-5 text-[#B84A2F]",  
+  };
 
 export const cartNoticesStyles = {
   container: "mt-4 flex w-full flex-col gap-3",

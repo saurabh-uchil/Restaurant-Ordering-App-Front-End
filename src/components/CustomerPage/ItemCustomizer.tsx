@@ -128,18 +128,12 @@ const ItemCustomizer = ({
 
   const handleEditCartItem = (data) => {
 
-    console.log("EDIT FORM DATA:", data);
-
     const selectedOptions = buildSelectedOptions(item, data.options);
     const selectedAddons = buildSelectedAddons(item, data.addons);
     const selectedDietaryAlternatives = buildSelectedDietaryAlternatives(
       item,
       data.dietaryAlternatives,
     );
-
-    console.log("SELECTED OPTIONS:", selectedOptions);
-    console.log("SELECTED ADDONS:", selectedAddons);
-    console.log("SELECTED DIETARY:", selectedDietaryAlternatives);
 
     editCartItem({
       ...cartItem,

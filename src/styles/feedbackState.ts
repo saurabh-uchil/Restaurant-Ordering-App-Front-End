@@ -7,7 +7,7 @@ export const drawerStyles = {
 };
 
 
-export const drawerStateStyles = {
+export const FeedbackStateStyles = {
   container:
     "flex h-full w-full flex-1 flex-col items-center justify-center px-6 text-center",
 

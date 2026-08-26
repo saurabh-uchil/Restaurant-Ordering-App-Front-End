@@ -10,17 +10,17 @@ const getPresignedUrl = async (file: File) => {
 
 export const handleImageUpload = async (file: File, setValue: any, setProgress: any, setUploadError: any) => {
         try{
-            console.log(file);
+            //console.log(file);
         if (!file) {
             alert("Please select a file to upload.");
             return;
         }
         
         const response = await getPresignedUrl(file);
-        console.log(response.data);
+        //console.log(response.data);
         const{presignedUrl, imageUrl} = response.data;
         
-        console.log(presignedUrl, imageUrl);
+        //console.log(presignedUrl, imageUrl);
 
         await axios.put(presignedUrl, file, {
             headers: {
@@ -29,10 +29,10 @@ export const handleImageUpload = async (file: File, setValue: any, setProgress: 
             onUploadProgress: (progressEvent) => {                
                 const progress = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
                 setProgress(progress);
-                // console.log(`Upload Progress: ${progress}%`);
+                // //console.log(`Upload Progress: ${progress}%`);
             }
         });
-        console.log("imageUrl:", imageUrl);
+        //console.log("imageUrl:", imageUrl);
         setValue("imageUrl", imageUrl);
         alert("Image uploaded successfully!");
         }catch(error){

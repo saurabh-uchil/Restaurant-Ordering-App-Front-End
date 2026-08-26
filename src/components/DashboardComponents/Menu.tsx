@@ -22,7 +22,7 @@ const Menu = () => {
     queryKey:['menu'],
     queryFn: async()=>{
       const {data} = await api.get(`/restaurant/${currentUser?.restaurant}/menu`);
-      console.log(data);
+      //console.log(data);
       return data;  
     }
   });

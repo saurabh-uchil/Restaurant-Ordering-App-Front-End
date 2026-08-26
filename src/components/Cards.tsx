@@ -10,7 +10,7 @@ type CardProps = {
 }
 
 const Cards = ({item, mode, onAddToCart}:CardProps) => {
-  console.log(item)
+  //console.log(item)
   const navigate = useNavigate();
 
   const actionButton = mode == 'admin'? 

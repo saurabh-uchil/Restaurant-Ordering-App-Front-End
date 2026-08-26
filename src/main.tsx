@@ -22,6 +22,7 @@ import NotFound from './pages/NotFound.tsx';
 import CustomerLandingPage from './components/CustomerPage/CustomerLandingPage.tsx';
 import CustomerMenuPage from './pages/CustomerMenuPage.tsx';
 import Cart from './components/CustomerPage/Cart/Cart.tsx';
+import OrderConfirmation from './components/CustomerPage/OrderConfirmation.tsx';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,8 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/restaurant/:restaurant" element={<CustomerLandingPage />} />
           <Route path="/restaurant/:restaurant/menu" element={<CustomerMenuPage />} />
           <Route path="/restaurant/:restaurant/cart" element={<Cart />} />
+
+          <Route path="/restaurant/:restaurant/order/:orderId" element={<OrderConfirmation />} />
 
           <Route element={<ProtectedRoute />} >
             <Route path ="/dashboard" element={<Dashboard />} >

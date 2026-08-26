@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
 
-    console.log("Protected Route");
+    //console.log("Protected Route");
   const accessToken = useAuth(state => state.accessToken);  
 
   if(!accessToken){

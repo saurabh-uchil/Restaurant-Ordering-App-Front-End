@@ -1,17 +1,17 @@
 import { Loader2, CircleAlert } from "lucide-react";
-import { drawerStateStyles as styles } from "../styles/drawerState";
+import { FeedbackStateStyles as styles } from "../styles/feedbackState";
 
-type DrawerStateProps = {
+type FeedbackStateProps = {
   type: "loading" | "error";
   title: string;
   description: string;
 };
 
-const DrawerState = ({
+const FeedbackState = ({
   type,
   title,
   description,
-}: DrawerStateProps) => {
+}: FeedbackStateProps) => {
   const Icon = type === "loading" ? Loader2 : CircleAlert;
 
   return (
@@ -30,4 +30,4 @@ const DrawerState = ({
   );
 };
 
-export default DrawerState;
+export default FeedbackState;
