@@ -2,6 +2,7 @@
 import { Menu } from "lucide-react";
 import { navbarStyles as style } from "../../styles/dashboardNavbar";
 import type { userState } from "../../store/authStore";
+import { getDate } from "../../services/dateFormatter";
 
 type NavbarProp = {
   toggle: () => void,
@@ -17,23 +18,7 @@ const Navbar = ({toggle, currentUser}:NavbarProp) => {
     return initials;
   }
 
-  const getDate = () =>{
-    const date = new Date();
-      const today = date.toLocaleDateString("en-AU", {
-        day: "numeric",    
-        month: "long",
-        year: "numeric"
-      });
-      
-      const day = date.toLocaleDateString("en-AU", {
-        weekday: "long"
-      });
-
-      const dateString = day+", "+today;
-      
-      return dateString;
-  }
-
+ 
   return (
     <nav className={style.navbar}>
 
