@@ -1,6 +1,6 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createOrder, getOrderById } from "../services/orderService";
+import { createOrder, editOrderStatus, getActiveOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -20,14 +20,14 @@ export type OrderItem = {
 }
 
 type CreateOrderProps = {
-    cart: OrderItem[];
+    items: OrderItem[];
     table: string | null;
     restaurantId: string;
 }
 
 export const useOrder = () => {
    return useMutation({
-        mutationFn: ({cart, table, restaurantId}: CreateOrderProps) => createOrder(cart, table, restaurantId)
+        mutationFn: ({items, table, restaurantId}: CreateOrderProps) => createOrder(items, table, restaurantId)
     });
 }
 
@@ -36,4 +36,27 @@ export const useGetOrderById = (orderId: string) =>{
     queryKey: ["order", orderId],
     queryFn: ()=> getOrderById(orderId)
   })
+}
+
+export const useGetOrdersByRestaurantId = (restaurantId: string) =>{
+  return useQuery({
+    queryKey: ["orders", restaurantId],
+    queryFn: ()=> getOrdersByRestaurantId(restaurantId)
+  })
+}
+
+export const useGetActiveOrdersByRestaurantId = (restaurantId: string) =>{
+  return useQuery({
+    queryKey: ["activeOrders", restaurantId],
+    queryFn: ()=> getActiveOrdersByRestaurantId(restaurantId),
+    enabled: !!restaurantId
+  })
+}
+
+export const useEditOrderStatus = () =>{
+  return useMutation({
+    mutationFn: async ({orderId, newStatus}: {orderId: string, newStatus: string}) => {
+      return editOrderStatus(orderId, newStatus);
+    }
+  });
 }

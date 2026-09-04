@@ -1,20 +1,9 @@
 import { ArrowRight } from "lucide-react";
 
 import { kitchenOrderCardStyles as styles } from "../../styles/Kitchen/KitchenOrderCard";
+import type { KitchenOrder } from "../../types/KitchenOrder";
 
-export type KitchenOrderStatus = "new" | "preparing" | "ready";
-
-type KitchenOrder = {
-  id: string;
-  orderNumber: number;
-  table: number;
-  status: KitchenOrderStatus;
-  items: {
-    name: string;
-    quantity: number;
-  }[];
-  total: number;
-};
+export type KitchenOrderStatus = "received" | "preparing" | "ready";
 
 type KitchenOrderCardProps = {
   order: KitchenOrder;
@@ -24,7 +13,7 @@ type KitchenOrderCardProps = {
 const KitchenOrderCard = ({ order, onStatusChange }: KitchenOrderCardProps) => {
   const getAction = () => {
     switch (order.status) {
-      case "new":
+      case "received":
         return {
           label: "Start Preparing",
           nextStatus: "preparing" as const,
@@ -74,7 +63,7 @@ const KitchenOrderCard = ({ order, onStatusChange }: KitchenOrderCardProps) => {
         <button
           type="button"
           className={styles.actionButton}
-          onClick={() => onStatusChange(order.id, action.nextStatus)}
+          onClick={() => onStatusChange(order._id, action.nextStatus)}
         >
           {action.label}
 

@@ -161,7 +161,7 @@ const OrderConfirmation = () => {
           <section className={styles.summaryCard}>
             <h2 className={styles.summaryTitle}>Your Order</h2>
 
-            <OrderItems items={data.cart} />
+            <OrderItems items={data.items} />
 
             <div className={styles.breakdown}>
               <div className={styles.row}>

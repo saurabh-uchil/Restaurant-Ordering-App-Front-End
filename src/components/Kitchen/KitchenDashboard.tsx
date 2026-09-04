@@ -1,49 +1,122 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
-import { ContentState } from "../ContentState";
+import { useEditOrderStatus, useGetActiveOrdersByRestaurantId } from "../../api/apihooks/useOrder";
+import { socket } from "../../api/apihooks/useSocket";
 
+import { ContentState } from "../ContentState";
 import KitchenHeader from "./KitchenHeader";
 import OrderStatusCard from "./OrderStatusCard";
-
-import { kitchenStyles as styles } from "../../styles/Kitchen/KitchenDashboard";
 import SideNav from "../DashboardComponents/SideNav";
-import { kitchenLinks } from "../../data/kitchenDashboardLinks";
-import { useSidebar } from "../../hooks/useSidebar";
 import OrderSection from "./OrdersSection";
-import { useState } from "react";
-import type { KitchenOrderStatus } from "./KitchenOrderCards";
-import { mockOrders } from "../../data/kitchenMockOrders";
-import type { KitchenOrder } from "../../types/KitchenOrder";
 import KitchenOrderCard from "./KitchenOrderCards";
 
+import { useSidebar } from "../../hooks/useSidebar";
+import { kitchenLinks } from "../../data/kitchenDashboardLinks";
+import { kitchenStyles as styles } from "../../styles/Kitchen/KitchenDashboard";
+
+import type { KitchenOrderStatus } from "./KitchenOrderCards";
+
 const Kitchen = () => {
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
+
   const { restaurant } = useParams<{ restaurant: string }>();
 
   const restaurantSlugName = restaurant ?? "";
 
-  const { data, isPending, isError, error } = useRestuarant(restaurantSlugName);
+  // Get restaurant
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+  } = useRestuarant(restaurantSlugName);
 
-  const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebar();
+  // Get active orders once restaurant ID is available
+  const {
+    data: orders = [],
+    isPending: isActiveOrdersPending,
+    isError: isActiveOrdersError,
+    error: activeOrdersError,
+    refetch,
+  } = useGetActiveOrdersByRestaurantId(data?._id || "");
 
-  const [orders, setOrders] = useState<KitchenOrder[]>(mockOrders);
+  // Listen for new order events
+  useEffect(() => {
+    socket.connect();
 
-  const newOrders = orders.filter((order) => order.status === "new");
+    const handleOrderUpdate = async (updatedOrder: {
+      orderId: number;
+      orderStatus: string;
+    }) => {
+      console.log("Received order update:", updatedOrder);
+
+      // Show notification
+      setNotification({
+        show: true,
+        message: `New Order Received: Order #${updatedOrder.orderId}`,
+      });
+
+      // Refetch orders from backend
+      const result = await refetch();
+
+      console.log("Orders after refetch:", result.data);
+
+      // Hide notification after 5 seconds
+      setTimeout(() => {
+        setNotification({
+          show: false,
+          message: "",
+        });
+      }, 5000);
+    };
+
+    socket.on("orderUpdate", handleOrderUpdate);
+
+    return () => {
+      socket.off("orderUpdate", handleOrderUpdate);
+      socket.disconnect();
+    };
+  }, [refetch]);
+
+  const {
+    isSidebarOpen,
+    toggleSidebar,
+    closeSidebar,
+  } = useSidebar();
+
+  // Split orders by status
+  const newOrders = orders.filter(
+    (order) => order.status === "received",
+  );
 
   const preparingOrders = orders.filter(
     (order) => order.status === "preparing",
   );
 
-  const readyOrders = orders.filter((order) => order.status === "ready");
+  const readyOrders = orders.filter(
+    (order) => order.status === "ready",
+  );
 
-  const handleStatusChange = (orderId: string, status: KitchenOrderStatus) => {
-    setOrders((currentOrders) =>
-      currentOrders.map((order) =>
-        order.id === orderId ? { ...order, status } : order,
-      ),
-    );
+  const {mutateAsync, isPending: isEditPending, isError: isEditError, error: editError} = useEditOrderStatus();
+
+  const handleStatusChange = async (
+    orderId: string,
+    status: KitchenOrderStatus,
+  ) => {
+    // We'll handle the status update API/socket here later
+    console.log("Status change:", orderId, status);
+    alert(`Status change for Order ID: ${orderId} to ${status}`);
+    const response = await mutateAsync({orderId, newStatus: status});
+    await refetch();
+    console.log(response.data);
   };
 
+  // Invalid restaurant URL
   if (!restaurantSlugName) {
     return (
       <ContentState
@@ -54,6 +127,7 @@ const Kitchen = () => {
     );
   }
 
+  // Restaurant loading
   if (isPending) {
     return (
       <ContentState
@@ -64,18 +138,21 @@ const Kitchen = () => {
     );
   }
 
+  // Restaurant error
   if (isError) {
     return (
       <ContentState
         type="error"
         title="Unable to load restaurant"
         description={
-          error?.message || "Something went wrong while loading the restaurant."
+          error?.message ||
+          "Something went wrong while loading the restaurant."
         }
       />
     );
   }
 
+  // Restaurant not found
   if (!data) {
     return (
       <ContentState
@@ -86,19 +163,57 @@ const Kitchen = () => {
     );
   }
 
+  // Orders loading
+  if (isActiveOrdersPending) {
+    return (
+      <ContentState
+        type="loading"
+        title="Loading orders..."
+        description="Getting the latest kitchen orders."
+      />
+    );
+  }
+
+  // Orders error
+  if (isActiveOrdersError) {
+    return (
+      <ContentState
+        type="error"
+        title="Unable to load orders"
+        description={
+          activeOrdersError?.message ||
+          "Something went wrong while loading the orders."
+        }
+      />
+    );
+  }
+
+  // Dynamic order statistics
   const orderStats = (
     <div className={styles.statusGrid}>
-      <OrderStatusCard status="New Orders" stats={4} />
+      <OrderStatusCard
+        status="New Orders"
+        stats={newOrders.length}
+      />
 
-      <OrderStatusCard status="Preparing" stats={6} />
+      <OrderStatusCard
+        status="Preparing"
+        stats={preparingOrders.length}
+      />
 
-      <OrderStatusCard status="Ready" stats={2} />
+      <OrderStatusCard
+        status="Ready"
+        stats={readyOrders.length}
+      />
     </div>
   );
 
   return (
     <div className={styles.page}>
-      <KitchenHeader name={data.name} toggle={toggleSidebar} />
+      <KitchenHeader
+        name={data.name}
+        toggle={toggleSidebar}
+      />
 
       <div className={styles.container}>
         <SideNav
@@ -109,13 +224,35 @@ const Kitchen = () => {
         />
 
         <main className={styles.content}>
+          {/* Notification */}
+          {notification.show && (
+            <div className={styles.notification}>
+              <div className={styles.notificationIcon}>
+                ✓
+              </div>
+
+              <div className={styles.notificationContent}>
+                <p className={styles.notificationTitle}>
+                  New order received
+                </p>
+
+                <p className={styles.notificationMessage}>
+                  {notification.message}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Order statistics */}
           {orderStats}
 
-          {/* Active orders will go here */}
+          {/* Active orders */}
           <section className={styles.ordersSection}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Active Orders</h2>
+                <h2 className={styles.sectionTitle}>
+                  Active Orders
+                </h2>
 
                 <p className={styles.sectionDescription}>
                   Orders that need attention.
@@ -123,32 +260,43 @@ const Kitchen = () => {
               </div>
             </div>
 
-            {/* Order cards will go here */}
             <div className={styles.orderBoard}>
-              <OrderSection title="New Orders" count={newOrders.length}>
+              {/* New Orders */}
+              <OrderSection
+                title="New Orders"
+                count={newOrders.length}
+              >
                 {newOrders.map((order) => (
                   <KitchenOrderCard
-                    key={order.id}
+                    key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
                   />
                 ))}
               </OrderSection>
 
-              <OrderSection title="Preparing" count={preparingOrders.length}>
+              {/* Preparing */}
+              <OrderSection
+                title="Preparing"
+                count={preparingOrders.length}
+              >
                 {preparingOrders.map((order) => (
                   <KitchenOrderCard
-                    key={order.id}
+                    key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
                   />
                 ))}
               </OrderSection>
 
-              <OrderSection title="Ready" count={readyOrders.length}>
+              {/* Ready */}
+              <OrderSection
+                title="Ready"
+                count={readyOrders.length}
+              >
                 {readyOrders.map((order) => (
                   <KitchenOrderCard
-                    key={order.id}
+                    key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
                   />
