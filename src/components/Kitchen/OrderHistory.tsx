@@ -44,6 +44,7 @@ const { restaurant } = useParams<{ restaurant: string }>();
         <div className={OrderHistoryStyles.content}>
           <h1>Order History</h1>
           <p>Here you can view the history of all orders placed in your restaurant.</p>
+          <p>Sample past orders in a table</p>
         </div>
       </div>
     </div>
