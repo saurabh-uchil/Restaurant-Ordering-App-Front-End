@@ -1,17 +1,6 @@
 import { ArrowRight, Loader2 } from "lucide-react";
 import { orderSummaryStyles as styles } from "../../../styles/cart";
-
-type OrderSummaryProps = {
-  subtotal?: string;
-  serviceFee?: string;
-  tax?: string;
-  total?: string;
-  onContinueShopping: () => void;
-  onConfirmOrder: () => void;
-  isPending?: boolean;
-  isError?: boolean;
-  error?: Error | null;
-};
+import type { OrderSummaryProps } from "../../../types/OrderSummary";
 
 const OrderSummary = ({
   subtotal,

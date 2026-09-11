@@ -10,8 +10,11 @@ import OrderItems from "./OrderItems";
 import { ContentState } from "../ContentState";
 import { orderConfirmationStyles as styles } from "../../styles/CustomerPage/orderConfirmation";
 import { serviceCharge, taxCharge } from "../../data/serviceCharges";
+import { useEffect } from "react";
+import { socket } from "../../api/apihooks/useSocket";
 
 const OrderConfirmation = () => {
+
   const { restaurant, orderId } = useParams<{
     restaurant: string;
     orderId: string;
@@ -36,7 +39,32 @@ const OrderConfirmation = () => {
     isPending: isOrderPending,
     isError: isOrderError,
     error: orderError,
+    refetch,
   } = useGetOrderById(orderId ?? "");
+
+
+  useEffect(() => {
+    console.log("OrderConfirmation component mounted");
+    socket.connect();
+
+    socket.on("connect", () => {
+    console.log("Customer socket connected:", socket.id);
+    });
+
+    const handleOrderUpdate = (update: any) => {
+      console.log("Received order update:", update);
+      refetch();
+    }
+
+    socket.on("customerOrderUpdate", handleOrderUpdate);
+
+    return () => {
+      console.log("OrderConfirmation component unmounted");
+      socket.off("customerOrderUpdate", handleOrderUpdate);
+      socket.disconnect();
+    };
+  }, [])
+
 
   // Validate URL
   if (!restaurantSlugName || !orderId || !table) {
@@ -148,6 +176,8 @@ const OrderConfirmation = () => {
                 <p className={styles.statusTitle}>
                   Order Received
                 </p>
+
+                <p>{data.status}</p>
 
                 <p className={styles.statusDescription}>
                   The kitchen has received your order and will
