@@ -44,7 +44,6 @@ const OrderConfirmation = () => {
 
 
   useEffect(() => {
-    console.log("OrderConfirmation component mounted");
     socket.connect();
 
     socket.on("connect", () => {
@@ -52,14 +51,12 @@ const OrderConfirmation = () => {
     });
 
     const handleOrderUpdate = (update: any) => {
-      console.log("Received order update:", update);
       refetch();
     }
 
     socket.on("customerOrderUpdate", handleOrderUpdate);
 
     return () => {
-      console.log("OrderConfirmation component unmounted");
       socket.off("customerOrderUpdate", handleOrderUpdate);
       socket.disconnect();
     };
