@@ -1,7 +1,8 @@
 export type KitchenOrderStatus =
   | "received"
   | "preparing"
-  | "ready";
+  | "ready"
+  | "completed";
 
 export type KitchenOrderPaymentStatus =
   | "pending"

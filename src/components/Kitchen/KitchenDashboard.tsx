@@ -2,7 +2,10 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
-import { useEditOrderStatus, useGetActiveOrdersByRestaurantId } from "../../api/apihooks/useOrder";
+import {
+  useEditOrderStatus,
+  useGetActiveOrdersByRestaurantId,
+} from "../../api/apihooks/useOrder";
 import { socket } from "../../api/apihooks/useSocket";
 
 import { ContentState } from "../ContentState";
@@ -15,8 +18,10 @@ import KitchenOrderCard from "./KitchenOrderCards";
 import { useSidebar } from "../../hooks/useSidebar";
 import { kitchenLinks } from "../../data/kitchenDashboardLinks";
 import { kitchenStyles as styles } from "../../styles/Kitchen/KitchenDashboard";
-
-import type { KitchenOrderStatus } from "./KitchenOrderCards";
+import type {
+  KitchenOrder,
+  KitchenOrderStatus,
+} from "../../types/KitchenOrder";
 
 const Kitchen = () => {
   const [notification, setNotification] = useState({
@@ -24,17 +29,19 @@ const Kitchen = () => {
     message: "",
   });
 
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+
+  const [updateError, setUpdateError] = useState<{
+    orderId: string;
+    message: string;
+  } | null>(null);
+
   const { restaurant } = useParams<{ restaurant: string }>();
 
   const restaurantSlugName = restaurant ?? "";
 
   // Get restaurant
-  const {
-    data,
-    isPending,
-    isError,
-    error,
-  } = useRestuarant(restaurantSlugName);
+  const { data, isPending, isError, error } = useRestuarant(restaurantSlugName);
 
   // Get active orders once restaurant ID is available
   const {
@@ -83,37 +90,45 @@ const Kitchen = () => {
     };
   }, [refetch]);
 
-  const {
-    isSidebarOpen,
-    toggleSidebar,
-    closeSidebar,
-  } = useSidebar();
+  const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebar();
 
   // Split orders by status
   const newOrders = orders.filter(
-    (order) => order.status === "received",
+    (order: KitchenOrder) => order.status === "received",
   );
 
   const preparingOrders = orders.filter(
-    (order) => order.status === "preparing",
+    (order: KitchenOrder) => order.status === "preparing",
   );
 
   const readyOrders = orders.filter(
-    (order) => order.status === "ready",
+    (order: KitchenOrder) => order.status === "ready",
   );
 
-  const {mutateAsync, isPending: isEditPending, isError: isEditError, error: editError} = useEditOrderStatus();
+  const {mutateAsync} = useEditOrderStatus();
 
   const handleStatusChange = async (
     orderId: string,
     status: KitchenOrderStatus,
   ) => {
-    // We'll handle the status update API/socket here later
-    console.log("Status change:", orderId, status);
-    alert(`Status change for Order ID: ${orderId} to ${status}`);
-    const response = await mutateAsync({orderId, newStatus: status});
-    await refetch();
-    console.log(response.data);
+    try {
+      setUpdateError(null);
+      setUpdatingOrderId(orderId);
+
+      await mutateAsync({
+        orderId,
+        newStatus: status,
+      });
+
+      await refetch();
+    } catch (error: any) {
+      setUpdateError({
+        orderId,
+        message: error?.message || "Unable to update order.",
+      });
+    } finally {
+      setUpdatingOrderId(null);
+    }
   };
 
   // Invalid restaurant URL
@@ -145,8 +160,7 @@ const Kitchen = () => {
         type="error"
         title="Unable to load restaurant"
         description={
-          error?.message ||
-          "Something went wrong while loading the restaurant."
+          error?.message || "Something went wrong while loading the restaurant."
         }
       />
     );
@@ -191,29 +205,17 @@ const Kitchen = () => {
   // Dynamic order statistics
   const orderStats = (
     <div className={styles.statusGrid}>
-      <OrderStatusCard
-        status="New Orders"
-        stats={newOrders.length}
-      />
+      <OrderStatusCard status="New Orders" stats={newOrders.length} />
 
-      <OrderStatusCard
-        status="Preparing"
-        stats={preparingOrders.length}
-      />
+      <OrderStatusCard status="Preparing" stats={preparingOrders.length} />
 
-      <OrderStatusCard
-        status="Ready"
-        stats={readyOrders.length}
-      />
+      <OrderStatusCard status="Ready" stats={readyOrders.length} />
     </div>
   );
 
   return (
     <div className={styles.page}>
-      <KitchenHeader
-        name={data.name}
-        toggle={toggleSidebar}
-      />
+      <KitchenHeader name={data.name} toggle={toggleSidebar} />
 
       <div className={styles.container}>
         <SideNav
@@ -227,14 +229,10 @@ const Kitchen = () => {
           {/* Notification */}
           {notification.show && (
             <div className={styles.notification}>
-              <div className={styles.notificationIcon}>
-                ✓
-              </div>
+              <div className={styles.notificationIcon}>✓</div>
 
               <div className={styles.notificationContent}>
-                <p className={styles.notificationTitle}>
-                  New order received
-                </p>
+                <p className={styles.notificationTitle}>New order received</p>
 
                 <p className={styles.notificationMessage}>
                   {notification.message}
@@ -250,9 +248,7 @@ const Kitchen = () => {
           <section className={styles.ordersSection}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>
-                  Active Orders
-                </h2>
+                <h2 className={styles.sectionTitle}>Active Orders</h2>
 
                 <p className={styles.sectionDescription}>
                   Orders that need attention.
@@ -262,43 +258,52 @@ const Kitchen = () => {
 
             <div className={styles.orderBoard}>
               {/* New Orders */}
-              <OrderSection
-                title="New Orders"
-                count={newOrders.length}
-              >
-                {newOrders.map((order) => (
+              <OrderSection title="New Orders" count={newOrders.length}>
+                {newOrders.map((order: KitchenOrder) => (
                   <KitchenOrderCard
                     key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
+                    isUpdating={updatingOrderId === order._id}
+                    updateError={
+                      updateError?.orderId === order._id
+                        ? updateError.message
+                        : null
+                    }
                   />
                 ))}
               </OrderSection>
 
               {/* Preparing */}
-              <OrderSection
-                title="Preparing"
-                count={preparingOrders.length}
-              >
-                {preparingOrders.map((order) => (
+              <OrderSection title="Preparing" count={preparingOrders.length}>
+                {preparingOrders.map((order: KitchenOrder) => (
                   <KitchenOrderCard
                     key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
+                    isUpdating={updatingOrderId === order._id}
+                    updateError={
+                      updateError?.orderId === order._id
+                        ? updateError.message
+                        : null
+                    }
                   />
                 ))}
               </OrderSection>
 
               {/* Ready */}
-              <OrderSection
-                title="Ready"
-                count={readyOrders.length}
-              >
-                {readyOrders.map((order) => (
+              <OrderSection title="Ready" count={readyOrders.length}>
+                {readyOrders.map((order: KitchenOrder) => (
                   <KitchenOrderCard
                     key={order._id}
                     order={order}
                     onStatusChange={handleStatusChange}
+                    isUpdating={updatingOrderId === order._id}
+                    updateError={
+                      updateError?.orderId === order._id
+                        ? updateError.message
+                        : null
+                    }
                   />
                 ))}
               </OrderSection>
