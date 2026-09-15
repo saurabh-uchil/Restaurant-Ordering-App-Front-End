@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { ArrowLeft, Check, ChefHat } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
 import { useGetOrderById } from "../../api/apihooks/useOrder";
@@ -12,9 +12,9 @@ import { orderConfirmationStyles as styles } from "../../styles/CustomerPage/ord
 import { serviceCharge, taxCharge } from "../../data/serviceCharges";
 import { useEffect } from "react";
 import { socket } from "../../api/apihooks/useSocket";
+import OrderTimeline from "./OrderTimeline";
 
 const OrderConfirmation = () => {
-
   const { restaurant, orderId } = useParams<{
     restaurant: string;
     orderId: string;
@@ -42,17 +42,16 @@ const OrderConfirmation = () => {
     refetch,
   } = useGetOrderById(orderId ?? "");
 
-
   useEffect(() => {
     socket.connect();
 
     socket.on("connect", () => {
-    console.log("Customer socket connected:", socket.id);
+      console.log("Customer socket connected:", socket.id);
     });
 
     const handleOrderUpdate = (update: any) => {
       refetch();
-    }
+    };
 
     socket.on("customerOrderUpdate", handleOrderUpdate);
 
@@ -60,8 +59,7 @@ const OrderConfirmation = () => {
       socket.off("customerOrderUpdate", handleOrderUpdate);
       socket.disconnect();
     };
-  }, [])
-
+  }, []);
 
   // Validate URL
   if (!restaurantSlugName || !orderId || !table) {
@@ -124,17 +122,16 @@ const OrderConfirmation = () => {
 
   return (
     <div className={styles.page}>
-        <CustomerHeader
-          restaurant={restaurantDetails.name}
-          slug={restaurantSlugName}
-          table={table}
-        />
-        
-      <div className={styles.container}>
-        
+      <CustomerHeader
+        restaurant={restaurantDetails.name}
+        slug={restaurantSlugName}
+        table={table}
+      />
 
+      <div className={styles.container}>
         <main className={styles.content}>
           {/* Success */}
+
           <section className={styles.confirmation}>
             <div className={styles.successIcon}>
               <div className={styles.successIconInner}>
@@ -143,11 +140,6 @@ const OrderConfirmation = () => {
             </div>
 
             <h1 className={styles.title}>Order Confirmed</h1>
-
-            <p className={styles.description}>
-              Your order has been received and sent to the
-              kitchen. We'll let you know when it's ready.
-            </p>
 
             <div className={styles.orderMeta}>
               <span className={styles.orderNumber}>
@@ -165,25 +157,9 @@ const OrderConfirmation = () => {
             <h2 className={styles.cardTitle}>Order Status</h2>
 
             <div className={styles.statusContent}>
-              <div className={styles.statusIcon}>
-                <ChefHat size={19} />
-              </div>
-
-              <div>
-                <p className={styles.statusTitle}>
-                  Order Received
-                </p>
-
-                <p>{data.status}</p>
-
-                <p className={styles.statusDescription}>
-                  The kitchen has received your order and will
-                  start preparing it shortly.
-                </p>
-              </div>
+              <OrderTimeline status={data.status} />
             </div>
           </section>
-
           {/* Order */}
           <section className={styles.summaryCard}>
             <h2 className={styles.summaryTitle}>Your Order</h2>
@@ -197,17 +173,19 @@ const OrderConfirmation = () => {
               </div>
             </div>
 
-             <div className={styles.breakdown}>
+            <div className={styles.breakdown}>
               <div className={styles.row}>
                 <span>Service Fee</span>
-                <span>${(data.subtotal * (serviceCharge/100)).toFixed(2)}</span>
+                <span>
+                  ${(data.subtotal * (serviceCharge / 100)).toFixed(2)}
+                </span>
               </div>
             </div>
 
-             <div className={styles.breakdown}>
+            <div className={styles.breakdown}>
               <div className={styles.row}>
                 <span>Subtotal</span>
-                <span>${(data.subtotal * (taxCharge/100)).toFixed(2)}</span>
+                <span>${(data.subtotal * (taxCharge / 100)).toFixed(2)}</span>
               </div>
             </div>
 
@@ -224,7 +202,7 @@ const OrderConfirmation = () => {
               className={styles.backButton}
               onClick={() =>
                 navigate(
-                  `/restaurant/${restaurantSlugName}/menu?table=${table}`
+                  `/restaurant/${restaurantSlugName}/menu?table=${table}`,
                 )
               }
             >

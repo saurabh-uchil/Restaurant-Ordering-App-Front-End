@@ -38,8 +38,7 @@ export const orderConfirmationStyles = {
   cardTitle:
     "text-base font-semibold text-[#2F2A25]",
 
-  statusContent:
-    "mt-5 flex items-center gap-4",
+  statusContent: "mt-5 w-full",
 
   statusIcon:
     "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FCE8D8] text-[#E2793D]",
