@@ -1,7 +1,7 @@
 const KitchenLogin = () => {
   return (
     <div>
-      
+      <p>This is the kitchen login page</p>
     </div>
   )
 }
