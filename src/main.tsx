@@ -25,6 +25,7 @@ import Cart from './components/CustomerPage/Cart/Cart.tsx';
 import OrderConfirmation from './components/CustomerPage/OrderConfirmation.tsx';
 import KitchenDashboard from './components/Kitchen/KitchenDashboard.tsx';
 import OrderHistory from './components/Kitchen/OrderHistory.tsx';
+import KitchenLogin from './components/Kitchen/KitchenLogin.tsx';
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/restaurant/:restaurant/order/:orderId" element={<OrderConfirmation />} />
 
           <Route path="/restaurant/:restaurant/kitchen" element={<KitchenDashboard />} />
+          <Route path="/restaurant/:restaurant/kitchen/login" element={<KitchenLogin />} />
           <Route path="/restaurant/:restaurant/orders" element={<OrderHistory />} />
 
           <Route element={<ProtectedRoute />} >
