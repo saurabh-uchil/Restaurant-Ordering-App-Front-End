@@ -10,6 +10,7 @@ import axios from "axios";
 import AlertMessage from "../components/AuthFormComponents/AlertMessage";
 import ButtonWithLoader from "../components/AuthFormComponents/ButtonWithLoader";
 import { useAuth, useCurrentUser } from "../store/authStore";
+import loginIllustration from "../assets/the-pass-login-illustration.png";
 
 type LoginForm = {
   email: string;
@@ -30,32 +31,32 @@ const Login = () => {
   const setCurrentUser = useCurrentUser((state) => state.setCurrentUser);
 
   const mutation = useMutation({
-    mutationFn: async (data: LoginForm) =>{
-      const response = await axios.post('http://localhost:3000/auth/login', data);
+    mutationFn: async (data: LoginForm) => {
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        data
+      );
       return response.data;
     },
     onSuccess: (data) => {
-        const {_id, username, role, restaurant, accessToken, message} = data
-        //console.log(message);
-        setAccessToken(accessToken);
-        setCurrentUser({_id, username, role, restaurant});
-        reset();
-        navigate("/dashboard");
+      const { _id, username, role, restaurant, accessToken, message } = data;
+      //console.log(message);
+      setAccessToken(accessToken);
+      setCurrentUser({ _id, username, role, restaurant });
+      reset();
+      navigate("/dashboard");
     },
     onError: (error) => {
-        if (axios.isAxiosError(error)){
-          //console.log("Axios Error");
-          //console.log(error.response?.data);
-          //console.log(error.response?.status);
-        } 
-        else {
-            console.error(error);
-        }
-      },
+      if (axios.isAxiosError(error)) {
+        //console.log("Axios Error");
+        //console.log(error.response?.data);
+        //console.log(error.response?.status);
+      } else {
+        console.error(error);
+      }
+    },
+  });
 
-  })
-
-  
   const { errors } = formState;
 
   const onFormSubmit = (data: LoginForm) => {
@@ -63,16 +64,29 @@ const Login = () => {
   };
 
   const errorMessage = mutation.isError
-  ? axios.isAxiosError(mutation.error)
-    ? mutation.error.response?.data?.message ?? "Something went wrong."
-    : mutation.error instanceof Error
-      ? mutation.error.message
-      : "Something went wrong."
-  : "";
+    ? axios.isAxiosError(mutation.error)
+      ? mutation.error.response?.data?.message ?? "Something went wrong."
+      : mutation.error instanceof Error
+        ? mutation.error.message
+        : "Something went wrong."
+    : "";
+
   return (
     <div className={style.page}>
-      <Navbar />
-      <div className={style.div}>
+      <div className={style.navbar}>
+        <Navbar />
+      </div>
+
+      <div className={style.authContent}>
+        <div className={style.authIllustration}>
+          <img
+            src={loginIllustration}
+            alt=""
+            className={style.illustration}
+          />
+        </div>
+
+        <div className={style.div}>
           <div className={style.container}>
             <h1 className={style.title}>Welcome back</h1>
 
@@ -101,15 +115,38 @@ const Login = () => {
                 rules={rules.password}
               />
 
-              <ButtonWithLoader text="Login" loadingText="Logging in..." isLoading={mutation.isPending} />
-                   
-              {mutation.isSuccess && <AlertMessage type="success" message="Login Successfull!!"/>}
+              <ButtonWithLoader
+                text="Login"
+                loadingText="Logging in..."
+                isLoading={mutation.isPending}
+              />
 
-              {mutation.isError && <AlertMessage type="error" message={errorMessage} />}
+              {mutation.isSuccess && (
+                <AlertMessage
+                  type="success"
+                  message="Login Successfull!!"
+                />
+              )}
 
-          </form>
+              {mutation.isError && (
+                <AlertMessage
+                  type="error"
+                  message={errorMessage}
+                />
+              )}
+            </form>
+          </div>
         </div>
       </div>
+
+      <footer className={style.authFooter}>
+        <span>Powered by</span>
+
+        <div className={style.footerLogo}>
+          <span className={style.logoDot} />
+          <span>The Pass</span>
+        </div>
+      </footer>
     </div>
   );
 };

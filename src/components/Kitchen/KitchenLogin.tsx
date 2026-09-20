@@ -1,45 +1,91 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, KeyRound, Lock } from "lucide-react";
+import { useState } from "react";
 
+import kitchenIllustration from "../../assets/kitchen-login-illustration.svg";
 import { kitchenLoginStyles as styles } from "../../styles/Kitchen/KitchenLogin";
 
 const KitchenLogin = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <main className={styles.page}>
+      
       <header className={styles.header}>
         <div className={styles.logo}>
           <span className={styles.logoDot} />
           <span>The Pass</span>
         </div>
-
-        <button type="button" className={styles.backButton}>
-          <ArrowLeft size={17} />
-          <span>Back to restaurants</span>
-        </button>
       </header>
 
       <section className={styles.content}>
-        <div className={styles.branding}>
-          <div className={styles.brandingContent}>
-            <div className={styles.restaurantIcon}>
-              <span>🍴</span>
-            </div>
-
-            <h1 className={styles.restaurantName}>Williams Bar</h1>
-
-            <p className={styles.kitchenLabel}>KITCHEN LOGIN</p>
-
-            <p className={styles.brandingDescription}>
-              Sign in to manage your restaurant orders.
-            </p>
-          </div>
-
-          <div className={styles.illustration}>
-            {/* Kitchen illustration will be added next */}
-          </div>
+        <div className={styles.illustrationSection}>
+          <img
+            src={kitchenIllustration}
+            alt=""
+            className={styles.illustration}
+          />
         </div>
 
         <div className={styles.loginSection}>
-          {/* Login form will be added later */}
+          <p className={styles.kitchenLabel}>KITCHEN</p>
+
+          <h1 className={styles.restaurantName}>Williams Bar</h1>
+
+          <div className={styles.divider} />
+
+          <form className={styles.form}>
+            <div className={styles.field}>
+              <label htmlFor="kitchenCode" className={styles.label}>
+                Kitchen code
+              </label>
+
+              <div className={styles.inputWrapper}>
+                <KeyRound size={19} className={styles.inputIcon} />
+
+                <input
+                  id="kitchenCode"
+                  type="text"
+                  placeholder="e.g. KITCHEN-1024"
+                  className={styles.input}
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="password" className={styles.label}>
+                Password
+              </label>
+
+              <div className={styles.inputWrapper}>
+                <Lock size={19} className={styles.inputIcon} />
+
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className={styles.input}
+                />
+
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" className={styles.loginButton}>
+              <span>Log in</span>
+              <ArrowRight size={18} />
+            </button>
+
+            <button type="button" className={styles.forgotPassword}>
+              Forgot password?
+            </button>
+          </form>
         </div>
       </section>
 

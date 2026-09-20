@@ -1,9 +1,9 @@
 export const kitchenLoginStyles = {
   page:
-    "flex min-h-screen w-full flex-col overflow-hidden bg-[#17181A] px-6 py-7 text-[#FBF8F2] sm:px-10 lg:px-16",
+    "flex h-screen w-full flex-col overflow-hidden bg-[#17181A] px-6 py-6 text-[#FBF8F2] sm:px-10 lg:px-16",
 
   header:
-    "mx-auto flex w-full max-w-[1360px] items-center justify-between",
+    "mx-auto flex w-full max-w-[1360px] shrink-0 items-center justify-between",
 
   logo:
     "flex items-center gap-2 text-sm font-semibold text-[#FBF8F2]",
@@ -15,34 +15,61 @@ export const kitchenLoginStyles = {
     "flex items-center gap-3 text-sm text-[#9A958C] transition-colors hover:text-[#FBF8F2]",
 
   content:
-    "mx-auto flex min-h-[calc(100vh-150px)] w-full max-w-[1100px] items-center justify-center gap-20 lg:gap-24",
+    "mx-auto grid min-h-0 w-full max-w-[1200px] flex-1 grid-cols-1 items-center gap-12 py-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20",
 
-  branding:
-    "flex w-full max-w-[500px] flex-col items-center text-center",
-
-  brandingContent:
-    "flex w-full flex-col items-center",
-
-  restaurantIcon:
-    "mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#E2793D] text-3xl text-[#E2793D]",
-
-  restaurantName:
-    "font-serif text-4xl font-semibold tracking-tight text-[#FBF8F2] sm:text-5xl",
-
-  kitchenLabel:
-    "mt-3 text-sm font-semibold tracking-[0.32em] text-[#E2793D]",
-
-  brandingDescription:
-    "mt-5 max-w-sm text-base leading-6 text-[#9A958C]",
+  illustrationSection:
+    "flex w-full items-center justify-center",
 
   illustration:
-    "mt-8 flex h-[260px] w-full items-end justify-center",
+    "h-auto w-full max-w-[620px] object-contain",
 
   loginSection:
-    "w-full max-w-[500px]",
+    "w-full max-w-[500px] justify-self-center lg:justify-self-end",
+
+  kitchenLabel:
+    "text-xs font-semibold tracking-[0.32em] text-[#E2793D]",
+
+  restaurantName:
+    "mt-2 font-serif text-4xl font-semibold tracking-tight text-[#FBF8F2] sm:text-5xl",
+
+  divider:
+    "mt-5 h-px w-8 bg-[#E2793D]",
+
+  loginTitle:
+    "mt-7 text-2xl font-semibold tracking-tight text-[#FBF8F2] sm:text-3xl",
+
+  loginDescription:
+    "mt-2 max-w-md text-sm leading-6 text-[#9A958C] sm:text-base",
+
+  form:
+    "mt-7 flex flex-col gap-5",
+
+  field:
+    "flex flex-col gap-2",
+
+  label:
+    "text-sm font-medium text-[#D8D3CC]",
+
+  inputWrapper:
+    "relative flex h-14 items-center rounded-xl border border-[#343230] bg-[#1C1D1C] transition-colors focus-within:border-[#E2793D] focus-within:ring-1 focus-within:ring-[#E2793D]/30",
+
+  inputIcon:
+    "absolute left-4 text-[#77736D]",
+
+  input:
+    "h-full w-full rounded-xl bg-transparent px-12 pr-5 text-sm text-[#FBF8F2] outline-none placeholder:text-[#706C66]",
+
+  passwordToggle:
+    "absolute right-4 flex items-center justify-center text-[#77736D] transition-colors hover:text-[#FBF8F2]",
+
+  loginButton:
+    "mt-1 flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#E2793D] text-sm font-semibold text-white transition-colors hover:bg-[#D96F35] active:scale-[0.99]",
+
+  forgotPassword:
+    "self-start text-sm text-[#9A958C] underline-offset-4 transition-colors hover:text-[#FBF8F2] hover:underline",
 
   footer:
-    "mx-auto flex items-center justify-center gap-3 pb-1 text-xs text-[#6F6A63]",
+    "mx-auto flex shrink-0 items-center justify-center gap-3 pb-1 text-xs text-[#6F6A63]",
 
   footerLogo:
     "flex items-center gap-2 font-medium text-[#9A958C]",
