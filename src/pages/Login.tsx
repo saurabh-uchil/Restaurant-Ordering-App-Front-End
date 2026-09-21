@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import FormInput from "../components/AuthFormComponents/FormInput";
 import Navbar from "../components/LandingPageComponents/Navbar";
-import { authStyles as style } from "../styles/auth";
+import {illustrationStyles, authStyles as style } from "../styles/auth";
 import { Lock, Mail } from "lucide-react";
 import { rules } from "../data/validationRules";
 import { useNavigate } from "react-router";
@@ -10,7 +10,7 @@ import axios from "axios";
 import AlertMessage from "../components/AuthFormComponents/AlertMessage";
 import ButtonWithLoader from "../components/AuthFormComponents/ButtonWithLoader";
 import { useAuth, useCurrentUser } from "../store/authStore";
-import loginIllustration from "../assets/the-pass-login-illustration.png";
+import loginIllustration from "../assets/ChatGPT Image Sep 21, 2026, 01_00_31 AM.png";
 
 type LoginForm = {
   email: string;
@@ -34,7 +34,7 @@ const Login = () => {
     mutationFn: async (data: LoginForm) => {
       const response = await axios.post(
         "http://localhost:3000/auth/login",
-        data
+        data,
       );
       return response.data;
     },
@@ -65,12 +65,13 @@ const Login = () => {
 
   const errorMessage = mutation.isError
     ? axios.isAxiosError(mutation.error)
-      ? mutation.error.response?.data?.message ?? "Something went wrong."
+      ? (mutation.error.response?.data?.message ?? "Something went wrong.")
       : mutation.error instanceof Error
         ? mutation.error.message
         : "Something went wrong."
     : "";
-
+  
+    
   return (
     <div className={style.page}>
       <div className={style.navbar}>
@@ -83,6 +84,7 @@ const Login = () => {
             src={loginIllustration}
             alt=""
             className={style.illustration}
+            style={illustrationStyles}
           />
         </div>
 
@@ -90,9 +92,7 @@ const Login = () => {
           <div className={style.container}>
             <h1 className={style.title}>Welcome back</h1>
 
-            <p className={style.subtitle}>
-              Sign in to your restaurant.
-            </p>
+            <p className={style.subtitle}>Sign in to your restaurant.</p>
 
             <form onSubmit={handleSubmit(onFormSubmit)}>
               <FormInput<LoginForm>
@@ -122,17 +122,11 @@ const Login = () => {
               />
 
               {mutation.isSuccess && (
-                <AlertMessage
-                  type="success"
-                  message="Login Successfull!!"
-                />
+                <AlertMessage type="success" message="Login Successfull!!" />
               )}
 
               {mutation.isError && (
-                <AlertMessage
-                  type="error"
-                  message={errorMessage}
-                />
+                <AlertMessage type="error" message={errorMessage} />
               )}
             </form>
           </div>

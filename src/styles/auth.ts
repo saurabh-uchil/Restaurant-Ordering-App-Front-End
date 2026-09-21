@@ -67,3 +67,8 @@ export const authStyles = {
   loader:
     "h-4 w-4 animate-spin",
 };
+
+export const illustrationStyles = {
+     WebkitMaskImage: "radial-gradient(ellipse 60% 60% at center, black 20%, transparent 100%)",
+     maskImage: "radial-gradient(ellipse 60% 60% at center, black 20%, transparent 100%)",      
+}

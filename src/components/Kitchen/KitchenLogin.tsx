@@ -1,8 +1,9 @@
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock } from "lucide-react";
 import { useState } from "react";
 
-import kitchenIllustration from "../../assets/kitchen-login-illustration.svg";
+import kitchenIllustration from "../../assets/ChatGPT Image Sep 21, 2026, 01_24_33 AM.png";
 import { kitchenLoginStyles as styles } from "../../styles/Kitchen/KitchenLogin";
+import { illustrationStyles } from "../../styles/auth";
 
 const KitchenLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +24,7 @@ const KitchenLogin = () => {
             src={kitchenIllustration}
             alt=""
             className={styles.illustration}
+            style={illustrationStyles}
           />
         </div>
 

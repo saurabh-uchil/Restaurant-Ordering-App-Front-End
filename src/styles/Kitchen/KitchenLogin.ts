@@ -29,11 +29,9 @@ export const kitchenLoginStyles = {
   kitchenLabel:
     "text-xs font-semibold tracking-[0.32em] text-[#E2793D]",
 
-  restaurantName:
-    "mt-2 font-serif text-4xl font-semibold tracking-tight text-[#FBF8F2] sm:text-5xl",
-
-  divider:
-    "mt-5 h-px w-8 bg-[#E2793D]",
+  restaurantName:"mt-2 font-serif text-4xl font-medium tracking-tight text-[#FBF8F2] sm:text-[2.75rem]",
+  
+  divider:"mt-5 h-px w-8 bg-[#E2793D]",
 
   loginTitle:
     "mt-7 text-2xl font-semibold tracking-tight text-[#FBF8F2] sm:text-3xl",
