@@ -1,6 +1,6 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createOrder, editOrderStatus, getActiveOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
+import { createOrder, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -59,4 +59,12 @@ export const useEditOrderStatus = () =>{
       return editOrderStatus(orderId, newStatus);
     }
   });
+}
+
+export const useGetCompletedOrdersByRestaurantId = (restaurantId: string) =>{
+  return useQuery({
+    queryKey: ["completedOrders", restaurantId],
+    queryFn: ()=> getCompletedOrdersByRestaurantId(restaurantId),
+    enabled: !!restaurantId
+  })
 }

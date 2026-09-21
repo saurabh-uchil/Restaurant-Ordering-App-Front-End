@@ -10,7 +10,7 @@ import axios from "axios";
 import AlertMessage from "../components/AuthFormComponents/AlertMessage";
 import ButtonWithLoader from "../components/AuthFormComponents/ButtonWithLoader";
 import { useAuth, useCurrentUser } from "../store/authStore";
-import loginIllustration from "../assets/ChatGPT Image Sep 21, 2026, 01_00_31 AM.png";
+import loginIllustration from "../assets/the-pass-login-illustration.png";
 
 type LoginForm = {
   email: string;

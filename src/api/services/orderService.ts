@@ -25,3 +25,8 @@ export const editOrderStatus = async(orderId: string, newStatus: string)=>{
     const response = await api.patch(`/orders/${orderId}/status`, {newStatus});
     return response.data;
 }
+
+export const getCompletedOrdersByRestaurantId = async(restaurantId: string)=>{
+    const response = await api.get(`/orders/restaurant/${restaurantId}/completed`);
+    return response.data;
+}

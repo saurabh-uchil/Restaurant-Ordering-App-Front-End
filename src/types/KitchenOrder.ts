@@ -33,10 +33,7 @@ export type KitchenOrderItem = {
   addons: KitchenOrderAddon[];
   dietaryAlternatives: KitchenOrderDietaryAlternative[];
   removableIngredients: string[];
-  options: {
-    "Sauce For Gnocchi": KitchenOrderOption;
-    "Spice Level": KitchenOrderOption;
-  };
+  options: Record<string, KitchenOrderOption>;
 };
 
 export type KitchenOrder = {
