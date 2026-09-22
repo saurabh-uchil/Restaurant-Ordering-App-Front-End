@@ -1,3 +1,5 @@
+import type { KitchenOrder } from "./KitchenOrder";
+
 export type OrderSummaryProps = {
   subtotal?: string;
   serviceFee?: string;
@@ -8,4 +10,10 @@ export type OrderSummaryProps = {
   isPending?: boolean;
   isError?: boolean;
   error?: Error | null;
+};
+
+
+export type OrderDetailsDrawerProps = {
+  order: KitchenOrder | null;
+  onClose: () => void;
 };

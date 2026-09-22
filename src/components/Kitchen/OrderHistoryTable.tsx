@@ -3,9 +3,10 @@ import type { KitchenOrder } from "../../types/KitchenOrder";
 
 type OrderHistoryTableProps = {
   orders: KitchenOrder[];
+  selectOrder: (order: KitchenOrder) => void;
 };
 
-const OrderHistoryTable = ({ orders }: OrderHistoryTableProps) => {
+const OrderHistoryTable = ({ orders, selectOrder }: OrderHistoryTableProps) => {
   return (
     <div className={OrderHistoryStyles.tableWrapper}>
       <table className={OrderHistoryStyles.table}>
@@ -50,6 +51,11 @@ const OrderHistoryTable = ({ orders }: OrderHistoryTableProps) => {
               </td>
 
               <td className={OrderHistoryStyles.actionCell}>
+                <button
+                  onClick={() => {console.log(order); selectOrder(order);}}
+                >
+                  View
+                </button>
                 <span className={OrderHistoryStyles.arrow}>→</span>
               </td>
             </tr>

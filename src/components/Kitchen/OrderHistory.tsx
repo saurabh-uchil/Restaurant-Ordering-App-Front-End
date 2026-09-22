@@ -7,24 +7,20 @@ import SideNav from "../DashboardComponents/SideNav";
 import { styles as OrderHistoryStyles } from "../../styles/Kitchen/OrderHistory";
 import { useGetCompletedOrdersByRestaurantId } from "../../api/apihooks/useOrder";
 import OrderHistoryTable from "./OrderHistoryTable";
+import { useState } from "react";
+import type { KitchenOrder } from "../../types/KitchenOrder";
+import OrderDetailsDrawer from "./OrderDetailsDrawer";
 
 const OrderHistory = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
 
   const restaurantSlugName = restaurant ?? "";
 
-  const {
-    data,
-    isPending,
-    isError,
-    error,
-  } = useRestuarant(restaurantSlugName);
+  const [selectedOrder, setSelectedOrder] = useState<KitchenOrder | null>(null);
 
-  const {
-    isSidebarOpen,
-    toggleSidebar,
-    closeSidebar,
-  } = useSidebar();
+  const { data, isPending, isError, error } = useRestuarant(restaurantSlugName);
+
+  const { isSidebarOpen, toggleSidebar, closeSidebar } = useSidebar();
 
   const {
     data: ordersData,
@@ -39,10 +35,7 @@ const OrderHistory = () => {
 
   return (
     <div className={OrderHistoryStyles.page}>
-      <KitchenHeader
-        name={data.name}
-        toggle={toggleSidebar}
-      />
+      <KitchenHeader name={data.name} toggle={toggleSidebar} />
 
       <div className={OrderHistoryStyles.container}>
         <SideNav
@@ -61,7 +54,15 @@ const OrderHistory = () => {
             </p>
           </div>
 
-          <OrderHistoryTable orders={ordersData ?? []} />
+          <OrderHistoryTable
+            orders={ordersData ?? []}
+            selectOrder={setSelectedOrder}
+          />
+          
+          <OrderDetailsDrawer
+            order={selectedOrder}
+            onClose={() => setSelectedOrder(null)}
+          />
         </div>
       </div>
     </div>
