@@ -69,4 +69,7 @@ export const orderHistoryStyles = {
 
   arrow:
     "text-lg text-[#A39C93] transition-colors group-hover:text-[#E2793D]",
+
+  viewButton:
+  "flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8E4DE] bg-white text-[#7B756C] transition-colors hover:border-[#E2793D] hover:bg-[#FFF8F3] hover:text-[#E2793D] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",  
 };

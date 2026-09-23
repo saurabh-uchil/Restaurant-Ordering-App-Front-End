@@ -29,9 +29,6 @@ const OrderHistory = () => {
     error: ordersError,
   } = useGetCompletedOrdersByRestaurantId(data?._id || "");
 
-  if (ordersData) {
-    console.log("Completed Orders Data:", ordersData);
-  }
 
   return (
     <div className={OrderHistoryStyles.page}>

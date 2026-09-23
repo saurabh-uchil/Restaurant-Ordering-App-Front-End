@@ -1,3 +1,4 @@
+import { Eye } from "lucide-react";
 import { orderHistoryStyles as OrderHistoryStyles } from "../../styles/Kitchen/OrderHistory";
 import type { KitchenOrder } from "../../types/KitchenOrder";
 
@@ -23,7 +24,10 @@ const OrderHistoryTable = ({ orders, selectOrder }: OrderHistoryTableProps) => {
 
         <tbody>
           {orders.map((order) => (
-            <tr key={order._id} className={`${OrderHistoryStyles.tableRow} group`}>
+            <tr
+              key={order._id}
+              className={`${OrderHistoryStyles.tableRow} group`}
+            >
               <td className={OrderHistoryStyles.orderNumber}>
                 #{order.orderNumber}
               </td>
@@ -52,11 +56,13 @@ const OrderHistoryTable = ({ orders, selectOrder }: OrderHistoryTableProps) => {
 
               <td className={OrderHistoryStyles.actionCell}>
                 <button
-                  onClick={() => {console.log(order); selectOrder(order);}}
+                  type="button"
+                  onClick={() => selectOrder(order)}
+                  className={OrderHistoryStyles.viewButton}
+                  aria-label={`View order ${order.orderNumber}`}
                 >
-                  View
+                  <Eye size={17} />
                 </button>
-                <span className={OrderHistoryStyles.arrow}>→</span>
               </td>
             </tr>
           ))}
