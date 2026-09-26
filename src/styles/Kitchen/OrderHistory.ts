@@ -1,18 +1,51 @@
 export const styles = {
-  page: "min-h-screen w-full bg-[#FCFBF9] text-[#1E1B16]",
+  page:
+    "min-h-screen w-full bg-[#FCFBF9] text-[#1E1B16]",
 
-  container: "flex w-full",
+  container:
+    "flex w-full",
 
-  content: "min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8",
+  content:
+    "min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8",
 
-  heading: "mb-8",
+  heading:
+    "mb-8",
 
-  eyebrow: "text-xs font-semibold tracking-[0.28em] text-[#E2793D]",
+  eyebrow:
+    "text-xs font-semibold tracking-[0.28em] text-[#E2793D]",
 
   title:
     "mt-2 text-3xl font-semibold tracking-tight text-[#2F2A25] sm:text-4xl",
 
-  subtitle: "mt-2 text-sm leading-6 text-[#7B756C] sm:text-base",
+  subtitle:
+    "mt-2 text-sm leading-6 text-[#7B756C] sm:text-base",
+
+  ordersState:
+    "mt-6 flex min-h-[320px] items-center justify-center rounded-2xl border border-[#E8E4DE] bg-white",
+
+  loadingState:
+    "flex flex-col items-center justify-center text-center",
+
+  loader:
+    "h-7 w-7 animate-spin rounded-full border-2 border-[#E8E4DE] border-t-[#E2793D]",
+
+  loadingText:
+    "mt-4 text-sm font-medium text-[#5F584F]",
+
+  loadingDescription:
+    "mt-1 text-xs text-[#8B8177]",
+
+  errorState:
+    "flex max-w-md flex-col items-center justify-center px-6 text-center",
+
+  errorIcon:
+    "flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF1EB] text-[#C9662F]",
+
+  errorTitle:
+    "mt-4 text-sm font-semibold text-[#2F2A25]",
+
+  errorDescription:
+    "mt-1 text-sm leading-6 text-[#7B756C]",
 };
 
 export const orderHistoryStyles = {
@@ -71,5 +104,5 @@ export const orderHistoryStyles = {
     "text-lg text-[#A39C93] transition-colors group-hover:text-[#E2793D]",
 
   viewButton:
-  "flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8E4DE] bg-white text-[#7B756C] transition-colors hover:border-[#E2793D] hover:bg-[#FFF8F3] hover:text-[#E2793D] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",  
+    "flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8E4DE] bg-white text-[#7B756C] transition-colors hover:border-[#E2793D] hover:bg-[#FFF8F3] hover:text-[#E2793D] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
 };
