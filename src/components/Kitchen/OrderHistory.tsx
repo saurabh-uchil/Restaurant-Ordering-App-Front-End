@@ -13,6 +13,7 @@ import type { KitchenOrder } from "../../types/KitchenOrder";
 import OrderDetailsDrawer from "./OrderDetailsDrawer";
 import Pagination from "./Pagination";
 import { ContentState } from "../ContentState";
+import OrderHistoryFilters from "./OrderHistoryFilters";
 
 const OrderHistory = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -249,6 +250,8 @@ const OrderHistory = () => {
             <p className={OrderHistoryStyles.subtitle}>
               View and search completed orders from your restaurant.
             </p>
+
+            <OrderHistoryFilters />
           </div>
 
           <OrderHistoryTable
