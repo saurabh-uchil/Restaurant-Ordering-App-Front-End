@@ -50,3 +50,28 @@ export type KitchenOrder = {
   updatedAt: string;
   __v: number;
 };
+
+export type OrderFilters = {
+  orderNumber: string;
+  date: string;
+  total: string;
+  table: string;
+};
+
+export type OrderFiltersProps = {
+  filters: OrderFilters;
+  setFilters: React.Dispatch<React.SetStateAction<OrderFilters>>;
+  tableOptions: FilterOption[];
+};
+
+type FilterOption = {
+  label: string;
+  value: string;
+};
+
+export type FilterDropdownProps = {
+  label: string;
+  options: FilterOption[];
+  value: string;
+  onChange: (value: string) => void;
+};

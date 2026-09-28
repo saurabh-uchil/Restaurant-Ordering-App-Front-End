@@ -195,7 +195,7 @@ const CustomerMenuPage = () => {
               selectedFilter={selectedFilter}
               setSelectedFilter={setSelectedFilter}
             />
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholderText="Search menu"/>
           </div>
 
           <div className={pageStyles.menuGrid}>{card}</div>

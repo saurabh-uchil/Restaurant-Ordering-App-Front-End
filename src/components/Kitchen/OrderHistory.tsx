@@ -7,15 +7,25 @@ import { useSidebar } from "../../hooks/useSidebar";
 import { kitchenLinks } from "../../data/kitchenDashboardLinks";
 import SideNav from "../DashboardComponents/SideNav";
 import { styles as OrderHistoryStyles } from "../../styles/Kitchen/OrderHistory";
-import { useGetCompletedOrdersByRestaurantId } from "../../api/apihooks/useOrder";
+import { useGetCompletedOrdersByRestaurantId} from "../../api/apihooks/useOrder";
 import OrderHistoryTable from "./OrderHistoryTable";
-import type { KitchenOrder } from "../../types/KitchenOrder";
+import type { KitchenOrder, OrderFilters } from "../../types/KitchenOrder";
 import OrderDetailsDrawer from "./OrderDetailsDrawer";
 import Pagination from "./Pagination";
 import { ContentState } from "../ContentState";
 import OrderHistoryFilters from "./OrderHistoryFilters";
+import { filterOrders } from "../../services/ordersfiltersService";
+import { getTableOptions } from "../../data/filters";
 
 const OrderHistory = () => {
+
+const [filters, setFilters] = useState<OrderFilters>({
+  orderNumber: "",
+  date: "",
+  total: "",
+  table: "",
+});
+
   const { restaurant } = useParams<{ restaurant: string }>();
 
   const restaurantSlugName = restaurant ?? "";
@@ -222,10 +232,12 @@ const OrderHistory = () => {
     );
   }
 
+  const filteredOrders = filterOrders(ordersData, filters);
+
   const startIndex = (currentPage - 1) * ordersPerPage;
   const endIndex = currentPage * ordersPerPage;
 
-  const currentOrders = ordersData.reverse().slice(startIndex, endIndex);
+  const currentOrders = filteredOrders.reverse().slice(startIndex, endIndex);
 
   return (
     <div className={OrderHistoryStyles.page}>
@@ -251,7 +263,7 @@ const OrderHistory = () => {
               View and search completed orders from your restaurant.
             </p>
 
-            <OrderHistoryFilters />
+            <OrderHistoryFilters filters={filters} setFilters={setFilters} tableOptions={getTableOptions(ordersData)}/>
           </div>
 
           <OrderHistoryTable

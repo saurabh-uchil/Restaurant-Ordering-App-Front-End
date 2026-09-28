@@ -23,7 +23,7 @@ const MenuGrid = ({mode, data}) => {
     <div className={viewMenuStyles.cardContainer}>
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center px-4 lg:px-0">
         <Filters filterArray={filters} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholderText="Search menu"/>
       </div>
       <div className={viewMenuStyles.cardGridCols}>
         {card}
