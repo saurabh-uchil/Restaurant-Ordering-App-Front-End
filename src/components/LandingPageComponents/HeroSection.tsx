@@ -18,7 +18,7 @@ const HeroSection = () => {
         </h1>
 
         <p className={style.heroDescription}>
-            Manage menus, receive orders in real time, and keep your front-of-house and kitchen in sync with seamless, real-time order management.
+            Run your whole floor from one place. Customers scan and order, your kitchen sees it instantly, you manage the menu without lifting a pen.
         </p>
 
         <button className={style.heroButton} onClick={()=>navigate('/getStarted')}>
