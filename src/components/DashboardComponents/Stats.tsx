@@ -9,6 +9,7 @@ import { popularItems } from "../../data/popularItemsMock";
 import QuickActions from "./QuickAcitons";
 import Popular from "./Popular";
 import { statsMock } from "../../data/quickActions";
+import { useGetMenu } from "../../api/apihooks/useRestaurant";
 
 
 const Stats = () => {
@@ -33,6 +34,8 @@ const Stats = () => {
     enabled: Boolean(restaurantId && accessToken),
   });
 
+  console.log("Stats data:", data);
+  
   if (!currentUser) {
     return <p>Current user is not available.</p>;
   }
