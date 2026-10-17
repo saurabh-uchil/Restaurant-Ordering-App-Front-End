@@ -9,8 +9,6 @@ import { popularItems } from "../../data/popularItemsMock";
 import QuickActions from "./QuickAcitons";
 import Popular from "./Popular";
 import { statsMock } from "../../data/quickActions";
-import { useGetMenu } from "../../api/apihooks/useRestaurant";
-
 
 const Stats = () => {
 
@@ -34,7 +32,8 @@ const Stats = () => {
     enabled: Boolean(restaurantId && accessToken),
   });
 
-  console.log("Stats data:", data);
+  //console.log("Stats data:", data);
+  //Need to get the menu items for the restaurant to display in the popular items section
   
   if (!currentUser) {
     return <p>Current user is not available.</p>;
