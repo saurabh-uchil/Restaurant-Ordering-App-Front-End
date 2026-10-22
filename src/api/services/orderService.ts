@@ -30,3 +30,9 @@ export const getCompletedOrdersByRestaurantId = async(restaurantId: string)=>{
     const response = await api.get(`/orders/restaurant/${restaurantId}/completed`);
     return response.data;
 }
+
+export const createSession = async(restaurantId: string, table: string)=>{
+
+    const response = await api.post(`/session`, {restaurantId, table: parseInt(table)});
+    return response.data;
+}

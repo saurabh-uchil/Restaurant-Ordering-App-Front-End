@@ -37,9 +37,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<App />} />
           <Route path="/error" element={<Error401 />} />
           <Route path="/addToMenu" element={<AddToMenu />} />
-          {/* <Route path="/addFoodItem" element={<AddFoodItem />} />
-          <Route path="/viewMenu" element={<ViewMenu />} />
-          <Route path="/editMenuItem/:id" element={<EditMenuItem />} /> */}
+        
           <Route path="/login" element={<Login />} />
           <Route path="/getStarted" element={<Register />} />
           <Route path="/notFound" element={<NotFound />} />

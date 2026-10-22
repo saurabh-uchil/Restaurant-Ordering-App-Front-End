@@ -1,6 +1,6 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createOrder, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
+import { createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -67,4 +67,12 @@ export const useGetCompletedOrdersByRestaurantId = (restaurantId: string) =>{
     queryFn: ()=> getCompletedOrdersByRestaurantId(restaurantId),
     enabled: !!restaurantId
   })
+}
+
+export const useCreateSession = () =>{
+  return useMutation({
+    mutationFn: async ({restaurantId, table}: {restaurantId: string, table: string}) => {
+      return createSession(restaurantId, table);
+    }
+  });
 }

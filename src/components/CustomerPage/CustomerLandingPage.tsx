@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from "react-router";
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
 import ContentState from "../../components/ContentState";
 import { useNavigate } from "react-router-dom";
+import { useCreateSession } from "../../api/apihooks/useOrder";
 
 const CustomerLandingPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -14,7 +15,15 @@ const CustomerLandingPage = () => {
 
   const navigate = useNavigate();
 
+  const {mutateAsync: createSession} = useCreateSession();
+
   const { data, isPending, isError, error, } = useRestuarant(restaurantSlugName);
+
+  const handleBeginOrder =  async () => {
+    const response =  await createSession({restaurantId: data?._id, table: table ?? ""});
+    console.log("Session created:", response);
+    //navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`);
+  }
 
   if (!restaurantSlugName) {
     return (
@@ -137,7 +146,7 @@ const CustomerLandingPage = () => {
             <button
               type="button"
               className={styles.beginButton}
-              onClick={()=>{navigate(`/restaurant/${restaurantSlugName}/menu `)}}
+              onClick={handleBeginOrder}
             >
               <span>Begin Order</span>
               <ArrowRight size={17} />
