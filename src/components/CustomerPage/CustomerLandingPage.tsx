@@ -21,7 +21,7 @@ const CustomerLandingPage = () => {
 
   const handleBeginOrder =  async () => {
     const response =  await createSession({restaurantId: data?._id, table: table ?? ""});
-    console.log("Session created:", response);
+    //console.log("Session created:", response);
     navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`);
   }
 
