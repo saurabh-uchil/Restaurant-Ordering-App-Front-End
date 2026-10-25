@@ -1,4 +1,5 @@
-import { ArrowRight, CircleHelp, Armchair, Utensils } from "lucide-react";
+
+import { ArrowRight, CircleHelp, Armchair, Utensils, AlertCircle } from "lucide-react";
 import { customerLandingPageStyles as styles } from "../../styles/CustomerPage/customerLandingPage";
 import { useParams, useSearchParams } from "react-router";
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
@@ -15,15 +16,39 @@ const CustomerLandingPage = () => {
 
   const navigate = useNavigate();
 
-  const {mutateAsync: createSession} = useCreateSession();
+  const {
+    mutateAsync: createSession,
+    isPending: creatingSession,
+    isError: isSessionError,
+  } = useCreateSession();
 
-  const { data, isPending, isError, error, } = useRestuarant(restaurantSlugName);
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+  } = useRestuarant(restaurantSlugName);
 
-  const handleBeginOrder =  async () => {
-    const response =  await createSession({restaurantId: data?._id, table: table ?? ""});
-    //console.log("Session created:", response);
-    navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`);
-  }
+  const handleBeginOrder = async () => {
+    if (!data?._id || !table || creatingSession) {
+      return;
+    }
+
+    try {
+      const response = await createSession({
+        restaurantId: data._id,
+        table,
+      });
+
+      console.log("Session created:", response);
+
+      navigate(
+        `/restaurant/${restaurantSlugName}/menu?table=${table}`
+      );
+    } catch (error) {
+      console.error("Failed to create session:", error);
+    }
+  };
 
   if (!restaurantSlugName) {
     return (
@@ -46,12 +71,7 @@ const CustomerLandingPage = () => {
   }
 
   if (isPending) {
-    return (
-      <ContentState
-        type="loading"
-        title="Loading restaurant..."
-      />
-    );
+    return <ContentState type="loading" title="Loading restaurant..." />;
   }
 
   if (isError) {
@@ -86,38 +106,25 @@ const CustomerLandingPage = () => {
             <span className={styles.logoText}>The Pass</span>
           </div>
 
-          <span className={styles.dineInLabel}>
-            Dine-in ordering
-          </span>
+          <span className={styles.dineInLabel}>Dine-in ordering</span>
         </header>
 
         <main className={styles.content}>
           <section className={styles.intro}>
-            <p className={styles.welcomeTag}>
-              Welcome to
-            </p>
+            <p className={styles.welcomeTag}>Welcome to</p>
 
-            <h1 className={styles.restaurantName}>
-              {data.name}
-            </h1>
+            <h1 className={styles.restaurantName}>{data.name}</h1>
 
             <div className={styles.accentLine} />
 
-            <p className={styles.description}>
-              {data.description}
-            </p>
+            <p className={styles.description}>{data.description}</p>
           </section>
 
           <section className={styles.tableCard}>
             <div className={styles.tableHeader}>
               <div>
-                <p className={styles.tableLabel}>
-                  Your table
-                </p>
-
-                <p className={styles.tableNumber}>
-                  Table {table}
-                </p>
+                <p className={styles.tableLabel}>Your table</p>
+                <p className={styles.tableNumber}>Table {table}</p>
               </div>
 
               <div className={styles.tableIcon}>
@@ -133,10 +140,7 @@ const CustomerLandingPage = () => {
               </div>
 
               <div>
-                <p className={styles.orderInfoTitle}>
-                  Dine-in ordering
-                </p>
-
+                <p className={styles.orderInfoTitle}>Dine-in ordering</p>
                 <p className={styles.orderInfoText}>
                   Your order will be sent directly to the kitchen.
                 </p>
@@ -147,10 +151,44 @@ const CustomerLandingPage = () => {
               type="button"
               className={styles.beginButton}
               onClick={handleBeginOrder}
+              disabled={creatingSession}
+              aria-busy={creatingSession}
             >
-              <span>Begin Order</span>
-              <ArrowRight size={17} />
+              <span className={styles.beginButtonContent}>
+                {creatingSession && (
+                  <span
+                    className={styles.loadingSpinner}
+                    aria-hidden="true"
+                  />
+                )}
+
+                <span>
+                  {creatingSession
+                    ? "Starting order..."
+                    : "Begin Order"}
+                </span>
+              </span>
+
+              {!creatingSession && <ArrowRight size={17} />}
             </button>
+
+            {isSessionError && (
+              <div
+                className={styles.sessionError}
+                role="alert"
+              >
+                <div className={styles.sessionErrorContent}>
+                  <AlertCircle
+                    className={styles.sessionErrorIcon}
+                    aria-hidden="true"
+                  />
+
+                  <span>
+                    We couldn't start your order. Please try again.
+                  </span>
+                </div>
+              </div>
+            )}
 
             <div className={styles.helpBox}>
               <div className={styles.helpIcon}>
@@ -158,10 +196,7 @@ const CustomerLandingPage = () => {
               </div>
 
               <div>
-                <p className={styles.helpTitle}>
-                  Need help?
-                </p>
-
+                <p className={styles.helpTitle}>Need help?</p>
                 <p className={styles.helpText}>
                   Please ask one of our staff.
                 </p>
@@ -171,10 +206,7 @@ const CustomerLandingPage = () => {
         </main>
 
         <footer className={styles.footer}>
-          Powered by{" "}
-          <span className={styles.footerBrand}>
-            The Pass
-          </span>
+          Powered by <span className={styles.footerBrand}>The Pass</span>
         </footer>
       </div>
     </div>
