@@ -1,6 +1,6 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId } from "../services/orderService";
+import { createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId, validateSession } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -75,4 +75,11 @@ export const useCreateSession = () =>{
       return createSession(restaurantId, table);
     }
   });
+}
+
+export const useValidateSession = () =>{
+  return useQuery({
+      queryKey: ["session"],
+      queryFn: ()=> validateSession()
+    })
 }

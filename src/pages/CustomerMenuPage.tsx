@@ -14,6 +14,7 @@ import { filters } from "../data/filters";
 import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import Notification from "../components/Notification";
+import { useValidateSession } from "../api/apihooks/useOrder";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -21,6 +22,8 @@ const CustomerMenuPage = () => {
 
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
+
+  const {data: isValid, isPending: isValidPending, error, isError} = useValidateSession();
 
   const {
     data: menu = [],

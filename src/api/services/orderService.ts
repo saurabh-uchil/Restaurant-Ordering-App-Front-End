@@ -36,3 +36,8 @@ export const createSession = async(restaurantId: string, table: string)=>{
     const response = await api.post(`/session`, {restaurantId, table: parseInt(table)});
     return response.data;
 }
+
+export const validateSession = async()=>{
+    const response = await api.get(`/session/isValid`);
+    return response.data;
+}
