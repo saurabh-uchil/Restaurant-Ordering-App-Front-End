@@ -25,6 +25,8 @@ const CustomerMenuPage = () => {
 
   const {data: isValid, isPending: isValidPending, error, isError} = useValidateSession();
 
+  //need to handle loaders and errors
+
   const {
     data: menu = [],
     isPending: isMenuPending,
