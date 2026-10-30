@@ -23,7 +23,7 @@ const CustomerMenuPage = () => {
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
 
-  const {data: isValid, isPending: isValidPending, error, isError} = useValidateSession();
+  const {data: isValid, isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
 
   const {
     data: menu = [],
@@ -100,7 +100,7 @@ const CustomerMenuPage = () => {
   }
 
   // Loading either request
-  if (isMenuPending || isRestaurantPending) {
+  if (isMenuPending || isRestaurantPending || isValidPending) {
     return (
       <ContentState
         type="loading"
@@ -119,6 +119,20 @@ const CustomerMenuPage = () => {
         description={
           restaurantError?.message ||
           "Something went wrong while loading the restaurant."
+        }
+      />
+    );
+  }
+
+  // Session Error
+  if (isSessionError) {
+    return (
+      <ContentState
+        type="error"
+        title="Unable to load restaurant"
+        description={
+          sessionError?.message ||
+          "Something went wrong while loading the session."
         }
       />
     );
