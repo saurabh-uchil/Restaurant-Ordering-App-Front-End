@@ -24,7 +24,7 @@ const CustomerMenuPage = () => {
   const table = searchParams.get("table");
 
   const {data: isValid, isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
-
+  //need to check for a valid session
   const {
     data: menu = [],
     isPending: isMenuPending,
