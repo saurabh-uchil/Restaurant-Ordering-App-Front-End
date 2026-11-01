@@ -21,13 +21,11 @@ export type OrderItem = {
 
 type CreateOrderProps = {
     items: OrderItem[];
-    table: string | null;
-    restaurantId: string;
 }
 
 export const useOrder = () => {
    return useMutation({
-        mutationFn: ({items, table, restaurantId}: CreateOrderProps) => createOrder(items, table, restaurantId)
+        mutationFn: ({items}: CreateOrderProps) => createOrder(items)
     });
 }
 

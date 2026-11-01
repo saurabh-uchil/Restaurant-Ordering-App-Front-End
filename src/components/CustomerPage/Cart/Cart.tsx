@@ -84,8 +84,6 @@ const Cart = () => {
     error: restaurantError,
   } = useRestuarant(restaurantSlugName);
 
-  const restaurantId = restaurantDetails && restaurantDetails._id;
-
   const { mutateAsync, isPending, isError, error } = useOrder();
 
   const hasItems = myCart.length;
@@ -100,7 +98,7 @@ const Cart = () => {
 
   const confirmOrder = async () => {
     try {
-      const updatedData = normaliseCartData(myCart, table, restaurantId);
+      const updatedData = normaliseCartData(myCart);
       const data = await mutateAsync(updatedData);
       const orderId = data?.orderId;
       clearCart();
