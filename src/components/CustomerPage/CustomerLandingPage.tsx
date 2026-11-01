@@ -12,7 +12,7 @@ import {
   useJoinSession,
   useValidateSession,
 } from "../../api/apihooks/useOrder";
-import ActiveSessionDialog from "./ActiveSessionDialog";
+import Notification from "../Notification";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (axios.isAxiosError(error)) {
@@ -39,7 +39,6 @@ const CustomerLandingPage = () => {
   const {
     mutateAsync: joinSession,
     isPending: joiningSession,
-    error: joinError,
   } = useJoinSession();
   const {
     data: sessionValidation,
@@ -86,8 +85,8 @@ const CustomerLandingPage = () => {
     canCheckTableSession,
   );
 
-  const hasActiveSession = activeSessionResult?.hasActiveSession === true;
-  const activeSessionDialogOpen = hasActiveSession && !joinPromptDismissed;
+  const hasActiveSession = canCheckTableSession && activeSessionResult?.hasActiveSession === true;
+  const showExistingSessionNotification = hasActiveSession && !joinPromptDismissed;
 
   useEffect(() => {
     if (hasMatchingCookieSession && table) {
@@ -288,13 +287,17 @@ const CustomerLandingPage = () => {
         </footer>
       </div>
 
-      <ActiveSessionDialog
-        open={activeSessionDialogOpen}
-        isJoining={joiningSession}
-        errorMessage={joinError ? getErrorMessage(joinError, "We couldn't join this table session.") : undefined}
-        onJoin={() => void handleJoinSession()}
-        onCancel={() => setJoinPromptDismissed(true)}
-      />
+      {showExistingSessionNotification && (
+        <Notification
+          variant="info"
+          title="Existing dining session"
+          message="There's already an active dining session at this table. You can join to view existing orders."
+          actionLabel={joiningSession ? "Joining..." : "Join Table Session"}
+          actionDisabled={joiningSession}
+          onAction={() => void handleJoinSession()}
+          onClose={() => setJoinPromptDismissed(true)}
+        />
+      )}
     </div>
   );
 };
