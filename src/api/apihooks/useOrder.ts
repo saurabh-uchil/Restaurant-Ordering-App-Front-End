@@ -84,6 +84,10 @@ export const useValidateSession = () =>{
   return useQuery({
       queryKey: ["session"],
       queryFn: ()=> validateSession(),
+      // Several customer views observe this same session query. Keep the
+      // successful result fresh across route transitions so mounting the
+      // header does not immediately trigger another validation request.
+      staleTime: 30_000,
       retry: (failureCount, error) =>
         !(axios.isAxiosError(error) && error.response?.status === 401) && failureCount < 2,
     })
@@ -115,3 +119,4 @@ export const useGetOrdersForCurrentSession = (enabled: boolean, sessionId?: stri
   enabled: enabled && Boolean(sessionId),
   refetchInterval: 10000,
 });
+
