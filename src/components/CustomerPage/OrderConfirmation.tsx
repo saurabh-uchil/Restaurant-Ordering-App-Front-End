@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { ArrowLeft, Check } from "lucide-react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
@@ -13,6 +13,8 @@ import { serviceCharge, taxCharge } from "../../data/serviceCharges";
 import { useEffect } from "react";
 import { socket } from "../../api/apihooks/useSocket";
 import OrderTimeline from "./OrderTimeline";
+import Notification from "../Notification";
+import { useTimedNotification, type TimedNotificationValue } from "../../hooks/useTimedNotification";
 
 const OrderConfirmation = () => {
   const { restaurant, orderId } = useParams<{
@@ -23,6 +25,9 @@ const OrderConfirmation = () => {
   const restaurantSlugName = restaurant ?? "";
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialNotification = (location.state as { notification?: TimedNotificationValue } | null)?.notification ?? null;
+  const { notification, dismissNotification } = useTimedNotification(initialNotification);
 
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
@@ -60,6 +65,12 @@ const OrderConfirmation = () => {
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (initialNotification) {
+      navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+    }
+  }, [initialNotification, location.pathname, location.search, navigate]);
 
   // Validate URL
   if (!restaurantSlugName || !orderId || !table) {
@@ -127,6 +138,14 @@ const OrderConfirmation = () => {
         slug={restaurantSlugName}
         table={table}
       />
+
+      {notification && (
+        <Notification
+          variant={notification.variant}
+          message={notification.message}
+          onClose={dismissNotification}
+        />
+      )}
 
       <div className={styles.container}>
         <main className={styles.content}>
