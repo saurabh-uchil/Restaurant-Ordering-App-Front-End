@@ -27,8 +27,14 @@ export const customerHeaderStyles = {
   cartButton:
     "relative flex h-10 w-10 items-center justify-center rounded-full text-[#1E1B16] transition-colors hover:bg-[#F1EEE9] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
 
+  orderButton:
+    "relative flex h-10 w-10 items-center justify-center rounded-full text-[#1E1B16] transition-colors hover:bg-[#F1EEE9] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
+
   cartBadge:
     "absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E2793D] px-1 text-[10px] font-semibold text-white",
+
+  orderBadge:
+    "absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full border border-[#FCFBF9] bg-[#E2793D] px-1 text-[10px] font-semibold text-white",
 };
 
 export const customerMenuPageStyles = {

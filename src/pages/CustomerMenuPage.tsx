@@ -15,7 +15,7 @@ import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import Notification from "../components/Notification";
 import { useValidateSession } from "../api/apihooks/useOrder";
-import SessionOrders from "../components/CustomerPage/SessionOrders";
+import { useTimedNotification } from "../hooks/useTimedNotification";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -24,7 +24,7 @@ const CustomerMenuPage = () => {
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
 
-  const {data: isValid, isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
+  const {isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
   const {
     data: menu = [],
     isPending: isMenuPending,
@@ -57,14 +57,10 @@ const CustomerMenuPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [showToast, setShowToast] = useState({ visible: false, itemName: "" });
+  const { notification, showNotification, dismissNotification } = useTimedNotification();
 
   const handleShowToast = (itemName: string) => {
-    setShowToast({ visible: true, itemName });
-
-    setTimeout(() => {
-      setShowToast({ visible: false, itemName: "" });
-    }, 3000);
+    showNotification({ variant: "success", message: `${itemName} added to cart` });
   };
 
   const handleAddToCart = (item) => {
@@ -171,16 +167,11 @@ const CustomerMenuPage = () => {
           table={table}
         />
 
-        {showToast.visible && (
+        {notification && (
           <Notification
-            variant="success"
-            message={`${showToast.itemName} added to cart`}
-            onClose={() =>
-              setShowToast({
-                visible: false,
-                itemName: "",
-              })
-            }
+            variant={notification.variant}
+            message={notification.message}
+            onClose={dismissNotification}
           />
         )}
 
@@ -193,8 +184,6 @@ const CustomerMenuPage = () => {
             Browse the menu and choose something you’ll enjoy.
           </p>
         </section>
-
-        <SessionOrders enabled={isValid?.valid === true} sessionId={isValid?.session?.sessionId} />
 
         {!menu || menu.length === 0 ? (
           <ContentState
