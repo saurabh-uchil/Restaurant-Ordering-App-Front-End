@@ -19,6 +19,8 @@ import { getCartTotal } from "../../../services/calculateCostService";
 import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
 import { useOrder } from "../../../api/apihooks/useOrder";
 import { normaliseCartData } from "../../../services/structureCartData";
+import axios from "axios";
+import { useTimedNotification } from "../../../hooks/useTimedNotification";
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -39,21 +41,18 @@ const Cart = () => {
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const [showToast, setShowToast] = useState<{
-    visible: boolean;
-    itemName: string;
-    variant: "success" | "error" | "warning" | "info";
-  }>({ visible: false, itemName: "", variant: "success" });
+  const { notification, showNotification, dismissNotification } = useTimedNotification();
 
   const handleShowToast = (
     itemName: string,
     variant: "success" | "error" | "warning" | "info" = "success",
   ) => {
-    setShowToast({ visible: true, itemName, variant });
-
-    setTimeout(() => {
-      setShowToast({ visible: false, itemName: "", variant: "success" });
-    }, 3000);
+    showNotification({
+      variant,
+      message: variant === "error"
+        ? `${itemName} removed from the cart`
+        : `${itemName} updated successfully`,
+    });
   };
 
   const {
@@ -101,10 +100,26 @@ const Cart = () => {
       const updatedData = normaliseCartData(myCart);
       const data = await mutateAsync(updatedData);
       const orderId = data?.orderId;
+      if (!orderId) throw new Error("The order was created, but its confirmation could not be loaded.");
       clearCart();
-      navigate(`/restaurant/${restaurantSlugName}/order/${orderId}?table=${table}`);
-    } catch (e) {
-      console.log(e);
+      navigate(`/restaurant/${restaurantSlugName}/order/${orderId}?table=${table}`, {
+        state: {
+          notification: {
+            variant: "success",
+            message: "Order placed successfully. Your order has been sent to the kitchen.",
+          },
+        },
+      });
+    } catch (orderError: unknown) {
+      const serverMessage = axios.isAxiosError(orderError)
+        ? orderError.response?.data?.message
+        : undefined;
+      const message = typeof serverMessage === "string"
+        ? serverMessage
+        : orderError instanceof Error
+          ? orderError.message
+          : "Unable to place your order. Please try again.";
+      showNotification({ variant: "error", message });
     }
   };
 
@@ -163,21 +178,11 @@ const Cart = () => {
         table={table}
       />
 
-      {showToast.visible && (
+      {notification && (
         <Notification
-          variant={showToast.variant}
-          message={
-            showToast.variant == "error"
-              ? `${showToast.itemName} removed from the cart`
-              : `${showToast.itemName} updated successfully`
-          }
-          onClose={() =>
-            setShowToast({
-              visible: false,
-              itemName: "",
-              variant: "success",
-            })
-          }
+          variant={notification.variant}
+          message={notification.message}
+          onClose={dismissNotification}
         />
       )}
 
