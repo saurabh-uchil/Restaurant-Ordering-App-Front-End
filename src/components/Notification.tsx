@@ -9,8 +9,12 @@ type NotificationVariant =
 
 type NotificationProps = {
   variant?: NotificationVariant;
+  title?: string;
   message: string;
   onClose?: () => void;
+  actionLabel?: string;
+  onAction?: () => void;
+  actionDisabled?: boolean;
 };
 
 const notificationIcons = {
@@ -20,17 +24,43 @@ const notificationIcons = {
   info: Info,
 };
 
-const Notification = ({ variant = "success", message, onClose }: NotificationProps) => {
+const Notification = ({
+  variant = "success",
+  title,
+  message,
+  onClose,
+  actionLabel,
+  onAction,
+  actionDisabled = false,
+}: NotificationProps) => {
   const Icon = notificationIcons[variant];
 
   return (
-    <div className={`${notificationStyles.container} ${notificationStyles.variants[variant]}`}>
+    <div
+      className={`${notificationStyles.container} ${notificationStyles.variants[variant]}`}
+      role={variant === "error" ? "alert" : "status"}
+      aria-live={variant === "error" ? "assertive" : "polite"}
+    >
       <div className={notificationStyles.content}>
         <div className={`${notificationStyles.iconContainer} ${notificationStyles.iconVariants[variant]}`}>
           <Icon size={16} className={notificationStyles.icon} />
         </div>
 
-        <span className={notificationStyles.message}>{message}</span>
+        <div className={notificationStyles.textContainer}>
+          {title && <strong className={notificationStyles.title}>{title}</strong>}
+          <span className={notificationStyles.message}>{message}</span>
+          {actionLabel && onAction && (
+            <button
+              type="button"
+              className={notificationStyles.actionButton}
+              onClick={onAction}
+              disabled={actionDisabled}
+              aria-busy={actionDisabled}
+            >
+              {actionLabel}
+            </button>
+          )}
+        </div>
       </div>
 
       {onClose && (
