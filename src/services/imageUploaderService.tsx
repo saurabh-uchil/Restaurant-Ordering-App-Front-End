@@ -1,7 +1,8 @@
 import axios from "axios";
+import { api } from "../api/api";
 
 const getPresignedUrl = async (file: File) => {
-    const response = await axios.post("http://localhost:3000/image-uploader/presigned-url", {
+    const response = await api.post("/image-uploader/presigned-url", {
             fileName: file.name,
             fileType: file.type
     });

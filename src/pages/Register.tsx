@@ -6,6 +6,7 @@ import Navbar from "../components/LandingPageComponents/Navbar";
 import { rules } from "../data/validationRules";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { api } from "../api/api";
 import AlertMessage from "../components/AuthFormComponents/AlertMessage";
 import ButtonWithLoader from "../components/AuthFormComponents/ButtonWithLoader";
 import registerIllustration from "../assets/the-pass-register-illustration.png";
@@ -33,10 +34,7 @@ const Register = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: RegisterForm) => {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
-        data
-      );
+      const response = await api.post("/auth/register", data);
       return response.data;
     },
     onSuccess: (data) => {

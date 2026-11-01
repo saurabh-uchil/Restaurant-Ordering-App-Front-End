@@ -41,3 +41,23 @@ export const validateSession = async()=>{
     const response = await api.get(`/session/isValid`);
     return response.data;
 }
+
+export const checkActiveSession = async (restaurantId: string, table: string) => {
+    const response = await api.get('/session/active', {
+        params: { restaurantId, table: Number.parseInt(table, 10) },
+    });
+    return response.data as { hasActiveSession: boolean };
+}
+
+export const joinSession = async (restaurantId: string, table: string) => {
+    const response = await api.post('/session/join', {
+        restaurantId,
+        table: Number.parseInt(table, 10),
+    });
+    return response.data;
+}
+
+export const getOrdersForCurrentSession = async () => {
+    const response = await api.get('/orders/session/current');
+    return response.data;
+}
