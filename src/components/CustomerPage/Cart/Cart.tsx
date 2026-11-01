@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { Navigate, useNavigate, useParams, useSearchParams } from "react-router";
 import { useRestuarant } from "../../../api/apihooks/useRestaurant";
 import { ContentState } from "../../ContentState";
 import CustomerHeader from "../CustomerHeader";
@@ -17,7 +17,7 @@ import Notification from "../../Notification";
 import FeedbackState from "../../FeedbackState";
 import { getCartTotal } from "../../../services/calculateCostService";
 import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
-import { useOrder } from "../../../api/apihooks/useOrder";
+import { useOrder, useValidateSession } from "../../../api/apihooks/useOrder";
 import { normaliseCartData } from "../../../services/structureCartData";
 import axios from "axios";
 import { useTimedNotification } from "../../../hooks/useTimedNotification";
@@ -30,6 +30,13 @@ const Cart = () => {
 
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
+  const {
+    data: sessionValidation,
+    isPending: isSessionPending,
+    isFetching: isSessionFetching,
+    isError: isSessionError,
+    error: sessionError,
+  } = useValidateSession();
 
   const myCart = useCart((state) => state.myCart);
   const deleteCartItem = useCart((state) => state.deleteCartItem);
@@ -135,7 +142,7 @@ const Cart = () => {
   }
 
   // Loading
-  if (isRestaurantPending) {
+  if (isRestaurantPending || isSessionPending || isSessionFetching) {
     return (
       <ContentState
         type="loading"
@@ -159,6 +166,20 @@ const Cart = () => {
     );
   }
 
+  if (isSessionError && axios.isAxiosError(sessionError) && sessionError.response?.status === 401) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
+  if (isSessionError) {
+    return (
+      <ContentState
+        type="error"
+        title="Unable to check your session"
+        description={sessionError instanceof Error ? sessionError.message : "Please check your connection and try again."}
+      />
+    );
+  }
+
   // No restaurant
   if (!restaurantDetails) {
     return (
@@ -170,10 +191,22 @@ const Cart = () => {
     );
   }
 
+  const session = sessionValidation?.session;
+  const sessionMatchesPage = Boolean(
+    sessionValidation?.valid &&
+    String(session?.restaurantId) === String(restaurantDetails._id) &&
+    Number(session?.table) === Number(table),
+  );
+
+  if (!sessionMatchesPage) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
   return (
     <div className={styles.page}>
       <CustomerHeader
         restaurant={restaurantDetails.name}
+        restaurantId={restaurantDetails._id}
         slug={restaurantSlugName}
         table={table}
       />
@@ -269,3 +302,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

@@ -1,4 +1,5 @@
-import { useParams, useSearchParams } from "react-router";
+import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import axios from "axios";
 import { useGetMenu, useRestuarant } from "../api/apihooks/useRestaurant";
 import CustomerHeader from "../components/CustomerPage/CustomerHeader";
 import ContentState from "../components/ContentState";
@@ -8,23 +9,32 @@ import {
 } from "../styles/CustomerPage/customerPage";
 import Filters from "../components/Filters";
 import SearchBar from "../components/SearchBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cards from "../components/Cards";
 import { filters } from "../data/filters";
 import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import Notification from "../components/Notification";
 import { useValidateSession } from "../api/apihooks/useOrder";
-import { useTimedNotification } from "../hooks/useTimedNotification";
+import { useTimedNotification, type TimedNotificationValue } from "../hooks/useTimedNotification";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
   const restaurantSlugName = restaurant ?? "";
+  const location = useLocation();
+  const navigate = useNavigate();
+  const initialNotification = (location.state as { notification?: TimedNotificationValue } | null)?.notification ?? null;
 
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
 
-  const {isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
+  const {
+    data: sessionValidation,
+    isPending: isValidPending,
+    isFetching: isValidFetching,
+    error: sessionError,
+    isError: isSessionError,
+  } = useValidateSession();
   const {
     data: menu = [],
     isPending: isMenuPending,
@@ -57,7 +67,13 @@ const CustomerMenuPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { notification, showNotification, dismissNotification } = useTimedNotification();
+  const { notification, showNotification, dismissNotification } = useTimedNotification(initialNotification);
+
+  useEffect(() => {
+    if (initialNotification) {
+      navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+    }
+  }, [initialNotification, location.pathname, location.search, navigate]);
 
   const handleShowToast = (itemName: string) => {
     showNotification({ variant: "success", message: `${itemName} added to cart` });
@@ -96,7 +112,7 @@ const CustomerMenuPage = () => {
   }
 
   // Loading either request
-  if (isMenuPending || isRestaurantPending || isValidPending) {
+  if (isMenuPending || isRestaurantPending || isValidPending || isValidFetching) {
     return (
       <ContentState
         type="loading"
@@ -118,6 +134,12 @@ const CustomerMenuPage = () => {
         }
       />
     );
+  }
+
+  // A menu URL is valid only for the session authenticated by this browser's cookie.
+  // Returning to the landing page lets a customer start or join the scanned table.
+  if (isSessionError && axios.isAxiosError(sessionError) && sessionError.response?.status === 401) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
   }
 
   // Session Error
@@ -158,11 +180,23 @@ const CustomerMenuPage = () => {
     );
   }
 
+  const session = sessionValidation?.session;
+  const sessionMatchesPage = Boolean(
+    sessionValidation?.valid &&
+    String(session?.restaurantId) === String(restaurantDetails._id) &&
+    Number(session?.table) === Number(table),
+  );
+
+  if (!isSessionError && !sessionMatchesPage) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <CustomerHeader
           restaurant={restaurantDetails.name}
+          restaurantId={restaurantDetails._id}
           slug={restaurantSlugName}
           table={table}
         />
@@ -225,3 +259,4 @@ const CustomerMenuPage = () => {
 };
 
 export default CustomerMenuPage;
+
