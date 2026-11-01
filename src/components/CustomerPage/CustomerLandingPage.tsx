@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ArrowRight, CircleHelp, Armchair, Utensils, AlertCircle } from "lucide-react";
 import { customerLandingPageStyles as styles } from "../../styles/CustomerPage/customerLandingPage";
@@ -45,6 +45,7 @@ const CustomerLandingPage = () => {
     data: sessionValidation,
     isPending: validatingSession,
     isFetching: checkingCookieSession,
+    isFetchedAfterMount: sessionFetchedAfterMount,
     isError: sessionValidationFailed,
     error: sessionValidationError,
     refetch: refetchSession,
@@ -58,7 +59,11 @@ const CustomerLandingPage = () => {
   } = useRestuarant(restaurantSlugName);
 
   const session = sessionValidation?.session;
+  const sessionCheckComplete =
+    sessionFetchedAfterMount && !validatingSession && !checkingCookieSession;
   const hasMatchingCookieSession = Boolean(
+    sessionCheckComplete &&
+    !sessionValidationFailed &&
     sessionValidation?.valid &&
     restaurantData?._id &&
     String(session?.restaurantId) === String(restaurantData._id) &&
@@ -70,7 +75,7 @@ const CustomerLandingPage = () => {
   const canCheckTableSession = Boolean(
     restaurantData?._id &&
     table &&
-    !validatingSession &&
+    sessionCheckComplete &&
     (missingOrInvalidCookie || (sessionValidation?.valid && !hasMatchingCookieSession)),
   );
 
@@ -86,12 +91,17 @@ const CustomerLandingPage = () => {
     canCheckTableSession,
   );
 
-  const hasActiveSession = activeSessionResult?.hasActiveSession === true;
+  const hasActiveSession = canCheckTableSession && activeSessionResult?.hasActiveSession === true;
   const activeSessionDialogOpen = hasActiveSession && !joinPromptDismissed;
+  const redirectedMenuPath = useRef<string | null>(null);
 
   useEffect(() => {
-    if (hasMatchingCookieSession && table) {
-      navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`, { replace: true });
+    const menuPath = `/restaurant/${restaurantSlugName}/menu?table=${table}`;
+    if (hasMatchingCookieSession && table && redirectedMenuPath.current !== menuPath) {
+      redirectedMenuPath.current = menuPath;
+      navigate(menuPath, { replace: true });
+    } else if (!hasMatchingCookieSession) {
+      redirectedMenuPath.current = null;
     }
   }, [hasMatchingCookieSession, navigate, restaurantSlugName, table]);
 
@@ -173,7 +183,7 @@ const CustomerLandingPage = () => {
     );
   }
 
-  if (validatingSession || (hasMatchingCookieSession && checkingCookieSession) || (canCheckTableSession && checkingActiveSession)) {
+  if (validatingSession || checkingCookieSession || (canCheckTableSession && checkingActiveSession)) {
     return <ContentState type="loading" title="Checking your table session..." />;
   }
 

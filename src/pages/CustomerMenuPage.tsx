@@ -1,4 +1,5 @@
-import { useParams, useSearchParams } from "react-router";
+import { Navigate, useParams, useSearchParams } from "react-router";
+import axios from "axios";
 import { useGetMenu, useRestuarant } from "../api/apihooks/useRestaurant";
 import CustomerHeader from "../components/CustomerPage/CustomerHeader";
 import ContentState from "../components/ContentState";
@@ -24,7 +25,13 @@ const CustomerMenuPage = () => {
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
 
-  const {isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
+  const {
+    data: sessionValidation,
+    isPending: isValidPending,
+    isFetching: isValidFetching,
+    error: sessionError,
+    isError: isSessionError,
+  } = useValidateSession();
   const {
     data: menu = [],
     isPending: isMenuPending,
@@ -96,7 +103,7 @@ const CustomerMenuPage = () => {
   }
 
   // Loading either request
-  if (isMenuPending || isRestaurantPending || isValidPending) {
+  if (isMenuPending || isRestaurantPending || isValidPending || isValidFetching) {
     return (
       <ContentState
         type="loading"
@@ -118,6 +125,12 @@ const CustomerMenuPage = () => {
         }
       />
     );
+  }
+
+  // A menu URL is valid only for the session authenticated by this browser's cookie.
+  // Returning to the landing page lets a customer start or join the scanned table.
+  if (isSessionError && axios.isAxiosError(sessionError) && sessionError.response?.status === 401) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
   }
 
   // Session Error
@@ -158,11 +171,23 @@ const CustomerMenuPage = () => {
     );
   }
 
+  const session = sessionValidation?.session;
+  const sessionMatchesPage = Boolean(
+    sessionValidation?.valid &&
+    String(session?.restaurantId) === String(restaurantDetails._id) &&
+    Number(session?.table) === Number(table),
+  );
+
+  if (!isSessionError && !sessionMatchesPage) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <CustomerHeader
           restaurant={restaurantDetails.name}
+          restaurantId={restaurantDetails._id}
           slug={restaurantSlugName}
           table={table}
         />
@@ -225,3 +250,4 @@ const CustomerMenuPage = () => {
 };
 
 export default CustomerMenuPage;
+

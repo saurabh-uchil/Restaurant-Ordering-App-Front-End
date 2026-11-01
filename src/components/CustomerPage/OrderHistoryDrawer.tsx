@@ -14,6 +14,9 @@ export type SessionOrder = {
 type OrderHistoryDrawerProps = {
   open: boolean;
   orders: SessionOrder[];
+  loading: boolean;
+  error: boolean;
+  onRetry: () => void;
   onClose: () => void;
 };
 
@@ -25,7 +28,7 @@ const statusStyles: Record<string, string> = {
   cancelled: styles.statusCancelled,
 };
 
-const OrderHistoryDrawer = ({ open, orders, onClose }: OrderHistoryDrawerProps) => (
+const OrderHistoryDrawer = ({ open, orders, loading, error, onRetry, onClose }: OrderHistoryDrawerProps) => (
   <Drawer
     anchor="right"
     open={open}
@@ -44,7 +47,14 @@ const OrderHistoryDrawer = ({ open, orders, onClose }: OrderHistoryDrawerProps) 
         </button>
       </header>
 
-      {orders.length === 0 ? (
+      {loading ? (
+        <p className={styles.emptyState} role="status">Loading table orders...</p>
+      ) : error ? (
+        <div className={styles.errorState} role="alert">
+          <p>We couldn't load the table's orders.</p>
+          <button type="button" className={styles.retryButton} onClick={onRetry}>Try again</button>
+        </div>
+      ) : orders.length === 0 ? (
         <p className={styles.emptyState}>No orders have been placed at this table yet.</p>
       ) : (
         <ul className={styles.ordersList}>
@@ -85,3 +95,4 @@ const OrderHistoryDrawer = ({ open, orders, onClose }: OrderHistoryDrawerProps) 
 );
 
 export default OrderHistoryDrawer;
+

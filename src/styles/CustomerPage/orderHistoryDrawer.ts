@@ -20,4 +20,7 @@ export const orderHistoryDrawerStyles = {
   itemRow: "text-sm leading-5 text-gray-700",
   totalRow: "mt-4 flex items-center justify-between border-t border-gray-200 pt-3 text-sm font-semibold text-gray-900",
   emptyState: "py-10 text-center text-sm text-[#7B756C]",
+  errorState: "flex flex-col items-center gap-3 py-10 text-center text-sm text-red-700",
+  retryButton: "rounded-full border border-[#E2793D] px-4 py-2 text-xs font-semibold text-[#B85B2A] transition-colors hover:bg-[#FFF4ED] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/30",
 };
+

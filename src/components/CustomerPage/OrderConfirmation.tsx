@@ -1,8 +1,9 @@
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import axios from "axios";
 import { ArrowLeft, Check } from "lucide-react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
-import { useGetOrderById } from "../../api/apihooks/useOrder";
+import { useGetOrderById, useValidateSession } from "../../api/apihooks/useOrder";
 
 import CustomerHeader from "./CustomerHeader";
 import OrderItems from "./OrderItems";
@@ -31,6 +32,13 @@ const OrderConfirmation = () => {
 
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
+  const {
+    data: sessionValidation,
+    isPending: isSessionPending,
+    isFetching: isSessionFetching,
+    isError: isSessionError,
+    error: sessionError,
+  } = useValidateSession();
 
   const {
     data: restaurantDetails,
@@ -42,6 +50,8 @@ const OrderConfirmation = () => {
   const {
     data,
     isPending: isOrderPending,
+    isFetching: isOrderFetching,
+    isFetchedAfterMount: orderFetchedAfterMount,
     isError: isOrderError,
     error: orderError,
     refetch,
@@ -84,7 +94,13 @@ const OrderConfirmation = () => {
   }
 
   // Loading
-  if (isRestaurantPending || isOrderPending) {
+  if (
+    isRestaurantPending ||
+    isOrderPending ||
+    (isOrderFetching && !orderFetchedAfterMount) ||
+    isSessionPending ||
+    isSessionFetching
+  ) {
     return (
       <ContentState
         type="loading"
@@ -94,15 +110,28 @@ const OrderConfirmation = () => {
     );
   }
 
-  // Error
-  if (isRestaurantError || isOrderError) {
+  if (isSessionError && axios.isAxiosError(sessionError) && sessionError.response?.status === 401) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
+  if (isSessionError) {
+    return (
+      <ContentState
+        type="error"
+        title="Unable to check your session"
+        description={sessionError instanceof Error ? sessionError.message : "Please check your connection and try again."}
+      />
+    );
+  }
+
+  // Restaurant request error
+  if (isRestaurantError) {
     return (
       <ContentState
         type="error"
         title="Unable to load order confirmation"
         description={
           restaurantError?.message ||
-          orderError?.message ||
           "Something went wrong while loading your order."
         }
       />
@@ -116,6 +145,27 @@ const OrderConfirmation = () => {
         type="empty"
         title="Restaurant not found"
         description="This restaurant may no longer be available."
+      />
+    );
+  }
+
+  const session = sessionValidation?.session;
+  const sessionMatchesPage = Boolean(
+    sessionValidation?.valid &&
+    String(session?.restaurantId) === String(restaurantDetails._id) &&
+    Number(session?.table) === Number(table),
+  );
+
+  if (!sessionMatchesPage) {
+    return <Navigate to={`/restaurant/${restaurantSlugName}?table=${encodeURIComponent(table)}`} replace />;
+  }
+
+  if (isOrderError) {
+    return (
+      <ContentState
+        type="error"
+        title="Unable to load order confirmation"
+        description={orderError?.message || "Something went wrong while loading your order."}
       />
     );
   }
@@ -135,6 +185,7 @@ const OrderConfirmation = () => {
     <div className={styles.page}>
       <CustomerHeader
         restaurant={restaurantDetails.name}
+        restaurantId={restaurantDetails._id}
         slug={restaurantSlugName}
         table={table}
       />
@@ -236,3 +287,4 @@ const OrderConfirmation = () => {
 };
 
 export default OrderConfirmation;
+
