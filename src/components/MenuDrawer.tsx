@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import AddOptions from "./BrowseOptionGroups";
 import BrowseDietaryAlternatives from "./BrowseDietaryAlternatives";
@@ -12,14 +12,12 @@ const [isLoading, setIsLoading] = useState(true);
 const [error, setError] = useState<string | null>(null);
 const [data, setData] = useState<any[]>([]);
 
-const baseURL = "http://localhost:3000";
-
-const endPoint = component === "Options" ? `${baseURL}/option-group` : component === "Dietary" ? `${baseURL}/dietary-alternatives` : `${baseURL}/addon`;
+const endPoint = component === "Options" ? "/option-group" : component === "Dietary" ? "/dietary-alternatives" : "/addon";
 
 
  async function fetchData() {
         try {
-            const response = await axios.get(endPoint);
+            const response = await api.get(endPoint);
             setData(response.data);
         } catch (err) {
             setError(err.message);

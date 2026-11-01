@@ -1,6 +1,7 @@
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId, validateSession } from "../services/orderService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { checkActiveSession, createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId, getOrdersForCurrentSession, joinSession, validateSession } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -24,8 +25,10 @@ type CreateOrderProps = {
 }
 
 export const useOrder = () => {
+   const queryClient = useQueryClient();
    return useMutation({
-        mutationFn: ({items}: CreateOrderProps) => createOrder(items)
+        mutationFn: ({items}: CreateOrderProps) => createOrder(items),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["session-orders"] }),
     });
 }
 
@@ -68,16 +71,47 @@ export const useGetCompletedOrdersByRestaurantId = (restaurantId: string) =>{
 }
 
 export const useCreateSession = () =>{
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({restaurantId, table}: {restaurantId: string, table: string}) => {
       return createSession(restaurantId, table);
-    }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["session"] }),
   });
 }
 
 export const useValidateSession = () =>{
   return useQuery({
       queryKey: ["session"],
-      queryFn: ()=> validateSession()
+      queryFn: ()=> validateSession(),
+      retry: (failureCount, error) =>
+        !(axios.isAxiosError(error) && error.response?.status === 401) && failureCount < 2,
     })
 }
+
+export const useCheckActiveSession = (
+  restaurantId: string,
+  table: string,
+  enabled: boolean,
+) => useQuery({
+  queryKey: ["active-session", restaurantId, table],
+  queryFn: () => checkActiveSession(restaurantId, table),
+  enabled: enabled && Boolean(restaurantId) && Boolean(table),
+  retry: 1,
+});
+
+export const useJoinSession = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ restaurantId, table }: { restaurantId: string; table: string }) =>
+      joinSession(restaurantId, table),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["session"] }),
+  });
+};
+
+export const useGetOrdersForCurrentSession = (enabled: boolean, sessionId?: string) => useQuery({
+  queryKey: ["session-orders", sessionId],
+  queryFn: getOrdersForCurrentSession,
+  enabled: enabled && Boolean(sessionId),
+  refetchInterval: 10000,
+});

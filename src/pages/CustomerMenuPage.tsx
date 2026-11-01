@@ -15,6 +15,7 @@ import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import Notification from "../components/Notification";
 import { useValidateSession } from "../api/apihooks/useOrder";
+import SessionOrders from "../components/CustomerPage/SessionOrders";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -24,7 +25,6 @@ const CustomerMenuPage = () => {
   const table = searchParams.get("table");
 
   const {data: isValid, isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
-  //need to check for a valid session
   const {
     data: menu = [],
     isPending: isMenuPending,
@@ -162,17 +162,6 @@ const CustomerMenuPage = () => {
     );
   }
 
-  // Restaurant exists but has no menu items
-  if (!menu || menu.length === 0) {
-    return (
-      <ContentState
-        type="empty"
-        title="No menu items available"
-        description="This restaurant hasn't added any menu items yet."
-      />
-    );
-  }
-
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -205,18 +194,28 @@ const CustomerMenuPage = () => {
           </p>
         </section>
 
-        <section className={pageStyles.menuSection}>
-          <div className={pageStyles.controls}>
-            <Filters
-              filterArray={filters}
-              selectedFilter={selectedFilter}
-              setSelectedFilter={setSelectedFilter}
-            />
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholderText="Search menu"/>
-          </div>
+        <SessionOrders enabled={isValid?.valid === true} sessionId={isValid?.session?.sessionId} />
 
-          <div className={pageStyles.menuGrid}>{card}</div>
-        </section>
+        {!menu || menu.length === 0 ? (
+          <ContentState
+            type="empty"
+            title="No menu items available"
+            description="This restaurant hasn't added any menu items yet."
+          />
+        ) : (
+          <section className={pageStyles.menuSection}>
+            <div className={pageStyles.controls}>
+              <Filters
+                filterArray={filters}
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+              />
+              <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholderText="Search menu"/>
+            </div>
+
+            <div className={pageStyles.menuGrid}>{card}</div>
+          </section>
+        )}
       </div>
 
       <Drawer

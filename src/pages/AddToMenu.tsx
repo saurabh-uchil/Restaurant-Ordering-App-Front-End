@@ -13,7 +13,7 @@ import MenuDrawer from "../components/MenuDrawer";
 import useGetExistingDataHook from "../hooks/useGetExistingDataHook";
 import UploadImage from "../components/UploadImage";
 import { formattedData } from "../services/dataFormatterService";
-import axios from "axios";
+import { api } from "../api/api";
 import { useState } from "react";
 
 const AddToMenu = () => {
@@ -36,7 +36,7 @@ const AddToMenu = () => {
             setIsLoading(true);
             const updatedData = formattedData(data, dietaryAlternatives, addons, optionGroups); 
             //console.log("Updated Data:", updatedData);
-            await axios.post("http://localhost:3000/menu/add-food-item", updatedData);
+            await api.post("/menu/add-food-item", updatedData);
             
             setIsLoading(false);
             setUploadSuccess(true);

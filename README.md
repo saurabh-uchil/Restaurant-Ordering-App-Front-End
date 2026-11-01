@@ -1,5 +1,19 @@
 # React + TypeScript + Vite
 
+## Environment configuration
+
+The frontend reads its backend origin from `VITE_API_BASE_URL`. Copy `.env.example` to `.env.development` for local work, or set the variable in the frontend hosting provider's **build-time** environment settings for production. Vite embeds this value in the built frontend, so changing it requires a new frontend build/deployment.
+
+```bash
+# PowerShell
+Copy-Item .env.example .env.development
+npm run dev
+```
+
+Set `VITE_API_BASE_URL` to the backend origin only, for example `https://api.the-pass.example.com` (no API route path). The shared Axios client uses this origin and keeps `withCredentials: true` so dining-session cookies are sent. Backend secrets must never use a `VITE_` variable because Vite exposes those values to browser code.
+
+For production, configure `VITE_API_BASE_URL` in the frontend host, and configure the backend's `CORS_ORIGINS` to include the exact deployed frontend origin. Use HTTPS for both deployments when relying on secure session cookies.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
