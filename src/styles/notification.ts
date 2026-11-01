@@ -5,20 +5,11 @@ export const notificationStyles = {
   content:
     "flex min-w-0 items-center gap-3",
 
-  textContainer:
-    "flex min-w-0 flex-col items-start gap-1",
-
-  title:
-    "text-sm font-semibold leading-5",
-
   iconContainer:
     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
 
   message:
     "text-[13px] font-medium leading-5",
-
-  actionButton:
-    "mt-1 inline-flex min-h-9 items-center justify-center rounded-full bg-[#E2793D] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#D96F35] focus:outline-none focus:ring-2 focus:ring-[#E2793D]/40 disabled:cursor-not-allowed disabled:opacity-60",
 
   icon:
     "shrink-0",
