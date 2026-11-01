@@ -1,8 +1,8 @@
 import { api } from "../api";
 import type { OrderItem } from "../apihooks/useOrder";
 
-export const createOrder = async (items: OrderItem[], table:string | null, restaurantId:string) =>{
-    const response = await api.post('/orders', {items, table, restaurantId});
+export const createOrder = async (items: OrderItem[]) =>{
+    const response = await api.post('/orders', {items});
     return response.data;
 }
 
