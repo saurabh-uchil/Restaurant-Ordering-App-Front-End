@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import FormCard from "../components/FormCard";
-import axios from "axios";
+import { api } from "../api/api";
 
 import MenuGrid from "../components/MenuGrid";
 import useFetchAPIHook from "../hooks/usefetchAPIHook";
@@ -18,7 +18,7 @@ const ViewMenu = () => {
         async function fetchMenuItems() {
             try {
                 setIsLoading(true);
-                const response = await axios.get("http://localhost:3000/menu");
+                const response = await api.get("/menu");
                 setMenuItems(response.data);
             } catch (error) {
                 console.error("Error fetching menu items:", error);
