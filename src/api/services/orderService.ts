@@ -41,3 +41,8 @@ export const validateSession = async()=>{
     const response = await api.get(`/session/isValid`);
     return response.data;
 }
+
+export const checkActiveSession = async(restaurantId: string, table: string)=>{
+    const response = await api.get(`/session/active?restaurantId=${restaurantId}&table=${table}`);
+    return response.data;
+}

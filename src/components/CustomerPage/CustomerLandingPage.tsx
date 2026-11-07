@@ -1,13 +1,28 @@
-
-import { ArrowRight, CircleHelp, Armchair, Utensils, AlertCircle } from "lucide-react";
+import {
+  ArrowRight,
+  CircleHelp,
+  Armchair,
+  Utensils,
+  AlertCircle,
+} from "lucide-react";
 import { customerLandingPageStyles as styles } from "../../styles/CustomerPage/customerLandingPage";
 import { useParams, useSearchParams } from "react-router";
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
 import ContentState from "../../components/ContentState";
 import { useNavigate } from "react-router-dom";
-import { useCreateSession } from "../../api/apihooks/useOrder";
+import {
+  useCheckActiveSession,
+  useCreateSession,
+} from "../../api/apihooks/useOrder";
+import { useState } from "react";
+import ExistingOrderDialog from "./ExistingSessionDialog";
 
 const CustomerLandingPage = () => {
+  const [existingSessionId, setExistingSessionId] = useState<string | null>(
+    null,
+  );
+  const [showExistingOrderDialog, setShowExistingOrderDialog] = useState(false);
+
   const { restaurant } = useParams<{ restaurant: string }>();
   const restaurantSlugName = restaurant ?? "";
 
@@ -22,12 +37,10 @@ const CustomerLandingPage = () => {
     isError: isSessionError,
   } = useCreateSession();
 
-  const {
-    data,
-    isPending,
-    isError,
-    error,
-  } = useRestuarant(restaurantSlugName);
+  const { data, isPending, isError, error } = useRestuarant(restaurantSlugName);
+
+  const { mutateAsync: checkActiveSession, isPending: checkingSession } =
+    useCheckActiveSession();
 
   const handleBeginOrder = async () => {
     if (!data?._id || !table || creatingSession) {
@@ -35,19 +48,33 @@ const CustomerLandingPage = () => {
     }
 
     try {
-      const response = await createSession({
+      const activeSession = await checkActiveSession({
+        restaurantId: data._id,
+        table,
+      });
+
+      if (activeSession.hasActiveSession) {
+        setExistingSessionId(activeSession.session.sessionId);
+        setShowExistingOrderDialog(true);
+        return;
+      }
+
+      /*  const response = await createSession({
         restaurantId: data._id,
         table,
       });
 
       console.log("Session created:", response);
 
-      navigate(
-        `/restaurant/${restaurantSlugName}/menu?table=${table}`
-      );
+      navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`); */
     } catch (error) {
       console.error("Failed to create session:", error);
     }
+  };
+  const handleJoinOrder = () => {}
+  const handleCancelJoin = () => {
+    setShowExistingOrderDialog(false);
+    setExistingSessionId(null);
   };
 
   if (!restaurantSlugName) {
@@ -80,8 +107,7 @@ const CustomerLandingPage = () => {
         type="error"
         title="Unable to load restaurant"
         description={
-          error?.message ||
-          "Something went wrong while loading the restaurant."
+          error?.message || "Something went wrong while loading the restaurant."
         }
       />
     );
@@ -156,16 +182,11 @@ const CustomerLandingPage = () => {
             >
               <span className={styles.beginButtonContent}>
                 {creatingSession && (
-                  <span
-                    className={styles.loadingSpinner}
-                    aria-hidden="true"
-                  />
+                  <span className={styles.loadingSpinner} aria-hidden="true" />
                 )}
 
                 <span>
-                  {creatingSession
-                    ? "Starting order..."
-                    : "Begin Order"}
+                  {creatingSession ? "Starting order..." : "Begin Order"}
                 </span>
               </span>
 
@@ -173,19 +194,14 @@ const CustomerLandingPage = () => {
             </button>
 
             {isSessionError && (
-              <div
-                className={styles.sessionError}
-                role="alert"
-              >
+              <div className={styles.sessionError} role="alert">
                 <div className={styles.sessionErrorContent}>
                   <AlertCircle
                     className={styles.sessionErrorIcon}
                     aria-hidden="true"
                   />
 
-                  <span>
-                    We couldn't start your order. Please try again.
-                  </span>
+                  <span>We couldn't start your order. Please try again.</span>
                 </div>
               </div>
             )}
@@ -197,9 +213,7 @@ const CustomerLandingPage = () => {
 
               <div>
                 <p className={styles.helpTitle}>Need help?</p>
-                <p className={styles.helpText}>
-                  Please ask one of our staff.
-                </p>
+                <p className={styles.helpText}>Please ask one of our staff.</p>
               </div>
             </div>
           </section>
@@ -209,6 +223,12 @@ const CustomerLandingPage = () => {
           Powered by <span className={styles.footerBrand}>The Pass</span>
         </footer>
       </div>
+      <ExistingOrderDialog
+        isOpen={showExistingOrderDialog}
+        table={Number(table)}
+        onCancel={handleCancelJoin}
+        onJoin={handleJoinOrder}
+      />
     </div>
   );
 };
