@@ -1,4 +1,4 @@
-import { Moon, ShoppingCart } from "lucide-react";
+import { Moon, ReceiptText, ShoppingCart } from "lucide-react";
 import { customerHeaderStyles as styles } from "../../styles/CustomerPage/customerPage";
 import { useCart } from "../../store/cartStore";
 import { useNavigate } from "react-router";
@@ -14,6 +14,13 @@ const CustomerHeader = ({ restaurant, slug, table }: CustomerHeaderProps) => {
   const myCart = useCart((state)=>state.myCart);
   const navigate = useNavigate(); 
 
+  const existingOrdersCount = 0; // Replace with actual logic to get the count of existing orders
+
+  const onOrdersClick = () => {
+    // Implement the logic to navigate to the orders page or show existing orders
+    navigate(`/restaurant/${slug}/orders?table=${table}`);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.restaurantInfo}>
@@ -28,6 +35,18 @@ const CustomerHeader = ({ restaurant, slug, table }: CustomerHeaderProps) => {
         >
           <Moon size={19} />
         </button>
+
+        <button
+            type="button"
+            className={styles.ordersButton}
+            aria-label={`View ${existingOrdersCount} existing orders`}
+            onClick={onOrdersClick}
+          >
+            <ReceiptText size={21} />
+            <span className={styles.ordersBadge}>
+              {existingOrdersCount}
+            </span>
+          </button>
 
         <button
           type="button"
