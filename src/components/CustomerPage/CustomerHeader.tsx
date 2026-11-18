@@ -14,7 +14,8 @@ const CustomerHeader = ({ restaurant, slug, table }: CustomerHeaderProps) => {
   const myCart = useCart((state)=>state.myCart);
   const navigate = useNavigate(); 
 
-  const existingOrdersCount = 0; // Replace with actual logic to get the count of existing orders
+  // Replace with actual logic to get the count of existing orders
+  const existingOrdersCount = 0; 
 
   const onOrdersClick = () => {
     // Implement the logic to navigate to the orders page or show existing orders
