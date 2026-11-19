@@ -18,6 +18,7 @@ const CustomerHeader = ({ restaurant, slug, table }: CustomerHeaderProps) => {
   const existingOrdersCount = 0; 
 
   const onOrdersClick = () => {
+    
     // Implement the logic to navigate to the orders page or show existing orders
     navigate(`/restaurant/${slug}/orders?table=${table}`);
   };
