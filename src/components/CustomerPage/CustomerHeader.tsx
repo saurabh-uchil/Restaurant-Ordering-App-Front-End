@@ -4,24 +4,26 @@ import { useCart } from "../../store/cartStore";
 import { useNavigate } from "react-router";
 
 type CustomerHeaderProps = {
-  restaurant: string,
-  slug: string,
-  table: string
+  restaurant: string;
+  slug: string;
+  table: string;
+  existingOrdersCount: number;
+  onOrdersClick: () => void;
 };
 
-const CustomerHeader = ({ restaurant, slug, table }: CustomerHeaderProps) => {
+const CustomerHeader = ({ restaurant, slug, table, existingOrdersCount, onOrdersClick }: CustomerHeaderProps) => {
 
   const myCart = useCart((state)=>state.myCart);
   const navigate = useNavigate(); 
 
   // Replace with actual logic to get the count of existing orders
-  const existingOrdersCount = 0; 
+ /*  const existingOrdersCount = 0; 
 
-  const onOrdersClick = () => {
+  const onOrdersClick = () => { */
     
     // Implement the logic to navigate to the orders page or show existing orders
-    navigate(`/restaurant/${slug}/orders?table=${table}`);
-  };
+   /*  navigate(`/restaurant/${slug}/orders?table=${table}`);
+  }; */
 
   return (
     <header className={styles.header}>
