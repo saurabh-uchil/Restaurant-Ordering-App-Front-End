@@ -16,7 +16,7 @@ const CustomerHeader = ({ restaurant, slug, table, existingOrdersCount, onOrders
   const myCart = useCart((state)=>state.myCart);
   const navigate = useNavigate(); 
 
-  // Replace with actual logic to get the count of existing orders
+  
  /*  const existingOrdersCount = 0; 
 
   const onOrdersClick = () => { */
