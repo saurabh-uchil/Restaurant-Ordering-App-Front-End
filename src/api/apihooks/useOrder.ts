@@ -1,6 +1,6 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { checkActiveSession, createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId, validateSession } from "../services/orderService";
+import { checkActiveSession, createOrder, createSession, editOrderStatus, getActiveOrdersByRestaurantId, getCompletedOrdersByRestaurantId, getOrderById, getOrdersByRestaurantId, getOrdersBySessionId, joinSession, validateSession } from "../services/orderService";
 
 type SelectedItem = {
   name: string;
@@ -87,5 +87,19 @@ export const useValidateSession = () =>{
 export const useCheckActiveSession = () => {
   return useMutation({
     mutationFn: async ({restaurantId, table}: {restaurantId: string, table: string}) => checkActiveSession(restaurantId, table),
+  });
+};
+
+export const useGetOrdersBySessionId = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ["sessionOrders"],
+    queryFn: getOrdersBySessionId,
+    enabled,
+  });
+};
+
+export const useJoinSession = () => {
+  return useMutation({
+    mutationFn: joinSession,
   });
 };

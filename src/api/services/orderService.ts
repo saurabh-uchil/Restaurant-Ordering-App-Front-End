@@ -46,3 +46,16 @@ export const checkActiveSession = async(restaurantId: string, table: string)=>{
     const response = await api.get(`/session/active?restaurantId=${restaurantId}&table=${table}`);
     return response.data;
 }
+
+export const getOrdersBySessionId = async()=>{
+    const response = await api.get(`/orders/session/current`);
+    return response.data;
+}
+
+export const joinSession = async (sessionId: string) => {
+  const response = await api.post("/session/join", {
+    sessionId,
+  });
+
+  return response.data;
+};

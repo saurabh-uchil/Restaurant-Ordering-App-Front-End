@@ -1,3 +1,4 @@
+
 import { Moon, ReceiptText, ShoppingCart } from "lucide-react";
 import { customerHeaderStyles as styles } from "../../styles/CustomerPage/customerPage";
 import { useCart } from "../../store/cartStore";
@@ -11,19 +12,15 @@ type CustomerHeaderProps = {
   onOrdersClick: () => void;
 };
 
-const CustomerHeader = ({ restaurant, slug, table, existingOrdersCount, onOrdersClick }: CustomerHeaderProps) => {
-
-  const myCart = useCart((state)=>state.myCart);
-  const navigate = useNavigate(); 
-
-  
- /*  const existingOrdersCount = 0; 
-
-  const onOrdersClick = () => { */
-    
-    // Implement the logic to navigate to the orders page or show existing orders
-   /*  navigate(`/restaurant/${slug}/orders?table=${table}`);
-  }; */
+const CustomerHeader = ({
+  restaurant,
+  slug,
+  table,
+  existingOrdersCount,
+  onOrdersClick,
+}: CustomerHeaderProps) => {
+  const myCart = useCart((state) => state.myCart);
+  const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
@@ -32,6 +29,7 @@ const CustomerHeader = ({ restaurant, slug, table, existingOrdersCount, onOrders
       </div>
 
       <div className={styles.actions}>
+        {/* Theme Button */}
         <button
           type="button"
           className={styles.iconButton}
@@ -40,27 +38,32 @@ const CustomerHeader = ({ restaurant, slug, table, existingOrdersCount, onOrders
           <Moon size={19} />
         </button>
 
+        {/* Existing Orders Button */}
         <button
-            type="button"
-            className={styles.ordersButton}
-            aria-label={`View ${existingOrdersCount} existing orders`}
-            onClick={onOrdersClick}
-          >
-            <ReceiptText size={21} />
-            <span className={styles.ordersBadge}>
-              {existingOrdersCount}
-            </span>
-          </button>
+          type="button"
+          className={styles.ordersButton}
+          aria-label={`View ${existingOrdersCount} existing orders`}
+          onClick={onOrdersClick}
+        >
+          <ReceiptText size={21} />
+          <span className={styles.ordersBadge}>
+            {existingOrdersCount}
+          </span>
+        </button>
 
+        {/* Cart Button */}
         <button
           type="button"
           className={styles.cartButton}
           aria-label="View cart"
-          onClick={()=>navigate(`/restaurant/${slug}/cart?table=${table}`)}
+          onClick={() =>
+            navigate(`/restaurant/${slug}/cart?table=${table}`)
+          }
         >
           <ShoppingCart size={21} />
-
-          <span className={styles.cartBadge}>{myCart.length}</span>
+          <span className={styles.cartBadge}>
+            {myCart.length}
+          </span>
         </button>
       </div>
     </header>

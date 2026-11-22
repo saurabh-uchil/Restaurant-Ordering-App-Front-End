@@ -1,5 +1,6 @@
+
 import { useParams, useSearchParams } from "react-router";
-import { useGetMenu, useRestuarant } from "../api/apihooks/useRestaurant";
+import { useRestuarant, useGetMenu } from "../api/apihooks/useRestaurant";
 import CustomerHeader from "../components/CustomerPage/CustomerHeader";
 import ContentState from "../components/ContentState";
 import {
@@ -14,7 +15,11 @@ import { filters } from "../data/filters";
 import ItemCustomizer from "../components/CustomerPage/ItemCustomizer";
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import Notification from "../components/Notification";
-import { useValidateSession } from "../api/apihooks/useOrder";
+import {
+  useValidateSession,
+  useGetOrdersBySessionId,
+} from "../api/apihooks/useOrder";
+import ExistingOrdersDrawer from "../components/CustomerPage/ExisitngOrdersDrawer";
 
 const CustomerMenuPage = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -23,8 +28,24 @@ const CustomerMenuPage = () => {
   const [searchParams] = useSearchParams();
   const table = searchParams.get("table");
 
-  const {data: isValid, isPending: isValidPending, error:sessionError, isError: isSessionError} = useValidateSession();
-  //need to check for a valid session
+  // Validate dining session
+  const {
+    isPending: isValidPending,
+    error: sessionError,
+    isError: isSessionError,
+  } = useValidateSession();
+
+  // Fetch existing orders after session validation
+  const {
+    data: orders = [],
+    isPending: isOrdersPending,
+    isError: isOrdersError,
+    refetch: refetchOrders,
+  } = useGetOrdersBySessionId(!isValidPending && !isSessionError);
+
+  const existingOrdersCount = orders.length;
+
+  // Fetch menu
   const {
     data: menu = [],
     isPending: isMenuPending,
@@ -32,6 +53,7 @@ const CustomerMenuPage = () => {
     error: menuError,
   } = useGetMenu(restaurantSlugName);
 
+  // Fetch restaurant
   const {
     data: restaurantDetails,
     isPending: isRestaurantPending,
@@ -42,22 +64,21 @@ const CustomerMenuPage = () => {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredData =
-    selectedFilter === "All"
-      ? menu
-      : menu.filter((item) => item.course === selectedFilter);
-
-  const searchedData = filteredData.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
+  // Item customizer drawer
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Existing orders drawer
+  const [isOrdersDrawerOpen, setIsOrdersDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [showToast, setShowToast] = useState({ visible: false, itemName: "" });
+  // Notifications
+  const [showToast, setShowToast] = useState({
+    visible: false,
+    itemName: "",
+  });
 
   const handleShowToast = (itemName: string) => {
     setShowToast({ visible: true, itemName });
@@ -67,6 +88,7 @@ const CustomerMenuPage = () => {
     }, 3000);
   };
 
+  // Item customizer handlers
   const handleAddToCart = (item) => {
     setSelectedItem(item);
     setIsDrawerOpen(true);
@@ -77,16 +99,33 @@ const CustomerMenuPage = () => {
     setIsDrawerOpen(false);
   };
 
-  const card = searchedData.map((item) => {
-    return (
-      <Cards
-        key={item._id}
-        item={item}
-        mode="customer"
-        onAddToCart={handleAddToCart}
-      />
-    );
-  });
+  // Existing orders drawer handlers
+  const handleOrdersOpen = () => {
+    setIsOrdersDrawerOpen(true);
+  };
+
+  const handleOrdersClose = () => {
+    setIsOrdersDrawerOpen(false);
+  };
+
+  // Filter menu
+  const filteredData =
+    selectedFilter === "All"
+      ? menu
+      : menu.filter((item) => item.course === selectedFilter);
+
+  const searchedData = filteredData.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const card = searchedData.map((item) => (
+    <Cards
+      key={item._id}
+      item={item}
+      mode="customer"
+      onAddToCart={handleAddToCart}
+    />
+  ));
 
   // Validate URL
   if (!restaurantSlugName || !table) {
@@ -99,7 +138,7 @@ const CustomerMenuPage = () => {
     );
   }
 
-  // Loading either request
+  // Loading requests
   if (isMenuPending || isRestaurantPending || isValidPending) {
     return (
       <ContentState
@@ -124,7 +163,7 @@ const CustomerMenuPage = () => {
     );
   }
 
-  // Session Error
+  // Session validation failed
   if (isSessionError) {
     return (
       <ContentState
@@ -145,13 +184,14 @@ const CustomerMenuPage = () => {
         type="error"
         title="Unable to load menu"
         description={
-          menuError?.message || "Something went wrong while loading the menu."
+          menuError?.message ||
+          "Something went wrong while loading the menu."
         }
       />
     );
   }
 
-  // No restaurant
+  // Restaurant not found
   if (!restaurantDetails) {
     return (
       <ContentState
@@ -162,7 +202,7 @@ const CustomerMenuPage = () => {
     );
   }
 
-  // Restaurant exists but has no menu items
+  // Empty menu
   if (!menu || menu.length === 0) {
     return (
       <ContentState
@@ -180,6 +220,8 @@ const CustomerMenuPage = () => {
           restaurant={restaurantDetails.name}
           slug={restaurantSlugName}
           table={table}
+          existingOrdersCount={existingOrdersCount}
+          onOrdersClick={handleOrdersOpen}
         />
 
         {showToast.visible && (
@@ -198,7 +240,9 @@ const CustomerMenuPage = () => {
         <section className={pageStyles.hero}>
           <p className={pageStyles.heroEyebrow}>Table {table}</p>
 
-          <h2 className={pageStyles.heroTitle}>What would you like to eat?</h2>
+          <h2 className={pageStyles.heroTitle}>
+            What would you like to eat?
+          </h2>
 
           <p className={pageStyles.heroDescription}>
             Browse the menu and choose something you’ll enjoy.
@@ -212,13 +256,19 @@ const CustomerMenuPage = () => {
               selectedFilter={selectedFilter}
               setSelectedFilter={setSelectedFilter}
             />
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholderText="Search menu"/>
+
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              placeholderText="Search menu"
+            />
           </div>
 
           <div className={pageStyles.menuGrid}>{card}</div>
         </section>
       </div>
 
+      {/* Item Customizer Drawer */}
       <Drawer
         anchor={isMobile ? "bottom" : "right"}
         open={isDrawerOpen}
@@ -232,6 +282,17 @@ const CustomerMenuPage = () => {
           />
         )}
       </Drawer>
+
+      {/* Existing Orders Drawer */}
+      <ExistingOrdersDrawer
+        open={isOrdersDrawerOpen}
+        onClose={handleOrdersClose}
+        orders={orders}
+        table={table}
+        isLoading={isOrdersPending}
+        isError={isOrdersError}
+        onRetry={() => refetchOrders()}
+      />
     </div>
   );
 };

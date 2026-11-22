@@ -1,20 +1,28 @@
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { ArrowLeft, Check } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { useRestuarant } from "../../api/apihooks/useRestaurant";
-import { useGetOrderById } from "../../api/apihooks/useOrder";
+import {
+  useGetOrderById,
+  useValidateSession,
+  useGetOrdersBySessionId,
+} from "../../api/apihooks/useOrder";
 
 import CustomerHeader from "./CustomerHeader";
 import OrderItems from "./OrderItems";
 
+
 import { ContentState } from "../ContentState";
 import { orderConfirmationStyles as styles } from "../../styles/CustomerPage/orderConfirmation";
 import { serviceCharge, taxCharge } from "../../data/serviceCharges";
-import { useEffect } from "react";
 import { socket } from "../../api/apihooks/useSocket";
 import OrderTimeline from "./OrderTimeline";
+import ExistingOrdersDrawer from "./ExisitngOrdersDrawer";
 
 const OrderConfirmation = () => {
+  const [isOrdersDrawerOpen, setIsOrdersDrawerOpen] = useState(false);
+
   const { restaurant, orderId } = useParams<{
     restaurant: string;
     orderId: string;
@@ -42,6 +50,30 @@ const OrderConfirmation = () => {
     refetch,
   } = useGetOrderById(orderId ?? "");
 
+  // Validate the current dining session
+  const {
+    isPending: isSessionPending,
+    isError: isSessionError,
+  } = useValidateSession();
+
+  // Fetch all orders belonging to this dining session
+  const {
+    data: orders = [],
+    isPending: isOrdersPending,
+    isError: isOrdersError,
+    refetch: refetchOrders,
+  } = useGetOrdersBySessionId(!isSessionPending && !isSessionError);
+
+  const existingOrdersCount = orders.length;
+
+  const handleOrdersOpen = () => {
+    setIsOrdersDrawerOpen(true);
+  };
+
+  const handleOrdersClose = () => {
+    setIsOrdersDrawerOpen(false);
+  };
+
   useEffect(() => {
     socket.connect();
 
@@ -49,7 +81,7 @@ const OrderConfirmation = () => {
       console.log("Customer socket connected:", socket.id);
     });
 
-    const handleOrderUpdate = (update: any) => {
+    const handleOrderUpdate = () => {
       refetch();
     };
 
@@ -126,6 +158,8 @@ const OrderConfirmation = () => {
         restaurant={restaurantDetails.name}
         slug={restaurantSlugName}
         table={table}
+        existingOrdersCount={existingOrdersCount}
+        onOrdersClick={handleOrdersOpen}
       />
 
       <div className={styles.container}>
@@ -160,6 +194,7 @@ const OrderConfirmation = () => {
               <OrderTimeline status={data.status} />
             </div>
           </section>
+
           {/* Order */}
           <section className={styles.summaryCard}>
             <h2 className={styles.summaryTitle}>Your Order</h2>
@@ -185,7 +220,9 @@ const OrderConfirmation = () => {
             <div className={styles.breakdown}>
               <div className={styles.row}>
                 <span>Subtotal</span>
-                <span>${(data.subtotal * (taxCharge / 100)).toFixed(2)}</span>
+                <span>
+                  ${(data.subtotal * (taxCharge / 100)).toFixed(2)}
+                </span>
               </div>
             </div>
 
@@ -212,6 +249,16 @@ const OrderConfirmation = () => {
           </div>
         </main>
       </div>
+
+      <ExistingOrdersDrawer
+        open={isOrdersDrawerOpen}
+        onClose={handleOrdersClose}
+        orders={orders}
+        table={table}
+        isLoading={isSessionPending || isOrdersPending}
+        isError={isSessionError || isOrdersError}
+        onRetry={() => refetchOrders()}
+      />
     </div>
   );
 };

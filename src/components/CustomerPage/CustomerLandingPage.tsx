@@ -1,3 +1,4 @@
+
 import {
   ArrowRight,
   CircleHelp,
@@ -13,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useCheckActiveSession,
   useCreateSession,
+  useJoinSession,
 } from "../../api/apihooks/useOrder";
 import { useState } from "react";
 import ExistingOrderDialog from "./ExistingSessionDialog";
@@ -22,6 +24,8 @@ const CustomerLandingPage = () => {
     null,
   );
   const [showExistingOrderDialog, setShowExistingOrderDialog] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
 
   const { restaurant } = useParams<{ restaurant: string }>();
   const restaurantSlugName = restaurant ?? "";
@@ -34,18 +38,26 @@ const CustomerLandingPage = () => {
   const {
     mutateAsync: createSession,
     isPending: creatingSession,
-    isError: isSessionError,
   } = useCreateSession();
+
+  const {
+    mutateAsync: checkActiveSession,
+    isPending: checkingSession,
+  } = useCheckActiveSession();
+
+  const {
+    mutateAsync: joinSession,
+    isPending: joiningSession,
+  } = useJoinSession();
 
   const { data, isPending, isError, error } = useRestuarant(restaurantSlugName);
 
-  const { mutateAsync: checkActiveSession, isPending: checkingSession } =
-    useCheckActiveSession();
-
   const handleBeginOrder = async () => {
-    if (!data?._id || !table || creatingSession) {
+    if (!data?._id || !table || creatingSession || checkingSession) {
       return;
     }
+
+    setActionError(null);
 
     try {
       const activeSession = await checkActiveSession({
@@ -59,22 +71,53 @@ const CustomerLandingPage = () => {
         return;
       }
 
-      /*  const response = await createSession({
+      await createSession({
         restaurantId: data._id,
         table,
       });
 
-      console.log("Session created:", response);
-
-      navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`); */
+      navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`);
     } catch (error) {
-      console.error("Failed to create session:", error);
+      console.error("Failed to start order:", error);
+
+      setActionError(
+        error instanceof Error
+          ? error.message
+          : "We couldn't start your order. Please try again.",
+      );
     }
   };
-  const handleJoinOrder = () => {}
+
+  const handleJoinOrder = async () => {
+    if (!existingSessionId || joiningSession) {
+      return;
+    }
+
+    setJoinError(null);
+
+    try {
+      await joinSession(existingSessionId);
+
+      setShowExistingOrderDialog(false);
+
+      navigate(`/restaurant/${restaurantSlugName}/menu?table=${table}`);
+    } catch (error) {
+      console.error("Failed to join session:", error);
+
+      setJoinError(
+        error instanceof Error
+          ? error.message
+          : "We couldn't join the existing order. Please try again.",
+      );
+    }
+  };
+
   const handleCancelJoin = () => {
+    if (joiningSession) return;
+
     setShowExistingOrderDialog(false);
     setExistingSessionId(null);
+    setJoinError(null);
   };
 
   if (!restaurantSlugName) {
@@ -122,6 +165,8 @@ const CustomerLandingPage = () => {
       />
     );
   }
+
+  const isProcessing = checkingSession || creatingSession;
 
   return (
     <div className={styles.page}>
@@ -177,23 +222,27 @@ const CustomerLandingPage = () => {
               type="button"
               className={styles.beginButton}
               onClick={handleBeginOrder}
-              disabled={creatingSession}
-              aria-busy={creatingSession}
+              disabled={isProcessing}
+              aria-busy={isProcessing}
             >
               <span className={styles.beginButtonContent}>
-                {creatingSession && (
+                {isProcessing && (
                   <span className={styles.loadingSpinner} aria-hidden="true" />
                 )}
 
                 <span>
-                  {creatingSession ? "Starting order..." : "Begin Order"}
+                  {checkingSession
+                    ? "Checking table..."
+                    : creatingSession
+                      ? "Starting order..."
+                      : "Begin Order"}
                 </span>
               </span>
 
-              {!creatingSession && <ArrowRight size={17} />}
+              {!isProcessing && <ArrowRight size={17} />}
             </button>
 
-            {isSessionError && (
+            {actionError && (
               <div className={styles.sessionError} role="alert">
                 <div className={styles.sessionErrorContent}>
                   <AlertCircle
@@ -201,7 +250,7 @@ const CustomerLandingPage = () => {
                     aria-hidden="true"
                   />
 
-                  <span>We couldn't start your order. Please try again.</span>
+                  <span>{actionError}</span>
                 </div>
               </div>
             )}
@@ -223,11 +272,14 @@ const CustomerLandingPage = () => {
           Powered by <span className={styles.footerBrand}>The Pass</span>
         </footer>
       </div>
+
       <ExistingOrderDialog
         isOpen={showExistingOrderDialog}
         table={Number(table)}
         onCancel={handleCancelJoin}
         onJoin={handleJoinOrder}
+        isJoining={joiningSession}
+        joinError={joinError}
       />
     </div>
   );

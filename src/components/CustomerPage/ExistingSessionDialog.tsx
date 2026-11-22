@@ -1,12 +1,13 @@
 import { ConciergeBell, X, UsersRound } from "lucide-react";
 import { styles } from "../../styles/CustomerPage/existingSessionDialog";
 
-
 interface ExistingOrderDialogProps {
   isOpen: boolean;
   table: number;
   onCancel: () => void;
   onJoin: () => void;
+  isJoining?: boolean;
+  joinError?: string | null;
 }
 
 const ExistingOrderDialog = ({
@@ -14,6 +15,8 @@ const ExistingOrderDialog = ({
   table,
   onCancel,
   onJoin,
+  isJoining = false,
+  joinError = null,
 }: ExistingOrderDialogProps) => {
   if (!isOpen) return null;
 
@@ -29,6 +32,7 @@ const ExistingOrderDialog = ({
           type="button"
           className={styles.closeButton}
           onClick={onCancel}
+          disabled={isJoining}
           aria-label="Close dialog"
         >
           <X size={20} />
@@ -57,11 +61,18 @@ const ExistingOrderDialog = ({
           and add more items.
         </p>
 
+        {joinError && (
+          <p className={styles.description} role="alert">
+            {joinError}
+          </p>
+        )}
+
         <div className={styles.actions}>
           <button
             type="button"
             className={styles.cancelButton}
             onClick={onCancel}
+            disabled={isJoining}
           >
             Cancel
           </button>
@@ -70,9 +81,11 @@ const ExistingOrderDialog = ({
             type="button"
             className={styles.joinButton}
             onClick={onJoin}
+            disabled={isJoining}
+            aria-busy={isJoining}
           >
             <UsersRound size={18} />
-            Join Order
+            {isJoining ? "Joining..." : "Join Order"}
           </button>
         </div>
       </div>
