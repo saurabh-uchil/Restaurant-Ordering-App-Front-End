@@ -1,5 +1,12 @@
+
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useRestuarant } from "../../../api/apihooks/useRestaurant";
+import {
+  useValidateSession,
+  useGetOrdersBySessionId,
+  useOrder,
+} from "../../../api/apihooks/useOrder";
+
 import { ContentState } from "../../ContentState";
 import CustomerHeader from "../CustomerHeader";
 import CartItems from "../Cart/CartItems";
@@ -17,8 +24,9 @@ import Notification from "../../Notification";
 import FeedbackState from "../../FeedbackState";
 import { getCartTotal } from "../../../services/calculateCostService";
 import { serviceCharge, taxCharge } from "../../../data/serviceCharges";
-import { useOrder } from "../../../api/apihooks/useOrder";
 import { normaliseCartData } from "../../../services/structureCartData";
+import ExistingOrdersDrawer from "../ExisitngOrdersDrawer";
+
 
 const Cart = () => {
   const { restaurant } = useParams<{ restaurant: string }>();
@@ -38,6 +46,7 @@ const Cart = () => {
 
   const [selectedItem, setSelectedItem] = useState<CartItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isOrdersDrawerOpen, setIsOrdersDrawerOpen] = useState(false);
 
   const [showToast, setShowToast] = useState<{
     visible: boolean;
@@ -84,6 +93,30 @@ const Cart = () => {
     error: restaurantError,
   } = useRestuarant(restaurantSlugName);
 
+  // Validate the current dining session
+  const {
+    isPending: isSessionPending,
+    isError: isSessionError,
+  } = useValidateSession();
+
+  // Fetch all orders belonging to the current dining session
+  const {
+    data: orders = [],
+    isPending: isOrdersPending,
+    isError: isOrdersError,
+    refetch: refetchOrders,
+  } = useGetOrdersBySessionId(!isSessionPending && !isSessionError);
+
+  const existingOrdersCount = orders.length;
+
+  const handleOrdersOpen = () => {
+    setIsOrdersDrawerOpen(true);
+  };
+
+  const handleOrdersClose = () => {
+    setIsOrdersDrawerOpen(false);
+  };
+
   const restaurantId = restaurantDetails && restaurantDetails._id;
 
   const { mutateAsync, isPending, isError, error } = useOrder();
@@ -103,8 +136,12 @@ const Cart = () => {
       const updatedData = normaliseCartData(myCart, table, restaurantId);
       const data = await mutateAsync(updatedData);
       const orderId = data?.orderId;
+
       clearCart();
-      navigate(`/restaurant/${restaurantSlugName}/order/${orderId}?table=${table}`);
+
+      navigate(
+        `/restaurant/${restaurantSlugName}/order/${orderId}?table=${table}`,
+      );
     } catch (e) {
       console.log(e);
     }
@@ -163,6 +200,8 @@ const Cart = () => {
         restaurant={restaurantDetails.name}
         slug={restaurantSlugName}
         table={table}
+        existingOrdersCount={existingOrdersCount}
+        onOrdersClick={handleOrdersOpen}
       />
 
       {showToast.visible && (
@@ -261,6 +300,16 @@ const Cart = () => {
           </div>
         </Drawer>
       )}
+
+      <ExistingOrdersDrawer
+        open={isOrdersDrawerOpen}
+        onClose={handleOrdersClose}
+        orders={orders}
+        table={table}
+        isLoading={isSessionPending || isOrdersPending}
+        isError={isSessionError || isOrdersError}
+        onRetry={() => refetchOrders()}
+      />
     </div>
   );
 };
