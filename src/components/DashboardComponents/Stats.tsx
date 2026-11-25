@@ -9,6 +9,7 @@ import { popularItems } from "../../data/popularItemsMock";
 import QuickActions from "./QuickAcitons";
 import Popular from "./Popular";
 import { statsMock } from "../../data/quickActions";
+import { useGetRestaurantStats } from "../../api/apihooks/useRestaurant";
 
 const Stats = () => {
 
@@ -31,6 +32,9 @@ const Stats = () => {
     },
     enabled: Boolean(restaurantId && accessToken),
   });
+
+  const { data: statsData } = useGetRestaurantStats(restaurantId);
+  console.log("Stats data:", statsData);
 
   //console.log("Stats data:", data);
   //Need to get the menu items for the restaurant to display in the popular items section
