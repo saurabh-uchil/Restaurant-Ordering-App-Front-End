@@ -33,7 +33,7 @@ const Stats = () => {
     enabled: Boolean(restaurantId && accessToken),
   });
 
-  const { data: statsData } = useGetRestaurantStats(restaurantId);
+  const { data: statsData, isLoading: isStatsLoading, hasError: hasStatsError } = useGetRestaurantStats(restaurantId);
   console.log("Stats data:", statsData);
 
   //console.log("Stats data:", data);
