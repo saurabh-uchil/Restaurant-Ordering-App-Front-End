@@ -34,9 +34,7 @@ const Stats = () => {
   });
 
   const { data: statsData, isLoading: isStatsLoading, hasError: hasStatsError } = useGetRestaurantStats(restaurantId);
-  console.log("Stats data:", statsData);
-
-  console.log("Stats data:", data);
+  
   //Need to get the menu items for the restaurant to display in the popular items section
   
   if (!currentUser) {
